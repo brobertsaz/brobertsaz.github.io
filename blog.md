@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Blog
-permalink: /blog/
+permalink: /posts/
 ---
 
 <div class="posts-grid">

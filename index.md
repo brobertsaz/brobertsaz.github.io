@@ -25,5 +25,5 @@ I'm a Senior Software Engineer in Madison, Wisconsin. For 15+ years I've built w
 {% endfor %}
 
 <div class="all-posts">
-  <a href="/blog/" class="btn btn-primary">View All Posts</a>
+  <a href="/posts/" class="btn btn-primary">View All Posts</a>
 </div>
