@@ -16,6 +16,11 @@ description: Legacy posts from the old blog, preserved with original dates and p
   {% else %}
     {% assign sorted_posts = legacy_posts | sort: 'date' | reverse %}
     {% assign current_year = '' %}
+    {% assign date_format = site.minima.date_format %}
+    {% if date_format == nil or date_format == '' %}
+      {% assign date_format = "%B %d, %Y" %}
+    {% endif %}
+
     <div class="archive-list">
       {% for post in sorted_posts %}
         {% assign year = post.date | date: '%Y' %}
@@ -27,7 +32,7 @@ description: Legacy posts from the old blog, preserved with original dates and p
         {% endif %}
         <li class="archive-item">
           <a class="archive-link" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-          <span class="archive-meta">{{ post.date | date: site.minima.date_format | default: "%b %-d, %Y" }}</span>
+          <span class="archive-meta">{{ post.date | date: date_format }}</span>
           {% if post.tags and post.tags.size > 0 %}
             <span class="archive-tags">
               {% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
