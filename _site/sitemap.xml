@@ -359,6 +359,9 @@
 <loc>http://localhost:4001/payitforward/</loc>
 </url>
 <url>
+<loc>http://localhost:4001/resume/</loc>
+</url>
+<url>
 <loc>http://localhost:4001/search/</loc>
 </url>
 </urlset>

@@ -425,6 +425,13 @@
     }
   }
 }
+  .post-thumb.default {
+    background:
+      radial-gradient(circle at 30% 25%, rgba(88,166,255,0.22), transparent 45%),
+      radial-gradient(circle at 70% 75%, rgba(248,81,73,0.22), transparent 50%),
+      var(--bg-tertiary);
+  }
+
 
 // Related posts section
 .related-posts {

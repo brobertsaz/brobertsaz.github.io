@@ -6,7 +6,13 @@ permalink: /about/
 
 ## About me
 
+<img src="/assets/images/comic-bob.png" alt="Profile illustration" style="float:left; margin:0 1rem 0.75rem 0; width:160px; border-radius:50%; box-shadow:var(--shadow); border:1px solid var(--border-primary);">
+
+
 I'm Bob Roberts, a Senior Software Engineer based in Madison, Wisconsin. I have 15+ years of hands‑on experience building web applications, primarily with Ruby on Rails, for startups, companies, and leading brands. I've worked both in‑house and remotely, on small squads and large programs, often stepping up to lead when the team needs it.
+
+<div style="clear: both;"></div>
+
 
 ## What I do
 

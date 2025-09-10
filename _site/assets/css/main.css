@@ -188,6 +188,8 @@ hr { border: none; height: 1px; background-color: var(--border-primary); margin:
 .post-preview .post-thumb { margin-bottom: 1rem; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-primary); background: var(--bg-tertiary); height: 200px; }
 .post-preview .post-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+.post-thumb.default { background: radial-gradient(circle at 30% 25%, rgba(88, 166, 255, 0.22), transparent 45%), radial-gradient(circle at 70% 75%, rgba(248, 81, 73, 0.22), transparent 50%), var(--bg-tertiary); }
+
 .related-posts { margin-top: 3rem; }
 .related-posts h3 { margin-bottom: 1.5rem; }
 
