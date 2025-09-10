@@ -3,6 +3,14 @@ layout: home
 title: Home
 ---
 
+<div class="mini-hero">
+  <img src="/assets/images/comic-bob.png" alt="Bob Roberts" class="avatar">
+  <div class="mini-hero-content">
+    <h1>Bob Roberts</h1>
+    <p>Senior Software Engineer building with Rails & React</p>
+  </div>
+</div>
+
 ## Hi, I'm Bob Roberts
 
 I'm a Senior Software Engineer in Madison, Wisconsin. For 15+ years I've built web applications with Ruby on Rails for startups and established brands, remote and in-house. I like small, accountable teams, clear outcomes, and shipping iteratively.

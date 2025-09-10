@@ -467,3 +467,54 @@
   ol, ul { margin: 0; padding-left: 1.25rem; }
   a { color: var(--text-secondary); }
 }
+
+// Mini hero for home page
+.mini-hero {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  padding: $spacing-xl 0;
+  margin-bottom: $spacing-lg;
+  border-bottom: 1px solid var(--border-primary);
+  background:
+    radial-gradient(400px 200px at 0% 0%, rgba(88,166,255,0.08), transparent 60%),
+    radial-gradient(400px 200px at 100% 100%, rgba(248,81,73,0.08), transparent 60%);
+
+  .avatar {
+    width: 160px;
+    height: auto;
+    border-radius: 50%;
+    border: 2px solid var(--border-primary);
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+  }
+
+  .mini-hero-content {
+    h1 {
+      margin: 0 0 $spacing-xs 0;
+      color: var(--text-primary);
+      font-size: 2rem;
+    }
+
+    p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: $font-size-lg;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: column;
+    text-align: center;
+    gap: $spacing-md;
+
+    .avatar {
+      width: 140px;
+      height: auto;
+    }
+
+    .mini-hero-content h1 {
+      font-size: 1.75rem;
+    }
+  }
+}
