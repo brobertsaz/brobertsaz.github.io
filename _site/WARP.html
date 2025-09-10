@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>WARP.md | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="WARP.md" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
+<meta property="og:description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
+<link rel="canonical" href="http://localhost:4001/WARP.html" />
+<meta property="og:url" content="http://localhost:4001/WARP.html" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="WARP.md" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Bob Roberts"},"description":"Practical Rails · React · GraphQL · TypeScript — pay it forward.","headline":"WARP.md","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4001/WARP.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/posts/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/resume/" >
+          Resume
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <h1 id="warpmd">WARP.md</h1>
+
+<p>This file provides guidance to WARP (warp.dev) when working with code in this repository.</p>
+
+<p>Project overview</p>
+<ul>
+  <li>Static site built with Jekyll, optimized for GitHub Pages.</li>
+  <li>Ruby-managed via Bundler; plugins include jekyll-feed, jekyll-sitemap, jekyll-seo-tag, and jekyll-paginate.</li>
+  <li>CI/CD: GitHub Actions workflow builds with Ruby 3.1 and deploys to GitHub Pages.</li>
+</ul>
+
+<p>Common commands</p>
+<ul>
+  <li>Install dependencies:
+    <ul>
+      <li>bundle install</li>
+    </ul>
+  </li>
+  <li>Run development server (auto-regenerates on changes):
+    <ul>
+      <li>bundle exec jekyll serve</li>
+      <li>With drafts: bundle exec jekyll serve –drafts</li>
+    </ul>
+  </li>
+  <li>Build the site (outputs to _site/):
+    <ul>
+      <li>bundle exec jekyll build</li>
+      <li>Production build: JEKYLL_ENV=production bundle exec jekyll build</li>
+    </ul>
+  </li>
+  <li>Validate configuration and environment:
+    <ul>
+      <li>bundle exec jekyll doctor</li>
+    </ul>
+  </li>
+  <li>Clean caches and build output:
+    <ul>
+      <li>bundle exec jekyll clean</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Notes for macOS developers</p>
+<ul>
+  <li>Ensure a compatible Ruby (README suggests Ruby 3.1+) and Bundler are installed.</li>
+  <li>If you hit missing webrick when serving locally, it is pinned in Gemfile; ensure bundle install has completed successfully.</li>
+</ul>
+
+<p>Running a focused content preview</p>
+<ul>
+  <li>Serve and view only recent changes: use jekyll serve as above; Jekyll will regenerate only changed files.</li>
+  <li>To preview draft posts (files under _drafts/), use –drafts.</li>
+</ul>
+
+<p>Repository structure and architecture</p>
+<ul>
+  <li>Site configuration: _config.yml
+    <ul>
+      <li>Sets markdown (kramdown), syntax highlighting (rouge), plugins, pagination, SEO metadata, and collection defaults.</li>
+      <li>Collections: posts output with permalink pattern /:categories/:year/:month/:day/:title/.</li>
+    </ul>
+  </li>
+  <li>Layout system (templating):
+    <ul>
+      <li>_layouts/default.html: Base HTML skeleton. Includes head, header, footer, and yields page content.</li>
+      <li>_layouts/home.html: Home page composition, renders a grid of recent posts and a CTA to view all posts.</li>
+      <li>_layouts/page.html and _layouts/post.html: Standard page and post templates.</li>
+      <li>_includes/head.html: SEO tags (jekyll-seo-tag), CSS, feed metadata, favicons, and optional Google Analytics include in production.</li>
+      <li>_includes/header.html and _includes/footer.html: Site-wide navigation and footer elements.</li>
+    </ul>
+  </li>
+  <li>Content model:
+    <ul>
+      <li>Root-level pages (e.g., index.md, about.md, archive.md, contact.md, resume.md) use YAML front matter to select a layout and set metadata.</li>
+      <li>Blog posts in _posts/ use standard Jekyll naming (YYYY-MM-DD-title.md) with front matter specifying title, date, categories, tags, author, and optional image metadata used by home/post previews.</li>
+      <li>search.json and search.md support client-side search if implemented; search.json is generated and consumed by front-end scripts or themes.</li>
+    </ul>
+  </li>
+  <li>Styling pipeline:
+    <ul>
+      <li>assets/css/main.scss is the Jekyll SASS entrypoint importing partials from _sass/.</li>
+      <li>_sass/_variables.scss defines the dark theme color system and typographic/spacing scales used across partials (_base.scss, _layout.scss, _components.scss, _syntax-highlighting.scss).</li>
+      <li>The compiled CSS is linked from _includes/head.html as /assets/css/main.css.</li>
+    </ul>
+  </li>
+  <li>Pagination and feeds:
+    <ul>
+      <li>jekyll-paginate exposes paginate and paginate_path in _config.yml; home and/or archive pages can iterate site.posts accordingly.</li>
+      <li>jekyll-feed auto-generates Atom feed metadata via feed_meta in head include.</li>
+    </ul>
+  </li>
+  <li>SEO:
+    <ul>
+      <li>jekyll-seo-tag outputs SEO and social tags in head; _config.yml sets site/author metadata and logo.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>CI/CD</p>
+<ul>
+  <li>Workflow: .github/workflows/jekyll.yml
+    <ul>
+      <li>Triggers on push/PR to main or master.</li>
+      <li>Uses ruby/setup-ruby@v1 (Ruby 3.1, bundler-cache: true).</li>
+      <li>Builds with: bundle exec jekyll build –baseurl “$” and JEKYLL_ENV=production.</li>
+      <li>Publishes via actions/deploy-pages@v4 to the GitHub Pages environment.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Local vs. Pages differences</p>
+<ul>
+  <li>Local serve uses baseurl from _config.yml (empty string here). GitHub Pages build injects a base path via the workflow; avoid hardcoding absolute links—prefer relative_url and absolute_url filters.</li>
+</ul>
+
+<p>Conventions used by content</p>
+<ul>
+  <li>Posts often specify image, image_alt, and image_position in front matter; _layouts/home.html and post previews account for these fields.</li>
+  <li>categories and tags drive permalinks and grouping; ensure categories are lowercased and URL-safe for clean paths.</li>
+</ul>
+
+<p>Helpful troubleshooting</p>
+<ul>
+  <li>If CSS doesn’t load locally, ensure the front matter at the top of assets/css/main.scss is present (the two — lines) so Jekyll processes it.</li>
+  <li>If drafts aren’t showing, include –drafts when serving.</li>
+  <li>If pagination isn’t working, confirm jekyll-paginate is installed and configured and that the relevant layout uses the paginate variables.</li>
+</ul>
+
+<p>Source references</p>
+<ul>
+  <li>Core config: _config.yml</li>
+  <li>Bundler deps: Gemfile</li>
+  <li>Entrypoints: index.md (home), _layouts/<em>.html, _includes/</em>.html</li>
+  <li>Styles: assets/css/main.scss, _sass/*.scss</li>
+  <li>CI/CD: .github/workflows/jekyll.yml</li>
+</ul>
+
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/resume/">Resume</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
+                Real‑Time and Optimistic UI...
+              </a>
+            </li><li>
+              <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
+                Authentication for Rails + ...
+              </a>
+            </li><li>
+              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
+                Type‑Safe React with Rails ...
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

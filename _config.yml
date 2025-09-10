@@ -70,6 +70,9 @@ social:
   links:
     - https://github.com/brobertsaz
 
+# Google Analytics
+google_analytics: G-5YWBN17Q7G
+
 # Dark theme settings
 theme_config:
   dark_mode: true
