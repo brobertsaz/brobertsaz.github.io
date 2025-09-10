@@ -1,0 +1,32 @@
+<header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="{{ "/" | relative_url }}">
+        {{ site.title | escape }}
+      </a>
+
+      <nav class="site-nav">
+        <a href="{{ "/" | relative_url }}" {% if page.url == "/" %}class="active"{% endif %}>
+          Home
+        </a>
+        <a href="/blog/" {% if page.url contains "/blog" %}class="active"{% endif %}>
+          Blog
+        </a>
+        <a href="/archive/" {% if page.url == "/archive/" %}class="active"{% endif %}>
+          Archive
+        </a>
+        <a href="/search/" {% if page.url == "/search/" %}class="active"{% endif %}>
+          Search
+        </a>
+        <a href="/about/" {% if page.url == "/about/" %}class="active"{% endif %}>
+          About
+        </a>
+        <a href="/contact/" {% if page.url == "/contact/" %}class="active"{% endif %}>
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link{% if page.url == '/payitforward/' %} active{% endif %}">#payitforward</a>
+
+      </nav>
+    </div>
+  </div>
+</header>

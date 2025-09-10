@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#58a6ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#64ffda" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <circle cx="1080" cy="-50" r="300" fill="url(#g2)"/>
+  <circle cx="-30" cy="580" r="260" fill="url(#g2)"/>
+  <g fill="none" stroke="#30363d" stroke-width="1">
+    <path d="M0 520 C 200 480, 400 560, 600 520 S 1000 480, 1200 520"/>
+    <path d="M0 560 C 200 520, 400 600, 600 560 S 1000 520, 1200 560"/>
+  </g>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,sans-serif" fill="#f0f6fc">
+    <text x="72" y="150" font-size="46" fill="#8b949e">Rails • GraphQL • Apollo • TypeScript</text>
+    <text x="72" y="230" font-size="72" font-weight="700">Production GraphQL with Rails</text>
+    <text x="72" y="300" font-size="72" font-weight="700">and Apollo Client</text>
+  </g>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,sans-serif" fill="#8b949e">
+    <text x="72" y="370" font-size="28">Pagination · Caching · Error Handling · Dataloader</text>
+  </g>
+  <rect x="72" y="410" rx="10" ry="10" width="480" height="56" fill="#21262d" stroke="#30363d"/>
+  <text x="96" y="448" font-size="28" fill="#58a6ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,sans-serif">https://brobertsaz.github.io</text>
+</svg>

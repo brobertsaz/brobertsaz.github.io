@@ -1,0 +1,19 @@
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.7/ext/stringio
+/Users/iamanmp/.rbenv/versions/3.3.0/bin/ruby extconf.rb
+checking for rb_io_mode_t in ruby/io.h... no
+creating Makefile
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.7/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-c19q58 sitelibdir\=./.gem.20250909-19162-c19q58 clean
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.7/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-c19q58 sitelibdir\=./.gem.20250909-19162-c19q58
+compiling stringio.c
+linking shared-object stringio.bundle
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.7/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-c19q58 sitelibdir\=./.gem.20250909-19162-c19q58 install
+/usr/bin/install -c -m 0755 stringio.bundle ./.gem.20250909-19162-c19q58
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.7/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-c19q58 sitelibdir\=./.gem.20250909-19162-c19q58 clean

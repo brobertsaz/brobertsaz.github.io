@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0d1117"/>
+      <stop offset="1" stop-color="#161b22"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#58A6FF"/>
+      <stop offset="1" stop-color="#64FFDA"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- React atom -->
+  <g transform="translate(780,180) scale(1.1)" stroke="#61DAFB" stroke-width="6" fill="none">
+    <ellipse rx="120" ry="45"/>
+    <ellipse rx="120" ry="45" transform="rotate(60)"/>
+    <ellipse rx="120" ry="45" transform="rotate(-60)"/>
+    <circle r="10" fill="#61DAFB" stroke="none"/>
+  </g>
+
+  <!-- TS badge -->
+  <g transform="translate(210,160)">
+    <rect x="0" y="0" width="190" height="120" rx="14" fill="#3178C6"/>
+    <text x="24" y="78" font-family="Menlo,monospace" font-size="64" fill="#fff" font-weight="700">TS</text>
+  </g>
+
+  <!-- GraphQL node dots -->
+  <g transform="translate(560,340)" fill="#E535AB" opacity="0.7">
+    <circle cx="0" cy="0" r="6"/>
+    <circle cx="40" cy="-30" r="6"/>
+    <circle cx="80" cy="0" r="6"/>
+    <circle cx="120" cy="-30" r="6"/>
+    <circle cx="160" cy="0" r="6"/>
+  </g>
+
+  <g font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" fill="#f0f6fc">
+    <text x="210" y="120" font-size="42" font-weight="700">Type-Safe React with Rails GraphQL</text>
+    <text x="210" y="155" font-size="24" fill="#8b949e">Codegen for zero-runtime surprises</text>
+  </g>
+
+  <!-- soft glows -->
+  <circle cx="860" cy="210" r="90" fill="#61DAFB" opacity="0.12" filter="url(#glow)"/>
+  <circle cx="300" cy="240" r="70" fill="#58A6FF" opacity="0.12" filter="url(#glow)"/>
+</svg>
+

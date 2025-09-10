@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Building Scalable Web Applications: Architecture Patterns and Strategies | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Building Scalable Web Applications: Architecture Patterns and Strategies" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Exploring proven architectural patterns and strategies for building web applications that can handle growth in users, data, and complexity while maintaining performance and reliability." />
+<meta property="og:description" content="Exploring proven architectural patterns and strategies for building web applications that can handle growth in users, data, and complexity while maintaining performance and reliability." />
+<link rel="canonical" href="http://localhost:4001/architecture/scalability/2024/02/01/building-scalable-web-applications/" />
+<meta property="og:url" content="http://localhost:4001/architecture/scalability/2024/02/01/building-scalable-web-applications/" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-02-01T10:15:00-06:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Building Scalable Web Applications: Architecture Patterns and Strategies" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2024-02-01T10:15:00-06:00","datePublished":"2024-02-01T10:15:00-06:00","description":"Exploring proven architectural patterns and strategies for building web applications that can handle growth in users, data, and complexity while maintaining performance and reliability.","headline":"Building Scalable Web Applications: Architecture Patterns and Strategies","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4001/architecture/scalability/2024/02/01/building-scalable-web-applications/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4001/architecture/scalability/2024/02/01/building-scalable-web-applications/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/blog/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Building Scalable Web Applications: Architecture Patterns and Strategies</h1>
+
+    <div class="post-meta">
+      <time class="dt-published" datetime="2024-02-01T10:15:00-06:00" itemprop="datePublished">
+        February 01, 2024
+      </time><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span class="p-author h-card" itemprop="name">Bob Roberts</span>
+        </span><span class="reading-time"> • <span id="reading-time"></span></span>
+    </div>
+
+    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav><div class="post-tags"><span class="tag">scalability</span><span class="tag">architecture</span><span class="tag">web-development</span><span class="tag">performance</span></div>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="building-scalable-web-applications-architecture-patterns-and-strategies">Building Scalable Web Applications: Architecture Patterns and Strategies</h1>
+
+<p>As applications grow from simple prototypes to production systems serving thousands or millions of users, scalability becomes a critical concern. Building scalable web applications isn’t just about handling more traffic—it’s about creating systems that can evolve, maintain performance, and remain reliable as they grow.</p>
+
+<h2 id="understanding-scalability">Understanding Scalability</h2>
+
+<p>Scalability comes in two main forms:</p>
+
+<h3 id="vertical-scaling-scale-up">Vertical Scaling (Scale Up)</h3>
+<p>Adding more power to existing machines:</p>
+<ul>
+  <li>More CPU cores</li>
+  <li>Additional RAM</li>
+  <li>Faster storage (SSD, NVMe)</li>
+  <li>Better network interfaces</li>
+</ul>
+
+<h3 id="horizontal-scaling-scale-out">Horizontal Scaling (Scale Out)</h3>
+<p>Adding more machines to the pool of resources:</p>
+<ul>
+  <li>Load balancing across multiple servers</li>
+  <li>Database sharding</li>
+  <li>Microservices architecture</li>
+  <li>Content delivery networks (CDNs)</li>
+</ul>
+
+<h2 id="architectural-patterns-for-scalability">Architectural Patterns for Scalability</h2>
+
+<h3 id="1-microservices-architecture">1. Microservices Architecture</h3>
+
+<p>Breaking applications into smaller, independent services:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// User Service</span>
+<span class="kd">class</span> <span class="nx">UserService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">createUser</span><span class="p">(</span><span class="nx">userData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle user creation</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">userData</span><span class="p">);</span>
+    
+    <span class="c1">// Publish event for other services</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">eventBus</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">user.created</span><span class="dl">'</span><span class="p">,</span> <span class="nx">user</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Order Service</span>
+<span class="kd">class</span> <span class="nx">OrderService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">createOrder</span><span class="p">(</span><span class="nx">orderData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Validate user exists (via API call)</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userServiceClient</span><span class="p">.</span><span class="nx">getUser</span><span class="p">(</span><span class="nx">orderData</span><span class="p">.</span><span class="nx">userId</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">User not found</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">orderRepository</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">orderData</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Benefits:</strong></p>
+<ul>
+  <li>Independent deployment and scaling</li>
+  <li>Technology diversity</li>
+  <li>Fault isolation</li>
+  <li>Team autonomy</li>
+</ul>
+
+<p><strong>Challenges:</strong></p>
+<ul>
+  <li>Network complexity</li>
+  <li>Data consistency</li>
+  <li>Service discovery</li>
+  <li>Monitoring complexity</li>
+</ul>
+
+<h3 id="2-event-driven-architecture">2. Event-Driven Architecture</h3>
+
+<p>Using events to decouple services and enable asynchronous processing:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Event Publisher</span>
+<span class="kd">class</span> <span class="nx">OrderProcessor</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">processOrder</span><span class="p">(</span><span class="nx">order</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="c1">// Process the order</span>
+      <span class="kd">const</span> <span class="nx">processedOrder</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">processPayment</span><span class="p">(</span><span class="nx">order</span><span class="p">);</span>
+      
+      <span class="c1">// Publish success event</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">eventBus</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">order.processed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">orderId</span><span class="p">:</span> <span class="nx">order</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">completed</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">});</span>
+      
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Publish failure event</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">eventBus</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">order.failed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">orderId</span><span class="p">:</span> <span class="nx">order</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="na">error</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+        <span class="na">timestamp</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Event Subscribers</span>
+<span class="kd">class</span> <span class="nx">InventoryService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">handleOrderProcessed</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateInventory</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">orderId</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">NotificationService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">handleOrderProcessed</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendConfirmationEmail</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">orderId</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-cqrs-command-query-responsibility-segregation">3. CQRS (Command Query Responsibility Segregation)</h3>
+
+<p>Separating read and write operations:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Command Side (Writes)</span>
+<span class="kd">class</span> <span class="nx">CreateUserCommand</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">userData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">userData</span> <span class="o">=</span> <span class="nx">userData</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">UserCommandHandler</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">handle</span><span class="p">(</span><span class="nx">command</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span><span class="nx">command</span><span class="p">.</span><span class="nx">userData</span><span class="p">);</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userWriteRepository</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
+    
+    <span class="c1">// Update read model asynchronously</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">eventBus</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="dl">'</span><span class="s1">user.created</span><span class="dl">'</span><span class="p">,</span> <span class="nx">user</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Query Side (Reads)</span>
+<span class="kd">class</span> <span class="nx">UserQueryService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getUserById</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userReadRepository</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">searchUsers</span><span class="p">(</span><span class="nx">criteria</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userSearchIndex</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">criteria</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="database-scaling-strategies">Database Scaling Strategies</h2>
+
+<h3 id="1-read-replicas">1. Read Replicas</h3>
+
+<p>Distributing read operations across multiple database instances:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">DatabaseManager</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">writeDB</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Database</span><span class="p">(</span><span class="nx">WRITE_DB_CONFIG</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">readDBs</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="k">new</span> <span class="nx">Database</span><span class="p">(</span><span class="nx">READ_DB_1_CONFIG</span><span class="p">),</span>
+      <span class="k">new</span> <span class="nx">Database</span><span class="p">(</span><span class="nx">READ_DB_2_CONFIG</span><span class="p">),</span>
+      <span class="k">new</span> <span class="nx">Database</span><span class="p">(</span><span class="nx">READ_DB_3_CONFIG</span><span class="p">)</span>
+    <span class="p">];</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">write</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">writeDB</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">read</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Load balance across read replicas</span>
+    <span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">readDBs</span><span class="p">[</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">readDBs</span><span class="p">.</span><span class="nx">length</span><span class="p">)];</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-database-sharding">2. Database Sharding</h3>
+
+<p>Partitioning data across multiple databases:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">ShardedUserRepository</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">shards</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">shard1</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Database</span><span class="p">(</span><span class="nx">SHARD_1_CONFIG</span><span class="p">),</span> <span class="c1">// Users A-H</span>
+      <span class="na">shard2</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Database</span><span class="p">(</span><span class="nx">SHARD_2_CONFIG</span><span class="p">),</span> <span class="c1">// Users I-P</span>
+      <span class="na">shard3</span><span class="p">:</span> <span class="k">new</span> <span class="nx">Database</span><span class="p">(</span><span class="nx">SHARD_3_CONFIG</span><span class="p">)</span>  <span class="c1">// Users Q-Z</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  
+  <span class="nx">getShardForUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">firstLetter</span> <span class="o">=</span> <span class="nx">userId</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nx">toLowerCase</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">firstLetter</span> <span class="o">&lt;=</span> <span class="dl">'</span><span class="s1">h</span><span class="dl">'</span><span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">shards</span><span class="p">.</span><span class="nx">shard1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">firstLetter</span> <span class="o">&lt;=</span> <span class="dl">'</span><span class="s1">p</span><span class="dl">'</span><span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">shards</span><span class="p">.</span><span class="nx">shard2</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">shards</span><span class="p">.</span><span class="nx">shard3</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">findUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">shard</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getShardForUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="nx">shard</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="caching-strategies">Caching Strategies</h2>
+
+<h3 id="1-multi-level-caching">1. Multi-Level Caching</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">CacheManager</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">l1Cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MemoryCache</span><span class="p">();</span> <span class="c1">// In-memory</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">l2Cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RedisCache</span><span class="p">();</span>  <span class="c1">// Distributed</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">database</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Database</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Try L1 cache first</span>
+    <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l1Cache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+    
+    <span class="c1">// Try L2 cache</span>
+    <span class="nx">value</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l2Cache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Populate L1 cache</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l1Cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="mi">300</span><span class="p">);</span> <span class="c1">// 5 min TTL</span>
+      <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Fetch from database</span>
+    <span class="nx">value</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">database</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Populate both caches</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l2Cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="mi">3600</span><span class="p">);</span> <span class="c1">// 1 hour TTL</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">l1Cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="mi">300</span><span class="p">);</span>  <span class="c1">// 5 min TTL</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-cache-aside-pattern">2. Cache-Aside Pattern</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">UserService</span> <span class="p">{</span>
+  <span class="k">async</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="s2">`user:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+    
+    <span class="c1">// Try cache first</span>
+    <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">user</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// Fetch from database</span>
+    <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Store in cache</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">user</span><span class="p">),</span> <span class="mi">3600</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">updateUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">userData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Update database</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">userData</span><span class="p">);</span>
+    
+    <span class="c1">// Invalidate cache</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="s2">`user:</span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="performance-optimization-techniques">Performance Optimization Techniques</h2>
+
+<h3 id="1-connection-pooling">1. Connection Pooling</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">DatabasePool</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pool</span><span class="p">({</span>
+      <span class="na">host</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">host</span><span class="p">,</span>
+      <span class="na">port</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span>
+      <span class="na">database</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">database</span><span class="p">,</span>
+      <span class="na">user</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">user</span><span class="p">,</span>
+      <span class="na">password</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">password</span><span class="p">,</span>
+      <span class="na">max</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>        <span class="c1">// Maximum connections</span>
+      <span class="na">min</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>         <span class="c1">// Minimum connections</span>
+      <span class="na">idleTimeoutMillis</span><span class="p">:</span> <span class="mi">30000</span><span class="p">,</span>
+      <span class="na">connectionTimeoutMillis</span><span class="p">:</span> <span class="mi">2000</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">query</span><span class="p">(</span><span class="nx">sql</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">pool</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="nx">sql</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+      <span class="nx">client</span><span class="p">.</span><span class="nx">release</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-asynchronous-processing">2. Asynchronous Processing</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">TaskQueue</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bull</span><span class="p">(</span><span class="dl">'</span><span class="s1">task processing</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">redis</span><span class="p">:</span> <span class="p">{</span> <span class="na">host</span><span class="p">:</span> <span class="dl">'</span><span class="s1">localhost</span><span class="dl">'</span><span class="p">,</span> <span class="na">port</span><span class="p">:</span> <span class="mi">6379</span> <span class="p">}</span>
+    <span class="p">});</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">setupProcessors</span><span class="p">();</span>
+  <span class="p">}</span>
+  
+  <span class="nx">setupProcessors</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Email processing</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="dl">'</span><span class="s1">send-email</span><span class="dl">'</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">job</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">subject</span><span class="p">,</span> <span class="nx">body</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">job</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">emailService</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">to</span><span class="p">,</span> <span class="nx">subject</span><span class="p">,</span> <span class="nx">body</span><span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="c1">// Image processing</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="dl">'</span><span class="s1">process-image</span><span class="dl">'</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">job</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="nx">imageUrl</span><span class="p">,</span> <span class="nx">transformations</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">job</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">imageService</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="nx">imageUrl</span><span class="p">,</span> <span class="nx">transformations</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="k">async</span> <span class="nx">addEmailTask</span><span class="p">(</span><span class="nx">emailData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="dl">'</span><span class="s1">send-email</span><span class="dl">'</span><span class="p">,</span> <span class="nx">emailData</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">attempts</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="na">backoff</span><span class="p">:</span> <span class="dl">'</span><span class="s1">exponential</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">delay</span><span class="p">:</span> <span class="mi">1000</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="monitoring-and-observability">Monitoring and Observability</h2>
+
+<h3 id="application-metrics">Application Metrics</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">MetricsCollector</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">prometheus</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">prom-client</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">httpRequestDuration</span> <span class="o">=</span> <span class="k">new</span> <span class="k">this</span><span class="p">.</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Histogram</span><span class="p">({</span>
+      <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">http_request_duration_seconds</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">help</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Duration of HTTP requests in seconds</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">labelNames</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">method</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">route</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">status</span><span class="dl">'</span><span class="p">]</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  
+  <span class="nx">recordHttpRequest</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">route</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">duration</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">httpRequestDuration</span>
+      <span class="p">.</span><span class="nx">labels</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">route</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">observe</span><span class="p">(</span><span class="nx">duration</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Middleware for Express</span>
+<span class="kd">function</span> <span class="nx">metricsMiddleware</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">start</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+  
+  <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">finish</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">duration</span> <span class="o">=</span> <span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
+    <span class="nx">metricsCollector</span><span class="p">.</span><span class="nx">recordHttpRequest</span><span class="p">(</span>
+      <span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
+      <span class="nx">req</span><span class="p">.</span><span class="nx">route</span><span class="p">?.</span><span class="nx">path</span> <span class="o">||</span> <span class="nx">req</span><span class="p">.</span><span class="nx">path</span><span class="p">,</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span>
+      <span class="nx">duration</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+  
+  <span class="nx">next</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Building scalable web applications requires careful consideration of architecture, data management, caching, and monitoring. The key principles to remember:</p>
+
+<ol>
+  <li><strong>Design for failure</strong> - Assume components will fail and build resilience</li>
+  <li><strong>Measure everything</strong> - You can’t optimize what you don’t measure</li>
+  <li><strong>Scale incrementally</strong> - Don’t over-engineer for problems you don’t have yet</li>
+  <li><strong>Choose the right tool</strong> - Different problems require different solutions</li>
+  <li><strong>Plan for growth</strong> - Consider how your architecture will evolve</li>
+</ol>
+
+<p>Scalability is not a destination but a journey. Start with simple, well-designed systems and evolve them as your needs grow. The patterns and strategies discussed here provide a foundation for building applications that can handle growth while maintaining performance and reliability.</p>
+
+<p>What scalability challenges have you faced in your projects? I’d love to hear about your experiences and solutions!</p>
+
+<hr />
+
+<p><em>In the next post, I’ll explore specific implementation details for setting up a microservices architecture with Docker and Kubernetes.</em></p>
+
+  </div>
+
+  
+    <section class="related-posts">
+      <h3>Related posts</h3>
+      <div class="posts-grid">
+        
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/rails-graphql-apollo-pro.svg" alt="Production-ready Rails GraphQL API with Apollo Client and TypeScript" style="object-position: center center;"></div>
+                
+                <h3><a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript</a></h3>
+                <div class="post-meta"><time datetime="2025-01-10T10:00:00-06:00">January 10, 2025</time></div>
+                <div class="post-excerpt">A practical, end‑to‑end guide to shipping a production‑ready GraphQL stack: Rails (graphql‑ruby) + Apollo Client + TypeScript with caching, pagination, error handling, and deployment...</div>
+              </article>
+              
+            
+          
+        
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+      </div>
+    </section>
+  
+
+
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4001%2Farchitecture%2Fscalability%2F2024%2F02%2F01%2Fbuilding-scalable-web-applications%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=Building+Scalable+Web+Applications%3A+Architecture+Patterns+and+Strategies+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4001%2Farchitecture%2Fscalability%2F2024%2F02%2F01%2Fbuilding-scalable-web-applications%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4001/architecture/scalability/2024/02/01/building-scalable-web-applications/">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div><div class="post-navigation"><div class="nav-previous">
+          <a href="/javascript/development/2024/01/22/modern-javascript-development/" class="btn btn-secondary">
+            ← Modern JavaScript Developme...
+          </a>
+        </div><div class="nav-next">
+          <a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/" class="btn btn-secondary">
+            Building a Production‑Ready... →
+          </a>
+        </div></div>
+  </footer>
+
+  <a class="u-url" href="/architecture/scalability/2024/02/01/building-scalable-web-applications/" hidden></a>
+</article>
+
+  <script src="/assets/js/post.js" defer></script>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
+                Real‑Time and Optimistic UI...
+              </a>
+            </li><li>
+              <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
+                Authentication for Rails + ...
+              </a>
+            </li><li>
+              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
+                Type‑Safe React with Rails ...
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

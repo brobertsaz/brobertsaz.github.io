@@ -1,0 +1,19 @@
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/debug-1.11.0/ext/debug
+/Users/iamanmp/.rbenv/versions/3.3.0/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/debug-1.11.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-d5rame sitelibdir\=./.gem.20250909-19162-d5rame clean
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/debug-1.11.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-d5rame sitelibdir\=./.gem.20250909-19162-d5rame
+compiling debug.c
+compiling iseq_collector.c
+linking shared-object debug/debug.bundle
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/debug-1.11.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-d5rame sitelibdir\=./.gem.20250909-19162-d5rame install
+/usr/bin/install -c -m 0755 debug.bundle ./.gem.20250909-19162-d5rame/debug
+
+current directory: /Users/iamanmp/Projects/brobertsaz.github.io/vendor/bundle/ruby/3.3.0/gems/debug-1.11.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20250909-19162-d5rame sitelibdir\=./.gem.20250909-19162-d5rame clean

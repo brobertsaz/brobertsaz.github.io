@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Modern JavaScript Development: Tools and Best Practices | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Modern JavaScript Development: Tools and Best Practices" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Exploring the current landscape of JavaScript development tools, from build systems to testing frameworks, and the best practices that make development more efficient and maintainable." />
+<meta property="og:description" content="Exploring the current landscape of JavaScript development tools, from build systems to testing frameworks, and the best practices that make development more efficient and maintainable." />
+<link rel="canonical" href="http://localhost:4001/javascript/development/2024/01/22/modern-javascript-development/" />
+<meta property="og:url" content="http://localhost:4001/javascript/development/2024/01/22/modern-javascript-development/" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-22T15:30:00-06:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Modern JavaScript Development: Tools and Best Practices" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2024-01-22T15:30:00-06:00","datePublished":"2024-01-22T15:30:00-06:00","description":"Exploring the current landscape of JavaScript development tools, from build systems to testing frameworks, and the best practices that make development more efficient and maintainable.","headline":"Modern JavaScript Development: Tools and Best Practices","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4001/javascript/development/2024/01/22/modern-javascript-development/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4001/javascript/development/2024/01/22/modern-javascript-development/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/blog/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Modern JavaScript Development: Tools and Best Practices</h1>
+
+    <div class="post-meta">
+      <time class="dt-published" datetime="2024-01-22T15:30:00-06:00" itemprop="datePublished">
+        January 22, 2024
+      </time><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span class="p-author h-card" itemprop="name">Bob Roberts</span>
+        </span><span class="reading-time"> • <span id="reading-time"></span></span>
+    </div>
+
+    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav><div class="post-tags"><span class="tag">javascript</span><span class="tag">tools</span><span class="tag">best-practices</span><span class="tag">modern-development</span></div>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="modern-javascript-development-tools-and-best-practices">Modern JavaScript Development: Tools and Best Practices</h1>
+
+<p>The JavaScript ecosystem has evolved dramatically over the past few years. What once was a simple scripting language for adding interactivity to web pages has become the foundation for complex applications, server-side development, and even desktop applications.</p>
+
+<h2 id="the-current-landscape">The Current Landscape</h2>
+
+<p>Today’s JavaScript development environment is rich with tools that help us write better code, faster. Let’s explore some of the key areas:</p>
+
+<h3 id="build-tools-and-bundlers">Build Tools and Bundlers</h3>
+
+<p>The days of manually concatenating JavaScript files are long gone. Modern build tools provide:</p>
+
+<ul>
+  <li><strong>Module bundling</strong> - Combining multiple files into optimized bundles</li>
+  <li><strong>Code splitting</strong> - Loading code on demand for better performance</li>
+  <li><strong>Tree shaking</strong> - Eliminating unused code from final bundles</li>
+  <li><strong>Asset optimization</strong> - Compressing images, CSS, and other resources</li>
+</ul>
+
+<p>Popular choices include:</p>
+<ul>
+  <li><strong>Vite</strong> - Lightning-fast development server with hot module replacement</li>
+  <li><strong>Webpack</strong> - Mature and highly configurable bundler</li>
+  <li><strong>Rollup</strong> - Focused on ES modules and library bundling</li>
+  <li><strong>Parcel</strong> - Zero-configuration bundler</li>
+</ul>
+
+<h3 id="package-management">Package Management</h3>
+
+<p>Managing dependencies is crucial for any non-trivial project:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># npm - The original package manager</span>
+npm <span class="nb">install </span>lodash
+
+<span class="c"># Yarn - Faster and more reliable</span>
+yarn add lodash
+
+<span class="c"># pnpm - Efficient disk space usage</span>
+pnpm add lodash
+</code></pre></div></div>
+
+<h3 id="code-quality-tools">Code Quality Tools</h3>
+
+<p>Maintaining code quality across a team requires automation:</p>
+
+<h4 id="eslint">ESLint</h4>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// .eslintrc.js</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">extends</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">eslint:recommended</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">@typescript-eslint/recommended</span><span class="dl">'</span><span class="p">],</span>
+  <span class="na">rules</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">'</span><span class="s1">no-console</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">warn</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">prefer-const</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="prettier">Prettier</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"semi"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"trailingComma"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es5"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"singleQuote"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"printWidth"</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="best-practices-for-modern-development">Best Practices for Modern Development</h2>
+
+<h3 id="1-use-typescript">1. Use TypeScript</h3>
+
+<p>TypeScript adds static typing to JavaScript, catching errors at compile time:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">User</span> <span class="p">{</span>
+  <span class="nl">id</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+  <span class="nl">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">createUser</span><span class="p">(</span><span class="nx">userData</span><span class="p">:</span> <span class="nb">Partial</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="p">):</span> <span class="nx">User</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">id</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+    <span class="na">name</span><span class="p">:</span> <span class="nx">userData</span><span class="p">.</span><span class="nx">name</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Anonymous</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">email</span><span class="p">:</span> <span class="nx">userData</span><span class="p">.</span><span class="nx">email</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">no-email@example.com</span><span class="dl">'</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-embrace-modern-syntax">2. Embrace Modern Syntax</h3>
+
+<p>Take advantage of ES6+ features:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Destructuring</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">email</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">user</span><span class="p">;</span>
+
+<span class="c1">// Arrow functions</span>
+<span class="kd">const</span> <span class="nx">users</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="p">({</span> <span class="p">...</span><span class="nx">item</span><span class="p">,</span> <span class="na">active</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}));</span>
+
+<span class="c1">// Template literals</span>
+<span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="s2">`Welcome, </span><span class="p">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">!`</span><span class="p">;</span>
+
+<span class="c1">// Optional chaining</span>
+<span class="kd">const</span> <span class="nx">city</span> <span class="o">=</span> <span class="nx">user</span><span class="p">?.</span><span class="nx">address</span><span class="p">?.</span><span class="nx">city</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="3-implement-proper-testing">3. Implement Proper Testing</h3>
+
+<p>A robust testing strategy includes:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Unit tests with Jest</span>
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">User utilities</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should create user with default values</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">createUser</span><span class="p">({</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">John</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">John</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+
+<span class="c1">// Integration tests</span>
+<span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should fetch user data</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">userData</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetchUser</span><span class="p">(</span><span class="mi">123</span><span class="p">);</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">userData</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="4-use-modern-frameworks-wisely">4. Use Modern Frameworks Wisely</h3>
+
+<p>Choose frameworks based on project needs:</p>
+
+<ul>
+  <li><strong>React</strong> - Component-based UI with a large ecosystem</li>
+  <li><strong>Vue</strong> - Progressive framework with gentle learning curve</li>
+  <li><strong>Svelte</strong> - Compile-time optimizations for smaller bundles</li>
+  <li><strong>Angular</strong> - Full-featured framework for large applications</li>
+</ul>
+
+<h2 id="performance-considerations">Performance Considerations</h2>
+
+<p>Modern JavaScript development must consider performance:</p>
+
+<h3 id="code-splitting">Code Splitting</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Dynamic imports for code splitting</span>
+<span class="kd">const</span> <span class="nx">LazyComponent</span> <span class="o">=</span> <span class="nx">lazy</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">./LazyComponent</span><span class="dl">'</span><span class="p">));</span>
+
+<span class="c1">// Route-based splitting</span>
+<span class="kd">const</span> <span class="nx">routes</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="na">path</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/dashboard</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">component</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">import</span><span class="p">(</span><span class="dl">'</span><span class="s1">./Dashboard</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<h3 id="bundle-analysis">Bundle Analysis</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Analyze bundle size</span>
+npm run build <span class="nt">--</span> <span class="nt">--analyze</span>
+
+<span class="c"># Check for duplicate dependencies</span>
+npx webpack-bundle-analyzer dist/static/js/<span class="k">*</span>.js
+</code></pre></div></div>
+
+<h2 id="the-future-of-javascript-development">The Future of JavaScript Development</h2>
+
+<p>Looking ahead, several trends are shaping the future:</p>
+
+<ul>
+  <li><strong>Edge computing</strong> - Running JavaScript closer to users</li>
+  <li><strong>WebAssembly integration</strong> - High-performance modules in web apps</li>
+  <li><strong>Micro-frontends</strong> - Composable frontend architectures</li>
+  <li><strong>Server-side rendering</strong> - Better SEO and initial load times</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Modern JavaScript development is about choosing the right tools for your project and team. While the ecosystem can feel overwhelming, focusing on fundamentals like code quality, testing, and performance will serve you well regardless of which specific tools you choose.</p>
+
+<p>The key is to start simple and add complexity only when needed. A well-configured development environment with good tooling can dramatically improve productivity and code quality.</p>
+
+<p>What tools and practices have you found most valuable in your JavaScript development workflow? I’d love to hear about your experiences!</p>
+
+<hr />
+
+<p><em>Next week, I’ll dive deeper into setting up a modern React development environment with TypeScript and testing.</em></p>
+
+  </div>
+
+  
+    <section class="related-posts">
+      <h3>Related posts</h3>
+      <div class="posts-grid">
+        
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+      </div>
+    </section>
+  
+
+
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4001%2Fjavascript%2Fdevelopment%2F2024%2F01%2F22%2Fmodern-javascript-development%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=Modern+JavaScript+Development%3A+Tools+and+Best+Practices+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4001%2Fjavascript%2Fdevelopment%2F2024%2F01%2F22%2Fmodern-javascript-development%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4001/javascript/development/2024/01/22/modern-javascript-development/">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div><div class="post-navigation"><div class="nav-previous">
+          <a href="/general/introduction/2024/01/15/welcome-to-my-blog/" class="btn btn-secondary">
+            ← Welcome to My Blog
+          </a>
+        </div><div class="nav-next">
+          <a href="/architecture/scalability/2024/02/01/building-scalable-web-applications/" class="btn btn-secondary">
+            Building Scalable Web Appli... →
+          </a>
+        </div></div>
+  </footer>
+
+  <a class="u-url" href="/javascript/development/2024/01/22/modern-javascript-development/" hidden></a>
+</article>
+
+  <script src="/assets/js/post.js" defer></script>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
+                Real‑Time and Optimistic UI...
+              </a>
+            </li><li>
+              <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
+                Authentication for Rails + ...
+              </a>
+            </li><li>
+              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
+                Type‑Safe React with Rails ...
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

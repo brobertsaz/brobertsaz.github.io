@@ -1,0 +1,769 @@
+[
+
+  {
+    "title": "Real‑Time and Optimistic UI with Apollo and Rails (ActionCable & Subscriptions)",
+    "url": "/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/",
+    "date": "2025-02-01T10:00:00-06:00",
+    "tags": ["apollo","optimistic-ui","subscriptions","actioncable","anycable","rails"],
+    "excerpt": "Make your app feel instant. Implement optimistic updates, live queries, and GraphQL subscriptions with Apollo Client and Rails (ActionCable or AnyCable).",
+    "content": "Fast UIs aren’t just about server speed—they’re about perceived speed. With Apollo’s optimistic updates and Rails subscriptions over ActionCable, you can deliver instant feedback and live data.What’s worked best for me  I prefer optimistic UI for tactile actions (create/toggle/like) and only add subscriptions when users need true live data (chat, dashboards).  In my projects, AnyCable replaces ActionCable once WS concurrency climbs; it’s a painless swap with graphql-ruby.  Here’s where this bites you: orphaned optimistic items if a mutation fails. I keep IDs stable and roll back in onError.  I also guard against duplicate feed entries by deduping in cache merge functions and keeping cache size in check with periodic GC.Optimistic Updates// optimistic creationuseMutation(CREATE_POST, {  optimisticResponse: ({ input }) =&gt; ({    createPost: {      __typename: 'CreatePostPayload',      post: { __typename: 'Post', id: 'temp-id', title: input.title, body: input.body }    }  }),  update(cache, { data }) {    const newPost = data?.createPost?.post;    cache.modify({      fields: {        posts(existing = { edges: [] }) {          return { ...existing, edges: [{ __typename: 'PostEdge', node: newPost }, ...existing.edges] };        }      }    });  }});Tips:  Prefer optimistic responses for tactile actions (create, toggle, like)  Roll back on error in the onError callbackGraphQL Subscriptions with Railsgraphql-ruby supports ActionCable subscriptions out of the box.# app/graphql/types/subscription_type.rbclass Types::SubscriptionType &lt; Types::BaseObject  field :post_created, Types::PostType, null: falseend# anywhere in app after createMySchema.subscriptions.trigger(:post_created, {}, @post)Client side with Apollo:import { split, HttpLink } from '@apollo/client';import { GraphQLWsLink } from '@apollo/client/link/subscriptions';import { createClient } from 'graphql-ws';import { getMainDefinition } from '@apollo/client/utilities';const httpLink = new HttpLink({ uri: '/graphql', credentials: 'include' });const wsLink = new GraphQLWsLink(createClient({ url: 'wss://example.com/cable' }));const splitLink = split(  ({ query }) =&gt; {    const def = getMainDefinition(query);    return def.kind === 'OperationDefinition' &amp;&amp; def.operation === 'subscription';  },  wsLink,  httpLink);// subscription usageconst POST_CREATED = gql`  subscription { postCreated { id title body } }`;useSubscription(POST_CREATED, {  onData: ({ client, data }) =&gt; {    const post = data.data?.postCreated;    client.cache.modify({      fields: {        posts(existing = { edges: [] }) {          return { ...existing, edges: [{ __typename: 'PostEdge', node: post }, ...existing.edges] };        }      }    });  }});AnyCable for ScaleFor high concurrency, swap ActionCable for AnyCable:  Offloads WS handling to Go (AnyCable‑Go)  Keeps your Ruby app focused on business logic  Drop‑in compatible with graphql-ruby subscriptionsLive Queries (Polling)When subscriptions are overkill, use lightweight pollInterval or manual refetch.useQuery(POSTS, { pollInterval: 10_000 });Reliability Checklist  Reconnect logic for websockets (exponential backoff)  Server heartbeats and ping/pong timeouts  Idempotent optimistic updates (stable IDs, dedupe by ID)  Cache GC to avoid unbounded growthWith the right mix of optimistic UI and realtime, your app feels instantaneous—even when the network isn’t."
+  },
+
+  {
+    "title": "Authentication for Rails + Apollo: Secure Sessions vs JWT (and How to Implement Both)",
+    "url": "/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/",
+    "date": "2025-01-24T10:00:00-06:00",
+    "tags": ["authentication","authorization","jwt","sessions","apollo","react","csrf"],
+    "excerpt": "A pragmatic guide to user auth in a Rails API consumed by a React/Apollo/TypeScript app: secure cookies + CSRF vs JWT tokens, trade‑offs, and reference snippets.",
+    "content": "There’s no one‑size‑fits‑all auth. Here’s how to choose between secure cookie‑based sessions and JWTs for a Rails API with a React/Apollo front‑end—and how to implement each safely.My defaults in the wild  I prefer secure cookie sessions for browser apps on the same domain because revocation and rotation are simpler and you get HttpOnly + SameSite defenses for free.  In my projects, Apollo is set to credentials: 'include' and mutations carry the CSRF token. This is boring—and boring is secure.  Here’s where this bites you: CSRF tokens missing on first request after deploy (asset pipeline/layout changes). I add a tiny healthcheck that asserts the token is present.  I reach for JWTs when I truly need cross‑domain or native clients. Budget time for refresh‑token rotation, blacklist storage, clock‑skew, and CORS preflights.Option A: Cookie Sessions (Recommended by Default)Pros: Mature, revocable, leverages browser security features (SameSite/HttpOnly).Rails# config/initializers/session_store.rbRails.application.config.session_store :cookie_store,  key: '_app_session',  same_site: :lax,  secure: Rails.env.production?,  httponly: trueProtect against CSRF:# app/controllers/application_controller.rbclass ApplicationController &lt; ActionController::Base  protect_from_forgery with: :exceptionendExpose CSRF token for SPA:&lt;!-- app/views/layouts/application.html.erb --&gt;&lt;meta name=\"csrf-token\" content=\"&lt;%= form_authenticity_token %&gt;\"&gt;Apollo Client// apollo/link.tsimport { HttpLink } from '@apollo/client';export const httpLink = new HttpLink({ uri: '/graphql', credentials: 'include' });Include CSRF on mutations via header:import { setContext } from '@apollo/client/link/context';const csrfToken = () =&gt; document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content') || '';export const csrfLink = setContext((_, { headers }) =&gt; ({  headers: { ...headers, 'X-CSRF-Token': csrfToken() }}));Chain links: from([errorLink, csrfLink, httpLink]).Option B: JWTs (Good for native clients / multiple domains)Pros: First‑class across domains; works well with mobile; no CSRF. Cons: Revocation/rotation complexity.Rails (JWT)# Gemfilegem 'jwt'# app/services/jwt_issuer.rbclass JwtIssuer  SECRET = Rails.application.credentials.jwt_secret  def self.issue(user_id)    exp = 30.minutes.from_now.to_i    JWT.encode({ sub: user_id, exp: exp }, SECRET, 'HS256')  endend# app/middlewares/jwt_auth.rbclass JwtAuth  def initialize(app); @app = app; end  def call(env)    token = env['HTTP_AUTHORIZATION']&amp;.split(' ')&amp;.last    return unauthorized unless token    payload, = JWT.decode(token, Rails.application.credentials.jwt_secret, true, { algorithm: 'HS256' })    env['current_user_id'] = payload['sub']    @app.call(env)  rescue JWT::DecodeError    unauthorized  end  def unauthorized; [401, { 'Content-Type' =&gt; 'application/json' }, [{ error: 'unauthorized' }.to_json]]; endendWire the middleware before GraphQL.Apollo Client (JWT)import { setContext } from '@apollo/client/link/context';const authLink = setContext((_, { headers }) =&gt; {  const token = localStorage.getItem('accessToken');  return { headers: { ...headers, Authorization: token ? `Bearer ${token}` : '' } };});Refresh Tokens (JWT)  Use short‑lived access tokens (15–30m) + long‑lived refresh tokens (httpOnly cookie)  Rotate refresh tokens on each use; blacklist previous  Re‑issue access token via a refreshToken mutationSession Hardening Checklist  Enforce HTTPS everywhere  SameSite=Lax or Strict for cookies  HttpOnly cookies (no JS access)  CSRF tokens on state‑changing requests (sessions)  Rate‑limit login and refresh endpoints (Rack::Attack)  Brute‑force and credential stuffing protection  Device‑bound signals where possible (IP, UA hashing)Pick sessions by default for web apps on the same domain. Reach for JWTs when you truly need cross‑domain or native client support—and budget time for rotation and revocation."
+  },
+
+  {
+    "title": "Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises",
+    "url": "/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/",
+    "date": "2025-01-17T10:00:00-06:00",
+    "tags": ["typescript","react","graphql","codegen","ruby-on-rails"],
+    "excerpt": "How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schema to get end‑to‑end type safety, generated hooks, and faster developer feedback.",
+    "content": "Type safety is only as strong as your weakest boundary. With GraphQL Code Generator, we can turn our Rails schema into first‑class TypeScript types and ergonomic React hooks.Why I lean hard on codegen  I prefer fragments‑first documents because they make co‑location natural and keep generated types composable.  In my projects, I run codegen:watch in dev and commit the generated output. CI blocks merges when schema drift isn’t reflected in types.  Here’s where this bites you: GraphQL nullability. If the server makes a field nullable, your optional‑chaining spiderweb grows. I lock nullability in the schema where possible, and narrow aggressively in React.  I prefer mapping custom scalars (UUID, ISO8601DateTime) to branded string types to catch mixups at compile time without overhead at runtime.Install Codegennpm i -D @graphql-codegen/cli @graphql-codegen/typescript \\  @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apolloAdd scripts:{  \"scripts\": {    \"codegen\": \"graphql-codegen --config codegen.yml\",    \"codegen:watch\": \"graphql-codegen --config codegen.yml --watch\"  }}Create codegen.ymlschema: http://localhost:3000/graphqldocuments: \"src/**/*.{ts,tsx,graphql}\"generates:  src/graphql/generated.tsx:    plugins:      - typescript      - typescript-operations      - typescript-react-apollo    config:      withHooks: true      scalars:        ISO8601DateTime: string        JSON: Record&lt;string, unknown&gt;        UUID: stringTip: In CI, point schema: to a dumped SDL file committed by Rails:# Railsbundle exec rake graphql:schema:dump# use schema: schema.graphql in codegen.ymlAuthor Operations# src/graphql/queries/users.graphqlquery Users($first: Int, $after: String) {  users(first: $first, after: $after) {    edges { node { id email name } }    pageInfo { hasNextPage endCursor }  }}Run:npm run codegenThis emits fully typed hooks:import { useUsersQuery } from './graphql/generated';export function UsersList() {  const { data, loading, fetchMore } = useUsersQuery({ variables: { first: 20 } });  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;  return (    &lt;ul&gt;      {data?.users.edges?.map(e =&gt; (        &lt;li key={e?.node?.id}&gt;{e?.node?.email}&lt;/li&gt;      ))}    &lt;/ul&gt;  );}Handling NullabilityGraphQL nullability propagates to your types. Prefer null: false on Rails fields when appropriate, and in React, narrow:const edges = data?.users.edges?.filter((e): e is NonNullable&lt;typeof e&gt; =&gt; Boolean(e));Custom ScalarsMap Rails scalars to TS types in config.scalars. For complex shapes, create brand types:type ISO8601 = string &amp; { readonly __brand: 'ISO8601' };Fragments for ReuseEncapsulate shared shapes:fragment UserCard on User { id name email }query Users { users(first: 20) { edges { node { ...UserCard } } } }Runtime Safety Still MattersTypes don’t replace runtime guards. Validate user input server‑side, handle network errors, and design your cache policies to avoid stale data.Developer Experience Checklist  codegen:watch running in dev  ESLint + @graphql-eslint/eslint-plugin for documents  CI job verifies schema changes regenerate typesWith codegen in place, your React codebase gets the confidence boost of compile‑time breakage instead of Friday‑night runtime surprises."
+  },
+
+  {
+    "title": "Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript",
+    "url": "/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/",
+    "date": "2025-01-10T10:00:00-06:00",
+    "tags": ["ruby-on-rails","graphql","apollo","typescript","fullstack","performance"],
+    "excerpt": "A practical, end‑to‑end guide to shipping a production‑ready GraphQL stack: Rails (graphql‑ruby) + Apollo Client + TypeScript with caching, pagination, error handling, and deployment tips.",
+    "content": "Rails + GraphQL + Apollo + TypeScript is a powerful stack for modern product teams. This guide walks through production‑grade setup, from schema design in Rails to a robust Apollo Client configuration in a React/TypeScript app.From my projects (opinionated)  I prefer the built‑in GraphQL::Dataloader over graphql-batch because it’s integrated, easier to reason about, and reduces gem surface area.  In my projects, I default to Relay‑style cursor pagination for anything user‑visible; offset pagination only for admin/reporting where exactness beats UX.  Here’s where this bites you: nested N+1s hide in fields you don’t suspect (think counts, owner lookups). Add dataloader early and write a regression for any N+1 you fix.  I prefer explicit type policies in Apollo (keyArgs, merge) because silent cache misses lead to “ghost” UI bugs later.  In my Rails apps (Rails 7 + Ruby 3.x), I keep GraphQL controller fast: authenticate early, memoize current_user, and short‑circuit before hitting resolvers when possible.Why GraphQL with Rails?  Strong conventions and velocity from Rails  GraphQL’s client‑driven queries reduce over/under‑fetching  First‑class TypeScript types for safer React  Natural fit for mobile and micro‑frontend consumersRails Setup (graphql‑ruby)Add gems and initialize GraphQL:# Gemfilegem 'graphql'# Optional but recommendedgem 'graphiql-rails', group: :developmentbundle installrails generate graphql:installThis creates:  app/graphql/types/* type system  app/graphql/mutations/*  app/graphql/queries/*  app/controllers/graphql_controller.rbExample Type and Query# app/graphql/types/user_type.rbmodule Types  class UserType &lt; Types::BaseObject    field :id, ID, null: false    field :email, String, null: false    field :name, String, null: true    field :created_at, GraphQL::Types::ISO8601DateTime, null: false  endend# app/graphql/queries/users_query.rbmodule Queries  class UsersQuery &lt; Queries::BaseQuery    type [Types::UserType], null: false    def resolve      User.order(created_at: :desc).limit(50)    end  endend# app/graphql/types/query_type.rbmodule Types  class QueryType &lt; Types::BaseObject    field :users, [Types::UserType], null: false, resolver: Queries::UsersQuery  endendAuthorization &amp; N+1 Avoidance  Use pundit/cancancan in resolvers or at model layer; raise GraphQL::ExecutionError for forbidden access  Use graphql-batch or GraphQL::Dataloader to batch queries and avoid N+1# app/graphql/queries/base_query.rbmodule Queries  class BaseQuery &lt; GraphQL::Schema::Resolver    def pundit_authorize!(record, query)      Pundit.authorize!(context[:current_user], record, query)    end  endend# app/graphql/types/user_type.rb (with dataloader)field :posts_count, Integer, null: falsedef posts_count  dataloader.with(Sources::Association, :posts).load(object).sizeendError Handling StrategyReturn safe, actionable messages and log details server‑side:rescue_from ActiveRecord::RecordNotFound do |err|  raise GraphQL::ExecutionError, \"Not found\"endrescue_from Pundit::NotAuthorizedError do  raise GraphQL::ExecutionError, \"You are not authorized to perform this action\"endPagination (Relay‑style)Install connections for cursor pagination:# app/graphql/types/query_type.rbfield :users, Types::UserType.connection_type, null: false# Example client queryquery Users($first: Int, $after: String) {  users(first: $first, after: $after) {    edges { node { id email name } }    pageInfo { hasNextPage endCursor }  }}React + Apollo + TypeScriptInstall client deps:npm i @apollo/client graphqlInitialize Apollo Client with sane defaults:// apollo/client.tsimport { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';import { onError } from '@apollo/client/link/error';const httpLink = new HttpLink({ uri: '/graphql', credentials: 'include' });const errorLink = onError(({ graphQLErrors, networkError }) =&gt; {  if (graphQLErrors) graphQLErrors.forEach(e =&gt; console.warn('[GraphQL]', e.message));  if (networkError) console.error('[Network]', networkError);});export const client = new ApolloClient({  link: from([errorLink, httpLink]),  cache: new InMemoryCache({    typePolicies: {      Query: {        fields: {          users: {            keyArgs: false,            merge(existing = { edges: [] }, incoming) {              return { ...incoming, edges: [...(existing.edges || []), ...incoming.edges] };            }          }        }      }    }  })});Use in app:// main.tsximport { ApolloProvider } from '@apollo/client';import { client } from './apollo/client';export function App() {  return (    &lt;ApolloProvider client={client}&gt;      {/* routes */}    &lt;/ApolloProvider&gt;  );}Type Safety with Codegen (Preview)Use GraphQL Code Generator to emit TS types and hooks (see dedicated post):npm i -D @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apolloCaching Tips  Normalize by id fields; avoid arrays of primitives where possible  Use field policies to merge paginated results  Invalidate cache via cache.modify after mutationsDeployment Notes  Serve POST /graphql behind Rack::Attack and rate limits  Enable response compression (Rack::Deflater)  Use ETags on persisted queries or CDN caching if applicable  Add request timeouts and circuit breakers for external callsFinal ThoughtsRails + GraphQL + Apollo + TypeScript is a strong default for product teams who value velocity and safety. Start simple, add complexity (subscriptions, persisted queries) only when metrics justify it."
+  },
+
+  {
+    "title": "Building Scalable Web Applications: Architecture Patterns and Strategies",
+    "url": "/architecture/scalability/2024/02/01/building-scalable-web-applications/",
+    "date": "2024-02-01T10:15:00-06:00",
+    "tags": ["scalability","architecture","web-development","performance"],
+    "excerpt": "Exploring proven architectural patterns and strategies for building web applications that can handle growth in users, data, and complexity while maintaining performance and reliability.",
+    "content": "Building Scalable Web Applications: Architecture Patterns and StrategiesAs applications grow from simple prototypes to production systems serving thousands or millions of users, scalability becomes a critical concern. Building scalable web applications isn’t just about handling more traffic—it’s about creating systems that can evolve, maintain performance, and remain reliable as they grow.Understanding ScalabilityScalability comes in two main forms:Vertical Scaling (Scale Up)Adding more power to existing machines:  More CPU cores  Additional RAM  Faster storage (SSD, NVMe)  Better network interfacesHorizontal Scaling (Scale Out)Adding more machines to the pool of resources:  Load balancing across multiple servers  Database sharding  Microservices architecture  Content delivery networks (CDNs)Architectural Patterns for Scalability1. Microservices ArchitectureBreaking applications into smaller, independent services:// User Serviceclass UserService {  async createUser(userData) {    // Handle user creation    const user = await this.userRepository.create(userData);        // Publish event for other services    await this.eventBus.publish('user.created', user);        return user;  }}// Order Serviceclass OrderService {  async createOrder(orderData) {    // Validate user exists (via API call)    const user = await this.userServiceClient.getUser(orderData.userId);        if (!user) {      throw new Error('User not found');    }        return await this.orderRepository.create(orderData);  }}Benefits:  Independent deployment and scaling  Technology diversity  Fault isolation  Team autonomyChallenges:  Network complexity  Data consistency  Service discovery  Monitoring complexity2. Event-Driven ArchitectureUsing events to decouple services and enable asynchronous processing:// Event Publisherclass OrderProcessor {  async processOrder(order) {    try {      // Process the order      const processedOrder = await this.processPayment(order);            // Publish success event      await this.eventBus.publish('order.processed', {        orderId: order.id,        status: 'completed',        timestamp: new Date()      });          } catch (error) {      // Publish failure event      await this.eventBus.publish('order.failed', {        orderId: order.id,        error: error.message,        timestamp: new Date()      });    }  }}// Event Subscribersclass InventoryService {  async handleOrderProcessed(event) {    await this.updateInventory(event.orderId);  }}class NotificationService {  async handleOrderProcessed(event) {    await this.sendConfirmationEmail(event.orderId);  }}3. CQRS (Command Query Responsibility Segregation)Separating read and write operations:// Command Side (Writes)class CreateUserCommand {  constructor(userData) {    this.userData = userData;  }}class UserCommandHandler {  async handle(command) {    const user = new User(command.userData);    await this.userWriteRepository.save(user);        // Update read model asynchronously    await this.eventBus.publish('user.created', user);  }}// Query Side (Reads)class UserQueryService {  async getUserById(id) {    return await this.userReadRepository.findById(id);  }    async searchUsers(criteria) {    return await this.userSearchIndex.search(criteria);  }}Database Scaling Strategies1. Read ReplicasDistributing read operations across multiple database instances:class DatabaseManager {  constructor() {    this.writeDB = new Database(WRITE_DB_CONFIG);    this.readDBs = [      new Database(READ_DB_1_CONFIG),      new Database(READ_DB_2_CONFIG),      new Database(READ_DB_3_CONFIG)    ];  }    async write(query, params) {    return await this.writeDB.execute(query, params);  }    async read(query, params) {    // Load balance across read replicas    const db = this.readDBs[Math.floor(Math.random() * this.readDBs.length)];    return await db.execute(query, params);  }}2. Database ShardingPartitioning data across multiple databases:class ShardedUserRepository {  constructor() {    this.shards = {      shard1: new Database(SHARD_1_CONFIG), // Users A-H      shard2: new Database(SHARD_2_CONFIG), // Users I-P      shard3: new Database(SHARD_3_CONFIG)  // Users Q-Z    };  }    getShardForUser(userId) {    const firstLetter = userId.charAt(0).toLowerCase();    if (firstLetter &lt;= 'h') return this.shards.shard1;    if (firstLetter &lt;= 'p') return this.shards.shard2;    return this.shards.shard3;  }    async findUser(userId) {    const shard = this.getShardForUser(userId);    return await shard.findById(userId);  }}Caching Strategies1. Multi-Level Cachingclass CacheManager {  constructor() {    this.l1Cache = new MemoryCache(); // In-memory    this.l2Cache = new RedisCache();  // Distributed    this.database = new Database();  }    async get(key) {    // Try L1 cache first    let value = await this.l1Cache.get(key);    if (value) return value;        // Try L2 cache    value = await this.l2Cache.get(key);    if (value) {      // Populate L1 cache      await this.l1Cache.set(key, value, 300); // 5 min TTL      return value;    }        // Fetch from database    value = await this.database.get(key);    if (value) {      // Populate both caches      await this.l2Cache.set(key, value, 3600); // 1 hour TTL      await this.l1Cache.set(key, value, 300);  // 5 min TTL    }        return value;  }}2. Cache-Aside Patternclass UserService {  async getUser(userId) {    const cacheKey = `user:${userId}`;        // Try cache first    let user = await this.cache.get(cacheKey);    if (user) {      return JSON.parse(user);    }        // Fetch from database    user = await this.userRepository.findById(userId);    if (user) {      // Store in cache      await this.cache.set(cacheKey, JSON.stringify(user), 3600);    }        return user;  }    async updateUser(userId, userData) {    // Update database    const user = await this.userRepository.update(userId, userData);        // Invalidate cache    await this.cache.delete(`user:${userId}`);        return user;  }}Performance Optimization Techniques1. Connection Poolingclass DatabasePool {  constructor(config) {    this.pool = new Pool({      host: config.host,      port: config.port,      database: config.database,      user: config.user,      password: config.password,      max: 20,        // Maximum connections      min: 5,         // Minimum connections      idleTimeoutMillis: 30000,      connectionTimeoutMillis: 2000    });  }    async query(sql, params) {    const client = await this.pool.connect();    try {      return await client.query(sql, params);    } finally {      client.release();    }  }}2. Asynchronous Processingclass TaskQueue {  constructor() {    this.queue = new Bull('task processing', {      redis: { host: 'localhost', port: 6379 }    });        this.setupProcessors();  }    setupProcessors() {    // Email processing    this.queue.process('send-email', 5, async (job) =&gt; {      const { to, subject, body } = job.data;      await this.emailService.send(to, subject, body);    });        // Image processing    this.queue.process('process-image', 2, async (job) =&gt; {      const { imageUrl, transformations } = job.data;      await this.imageService.process(imageUrl, transformations);    });  }    async addEmailTask(emailData) {    await this.queue.add('send-email', emailData, {      attempts: 3,      backoff: 'exponential',      delay: 1000    });  }}Monitoring and ObservabilityApplication Metricsclass MetricsCollector {  constructor() {    this.prometheus = require('prom-client');    this.httpRequestDuration = new this.prometheus.Histogram({      name: 'http_request_duration_seconds',      help: 'Duration of HTTP requests in seconds',      labelNames: ['method', 'route', 'status']    });  }    recordHttpRequest(method, route, status, duration) {    this.httpRequestDuration      .labels(method, route, status)      .observe(duration);  }}// Middleware for Expressfunction metricsMiddleware(req, res, next) {  const start = Date.now();    res.on('finish', () =&gt; {    const duration = (Date.now() - start) / 1000;    metricsCollector.recordHttpRequest(      req.method,      req.route?.path || req.path,      res.statusCode,      duration    );  });    next();}ConclusionBuilding scalable web applications requires careful consideration of architecture, data management, caching, and monitoring. The key principles to remember:  Design for failure - Assume components will fail and build resilience  Measure everything - You can’t optimize what you don’t measure  Scale incrementally - Don’t over-engineer for problems you don’t have yet  Choose the right tool - Different problems require different solutions  Plan for growth - Consider how your architecture will evolveScalability is not a destination but a journey. Start with simple, well-designed systems and evolve them as your needs grow. The patterns and strategies discussed here provide a foundation for building applications that can handle growth while maintaining performance and reliability.What scalability challenges have you faced in your projects? I’d love to hear about your experiences and solutions!In the next post, I’ll explore specific implementation details for setting up a microservices architecture with Docker and Kubernetes."
+  },
+
+  {
+    "title": "Modern JavaScript Development: Tools and Best Practices",
+    "url": "/javascript/development/2024/01/22/modern-javascript-development/",
+    "date": "2024-01-22T15:30:00-06:00",
+    "tags": ["javascript","tools","best-practices","modern-development"],
+    "excerpt": "Exploring the current landscape of JavaScript development tools, from build systems to testing frameworks, and the best practices that make development more efficient and maintainable.",
+    "content": "Modern JavaScript Development: Tools and Best PracticesThe JavaScript ecosystem has evolved dramatically over the past few years. What once was a simple scripting language for adding interactivity to web pages has become the foundation for complex applications, server-side development, and even desktop applications.The Current LandscapeToday’s JavaScript development environment is rich with tools that help us write better code, faster. Let’s explore some of the key areas:Build Tools and BundlersThe days of manually concatenating JavaScript files are long gone. Modern build tools provide:  Module bundling - Combining multiple files into optimized bundles  Code splitting - Loading code on demand for better performance  Tree shaking - Eliminating unused code from final bundles  Asset optimization - Compressing images, CSS, and other resourcesPopular choices include:  Vite - Lightning-fast development server with hot module replacement  Webpack - Mature and highly configurable bundler  Rollup - Focused on ES modules and library bundling  Parcel - Zero-configuration bundlerPackage ManagementManaging dependencies is crucial for any non-trivial project:# npm - The original package managernpm install lodash# Yarn - Faster and more reliableyarn add lodash# pnpm - Efficient disk space usagepnpm add lodashCode Quality ToolsMaintaining code quality across a team requires automation:ESLint// .eslintrc.jsmodule.exports = {  extends: ['eslint:recommended', '@typescript-eslint/recommended'],  rules: {    'no-console': 'warn',    'prefer-const': 'error'  }};Prettier{  \"semi\": true,  \"trailingComma\": \"es5\",  \"singleQuote\": true,  \"printWidth\": 80}Best Practices for Modern Development1. Use TypeScriptTypeScript adds static typing to JavaScript, catching errors at compile time:interface User {  id: number;  name: string;  email: string;}function createUser(userData: Partial&lt;User&gt;): User {  return {    id: Date.now(),    name: userData.name || 'Anonymous',    email: userData.email || 'no-email@example.com'  };}2. Embrace Modern SyntaxTake advantage of ES6+ features:// Destructuringconst { name, email } = user;// Arrow functionsconst users = data.map(item =&gt; ({ ...item, active: true }));// Template literalsconst message = `Welcome, ${user.name}!`;// Optional chainingconst city = user?.address?.city;3. Implement Proper TestingA robust testing strategy includes:// Unit tests with Jestdescribe('User utilities', () =&gt; {  test('should create user with default values', () =&gt; {    const user = createUser({ name: 'John' });    expect(user.name).toBe('John');    expect(user.id).toBeDefined();  });});// Integration teststest('should fetch user data', async () =&gt; {  const userData = await fetchUser(123);  expect(userData).toHaveProperty('name');});4. Use Modern Frameworks WiselyChoose frameworks based on project needs:  React - Component-based UI with a large ecosystem  Vue - Progressive framework with gentle learning curve  Svelte - Compile-time optimizations for smaller bundles  Angular - Full-featured framework for large applicationsPerformance ConsiderationsModern JavaScript development must consider performance:Code Splitting// Dynamic imports for code splittingconst LazyComponent = lazy(() =&gt; import('./LazyComponent'));// Route-based splittingconst routes = [  {    path: '/dashboard',    component: () =&gt; import('./Dashboard')  }];Bundle Analysis# Analyze bundle sizenpm run build -- --analyze# Check for duplicate dependenciesnpx webpack-bundle-analyzer dist/static/js/*.jsThe Future of JavaScript DevelopmentLooking ahead, several trends are shaping the future:  Edge computing - Running JavaScript closer to users  WebAssembly integration - High-performance modules in web apps  Micro-frontends - Composable frontend architectures  Server-side rendering - Better SEO and initial load timesConclusionModern JavaScript development is about choosing the right tools for your project and team. While the ecosystem can feel overwhelming, focusing on fundamentals like code quality, testing, and performance will serve you well regardless of which specific tools you choose.The key is to start simple and add complexity only when needed. A well-configured development environment with good tooling can dramatically improve productivity and code quality.What tools and practices have you found most valuable in your JavaScript development workflow? I’d love to hear about your experiences!Next week, I’ll dive deeper into setting up a modern React development environment with TypeScript and testing."
+  },
+
+  {
+    "title": "Welcome to My Blog",
+    "url": "/general/introduction/2024/01/15/welcome-to-my-blog/",
+    "date": "2024-01-15T11:00:00-06:00",
+    "tags": ["welcome","blog","introduction"],
+    "excerpt": "Welcome to my new blog! Here's what you can expect to find and why I decided to start sharing my thoughts and experiences in the world of technology.",
+    "content": "Welcome to My BlogHello and welcome to my corner of the internet! I’m excited to finally launch this blog and share my journey, insights, and discoveries in the world of technology and software development.What You’ll Find HereThis blog will be a mix of technical content, personal reflections, and industry insights. Here’s what you can expect:Technical Deep DivesI’ll be sharing detailed explorations of:  Modern web development frameworks and patterns  Cloud architecture and DevOps practices  Programming languages and their ecosystems  Performance optimization techniques  Security best practicesProject ShowcasesI love building things, and I’ll be documenting:  Personal projects and their technical challenges  Open source contributions  Interesting problems and their solutions  Code reviews and architectural decisionsIndustry InsightsThe tech world moves fast, and I’ll share my thoughts on:  Emerging technologies and trends  Developer tools and productivity  Career development and learning  The intersection of technology and societyWhy Start a Blog?After years of consuming content from the developer community, I felt it was time to give back. Writing helps me:  Solidify my understanding - Teaching others forces me to truly understand concepts  Document my learning journey - A record of growth and discovery  Connect with the community - Engage with fellow developers and learners  Share solutions - Help others who might face similar challengesWhat’s Next?I have several posts already in the pipeline covering topics like:  Setting up a modern development environment  Exploring the latest JavaScript frameworks  Building scalable web applications  DevOps automation strategiesLet’s ConnectI’d love to hear from you! Whether you have questions, suggestions, or just want to chat about technology, feel free to reach out through the contact page or connect with me on social media.Thank you for stopping by, and I hope you find the content here valuable. Here’s to the journey ahead!Happy coding!Bob Roberts"
+  },
+
+  {
+    "title": "Using Braintree hosted fields with Ruby on Rails",
+    "url": "/2017/rails-with-braintree-hosted-fields/",
+    "date": "2017-09-26T19:00:00-05:00",
+    "tags": ["rails","ruby","braintree","payments","tutorial"],
+    "excerpt": "  Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.",
+    "content": "  Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.While it is possible to create your own credit card process in a Ruby on Rails app, due to the PCI compliance rules, it is just safer to use something like Stripe or Braintree.I have used Stripe before and it is very easy to set up and use. Stripe now has elements which can be used to create a custom credit card form that can be styled to look exactly like your app.Previous to this, the dropin solutions were good but just did not look like the rest of the application.After reading up a bit, I decided that I wanted to try out Braintree hosted fields.Below is the finished form that I created. I wanted to be able to get more user information at the same time as charging the credit card.TL/DRFor the app that I made for this tutorial, it is at https://github.com/brobertsaz/rails_braintree_hosted_fieldsBraintree SetupFirst thing that you need to do is head on over to Braintree and sign up for sandbox account.  Don’t worry, it’s free.After you sign up you will need to copy this info:Braintree::Configuration.environment = :sandboxBraintree::Configuration.merchant_id = 'qwertyqwerty'Braintree::Configuration.public_key = 'qwertyqwerty'Braintree::Configuration.private_key = 'qwertyqwertyqwerty'Next, create a braintree.rb file in config/initializers/ directory and add these environment variables:Braintree::Configuration.environment = :sandboxBraintree::Configuration.logger = Logger.new('log/braintree.log')Braintree::Configuration.merchant_id = ENV['BRAINTREE_MERCHANT_ID']Braintree::Configuration.public_key = ENV['BRAINTREE_PUBLIC_KEY']Braintree::Configuration.private_key = ENV['BRAINTREE_PRIVATE_KEY']In order to use these environment variables, we will use the Figaro gem. Add to Gemfile:gem 'figaro'You will need to run bundle to install figaro and then bundle exec figaro install to install it. This will create a new file config/application.yml. This is where you will set your keys for Braintree.# Braintree configuration keysBRAINTREE_MERCHANT_ID: ''BRAINTREE_PUBLIC_KEY: ''BRAINTREE_PRIVATE_KEY: ''Make sure that you add config/application.yml to your .gitignore file as this holds all of your Braintree keys.Lastly, add the Braintree Ruby gem to your Gemfile,gem 'braintree', '~&gt; 2.77'and make sure that you run bundle to install it.Note: If you are in newer version of Rails, jQuery is no longer included automatically so you will need to addgem 'jquery-rails'to your Gemfile, and run bundle to install it.Customers SetupFor the checkout form that I wanted to use, I needed a Customer that would be saved to the database.rails g model CustomersNow open up the db/migrate/new-migration-file and we will add our fieldsclass CreateCustomers &lt; ActiveRecord::Migration[5.1]  def change    create_table :customers do |t|      t.string :first_name      t.string :last_name      t.string :email      t.string :phone      t.string :address_1      t.string :address_2      t.string :city      t.string :state      t.string :zipcode      t.integer :braintree_customer_id      t.datetime :last_visit      t.timestamps null: false    end  endendWe will use the braintree_customer_id so that in the future if we make a charge for that same customer, we can access the save data.As we created the model for Customer, we can create a new customer without having to create a Customer controller. This will be done in our Checkouts controller. Let’s create that now. Create new file at app/controllers/checkouts_controller.rb and add the following:class CheckoutsController &lt; ApplicationController  def new    @customer = Customer.new    @client_token = Braintree::ClientToken.generate  end  private  def customer_params    params.require(:customer).permit(:first_name, :last_name, :address_1, :address_2, :city, :state, :zipcode, :email, :phone)  endendIn the new method, we are creating a new customer that we will use in the checkout form. We also need to create a @client_token using the built in Braintree function Braintree::ClientToken.generate and we added the strong parameters which we will use later.Now, let’s make sure that we have our routes setup correctly.Rails.application.routes.draw do  resources :customers  root 'checkouts#new'  resources :checkouts,  only: [:new, :create, :show]endWe are going to route our app to checkouts#new which will take us to the views/checkouts/new.html.erb so lets create that file now.There are two parts to the new view; there is the HTML markup for the form and the Javascript section that is used by Braintree to create a iframe for the credit card information.For the sake of the demo, I just used Bootstrap CDN link in the view itself. I also used the simple_form ruby gem. Add the gem 'simple_form' to Gemfile and run bundle. Then you will need to run rails generate simple_form:install --bootstrap to install simple_form.Form setupHTML — add the following to the views/checkouts/new.html.erb:&lt;link href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" rel=\"stylesheet\"&gt;...&lt;div class=\"panel panel-default bootstrap-basic\"&gt;  &lt;div class=\"panel-heading\"&gt;    &lt;h3 class=\"panel-title\"&gt;Enter Card Details&lt;/h3&gt;  &lt;/div&gt;  &lt;div class=\"panel-body\"&gt;    &lt;%= simple_form_for @customer, url: {action: 'create'}, method: 'post' do |f| %&gt;      ... inputs ...    &lt;% end %&gt;  &lt;/div&gt;&lt;/div&gt;Javascript — add to the same view:&lt;script src=\"https://js.braintreegateway.com/js/beta/braintree-hosted-fields-beta.16.min.js\"&gt;&lt;/script&gt;&lt;script id=\"braintree-client-token\" type=\"application/json\"&gt;&lt;%= @client_token %&gt;&lt;/script&gt;&lt;script&gt;var clientToken = document.getElementById('braintree-client-token').innerHTML;braintree.setup(clientToken, 'custom', {  id: 'new_customer',  hostedFields: {    styles: {},    number: { selector: '#credit-card-field', placeholder: '4111 1111 1111 1111' },    cvv: { selector: '#security-code-field', placeholder: '123' },    expirationDate: { selector: '#expiration-field', placeholder: 'MM/YYYY' },    postalCode: { selector: '#postal-code-field', placeholder: '12345' }  }});&lt;/script&gt;TransactionWhen we submit the form it will go to the checkouts#create method. When this happens, the Braintree form will create a nonce which is basically a tokenized string that contains the credit card data. This data is encrypted when it is sent to the backend and will be decrypted by Braintree on their side.Let’s start to add the create method in controllers/checkouts_controller.rb:  def create    amount = params[\"amount\"] ||= 200    nonce = params[\"payment_method_nonce\"]    result = Braintree::Transaction.sale(      amount: amount,      payment_method_nonce: nonce,    )  endNow the full create method:  def create    amount = params[\"amount\"] ||= 200    nonce = params[\"payment_method_nonce\"]    result = Braintree::Transaction.sale(      amount: amount,      payment_method_nonce: nonce,      customer: {        first_name: customer_params[:first_name],        last_name: customer_params[:last_name],        email: customer_params[:email],        phone: customer_params[:phone]      },      options: { store_in_vault: true }    )    if result.success? || result.transaction      @customer = Customer.create customer_params      @customer.braintree_customer_id = result.transaction.customer_details.id      @customer.save      redirect_to checkout_path(result.transaction.id)    else      error_messages = result.errors.map { |error| \"Error: #{error.code}: #{error.message}\" }      flash[:error] = error_messages      redirect_to new_checkout_path    end  endThanks — helpful resources:  https://www.sitepoint.com/integrate-braintree-payments-rails/  https://github.com/braintree/braintree_rails_example  https://developers.braintreepayments.com/start/example-integrations  https://developers.braintreepayments.com/guides/hosted-fields/overview/javascript/v3Demo App: https://github.com/brobertsaz/rails_braintree_hosted_fieldsFeedback: If I missed something or made any errors, please let me know so that I can get this updated."
+  },
+
+  {
+    "title": "What Operation Code means to me.",
+    "url": "/2017/what-oc-means-to-me/",
+    "date": "2017-09-24T19:00:00-05:00",
+    "tags": ["workflow","community","veterans"],
+    "excerpt": "  Archived from the original post (2017-09-25). Lightly converted to Markdown.",
+    "content": "  Archived from the original post (2017-09-25). Lightly converted to Markdown.A few months back I was on Twitter looking for a place to volunteer to mentor people learning Ruby on Rails. I had not heard of Operation Code until somebody suggested it to me.I was in the Army for 6 years in the 80’s. My unit went to Desert Storm a couple of months after I go out. I almost went back in a couple of times. It was hard for me to transition back to the civilian life after the Army. You take so much for granted when you are in the service. There is no worry of cutbacks or layoffs. There is no worry about whether your paycheck will be there for payday or not. No worry of health insurance. Just do your job and life is good.I bounced around a bit after the Army, trying to find a good career. That did not come for many years…I started learning programming almost 20 years after getting out. I knew people that we retiring from the Army and I was still trying to get that career that would make me happy.In 2009 there were not a lot of resources for learning programming like there is now. I did not have the time nor the money to go to a school for programming and there were not that many places available at that time. I luckily found a mentor that became a friend that became a business partner.What drew me to Ruby on Rails was the community. That was something that I had missed from the days in the military. The friendships, the camaraderie and the unity.Finding Operation Code was a blessing. I found other vets, active duty and military family members that were all there for one of two things. To learn programming or to help others to learn programming. I had no idea of all of the resources that were available to vets until I joined OC.When I got my first mentee I was so happy.  Then I got my second. They are both super smart people that really do not need a lot of help at all. I think it is more of the fact that they have somebody that they can talk to if need be. What if I am not online? There are 100’s of others that are there to help and answer questions.Total strangers that will jump on a screen share just to help out somebody with questions. There are no charges and no fees. OC is just one great big group of people that are there for one another.What does Operation Code mean to me? Friends, family and a place that feels like home for this vet.If you love your freedom, thank a vet. If you really love your freedom, then help a vet become a programmer."
+  },
+
+  {
+    "title": "Blogging Mondays Premier",
+    "url": "/2017/blogging-mondays/",
+    "date": "2017-09-17T19:00:00-05:00",
+    "tags": ["workflow","writing"],
+    "excerpt": "  Archived from the original post (2017-09-18). Lightly converted to Markdown.",
+    "content": "  Archived from the original post (2017-09-18). Lightly converted to Markdown.Welcome the the very first Operation Code Blogging Mondays event for September 2017.In an effort to help people get motivated about writing blog posts, Blogging Mondays was created.  Each month, there will be a different host and a different topic.To participate:  To participate, write a blog post!  Although recommended, the post does not have to be on topic.  Please set article to go live the day of the event, preferably, at 0000 hours  Blog post should mention Blogging Mondays  There should be a link back to the invitation post  Somehow add your post to a list somewhere so the host can add you to the event summary  Don’t forget to post your article link in #bloggingThis months Topic is “Why I joined Operation Code”I feel that this is a easy topic for us to start off with.  It is also something that we all should (better not) have any issues coming up with something to write.Some possible ideas:  What did you expect from OC?  What do you love about OC?  Why you joined?Remember that this is for fun and you do NOT have to wite about the topic if you do not want to.It will be exciting to read all of the posts after they are done!!Let’s start blogging!"
+  },
+
+  {
+    "title": "Not all recruiters are evil",
+    "url": "/2017/recruiters-are-not-all-evil/",
+    "date": "2017-06-09T19:00:00-05:00",
+    "tags": ["workflow","career"],
+    "excerpt": "  Archived from the original post (2017-06-10). Lightly converted to Markdown.",
+    "content": "  Archived from the original post (2017-06-10). Lightly converted to Markdown.One of the most common topics I see, is about recruiters. Most are complaints about bad ones, and some are compliments of good ones.I know a LOT of great people that are great recruiters. I also know that more people take the time to write a complaint than people do to write a compliment.It must be a difficult job that they have to do day after day. They work for people that are hiring, they work for people looking to get hired, and the work for both. It must be a balancing act for them; doing a good job for the employer AND for the candidate at the same time. It must be like when a couple gets divorced and use the same attorney. Who’s best interest do they have? Hopefully both.LinkedIn has become a prime location for recruiters to find candidates. The good recruiters take the time to look at your profile before contacting you. They send a message apologizing for contacting you and ask if you are in the market. They do not bother you or pester you. The ones that contact you outside of LinkedIn say they are sorry for the interruption and ask if you are interested in a position that they are filling. They use your name in the email and not “Dear first_name.” They do not email you repeatedly. They do their job. They are the ones that we don’t talk about. They are the ones that don’t annoy us. They are not evil. The bad ones on the other hand …The bad ones are the evil ones. They are the ones that give recruiters a bad name. They are the ones that we do talk about. We do not like them. They are annoying, they treat you like crap. They play the numbers game; email everybody on the planet and some will reply. They will email you for things that you are not qualified for. They will ask if you want to relocate for a 6 month gig. They paste job descriptions into emails and ask you to fill in the blanks. They email you several times and do not pay attention to when you are nice enough to reply and say that you are not interested.If you decide to use a recruiter, that is great. If you are actively looking for work, you SHOULD use a recruiter. When you buy or sell your house, you normally use a Realtor. Let the recruiters do the job searching for you. Let them help you find your next job. Why? Because they know the companies that are hiring. They know where there are jobs. They know what kind of salary you can expect to get. They can tell you the pros and cons of companies that they have worked with before. They have a working relationship with the people that are doing the interviewing/hiring.That being said, there are certain things (in my opinion; after all, this is all my opinion) that should not be done by recruiters and there is a specific order in which the interview process should be done. They will and should ‘qualify’ you to see what roles you would be good in. This is a good thing. They do not want to waste time trying to place you into a position for which you do not qualify. Once they know who you are, what you want and what you can do, they have all of the information they need to start the hunt for your next position.Once they find a match, they should set you up with an initial conversation with prospective employer. This MUST be the first thing. Not calling references, or coding challenges or any test of any kind. They must NOT waste your time BEFORE you get to talk to somebody with the possible future employer. That initial call is like a first date. That first date is where you see if you are a match and like each other. You need to see if you WANT to go to work there and they need to see if they WANT you to go to work there. The worst question that I have ever gotten on the initial conversation is “why do you want to work for us?” to which I always reply with “why should I work for you?” You need to talk a bit so that you can decide if it is a place that you want to work for.If the initial conversation with the prospective employer goes well, then it is appropriate for them to ask you to do some SMALL things to prove that you are capable of performing the position for which they are hiring. Calling references at this point is also appropriate. Do your due diligence and check out the employer. Glassdoor has employee reviews of a ton of companies. Just bear in mind that the reviews are like the comments about recruiters; more people take the time to complain than to compliment.Remember that your recruiter wants to help you find a new job. Most agencies that I know of, have a 3 to 6 month retention period (not sure what they call it) where they only get full commission if you get placed and STAY there for the minimum duration.Good recruiters, keep up the great work!!Evil recruiters, find another career path ;)"
+  },
+
+  {
+    "title": "Q and A with me",
+    "url": "/2017/q-and-a/",
+    "date": "2017-05-31T19:00:00-05:00",
+    "tags": ["workflow","career"],
+    "excerpt": "  Archived from the original post (2017-06-01). Lightly converted to Markdown.",
+    "content": "  Archived from the original post (2017-06-01). Lightly converted to Markdown.I have recently been searching for a new developer job, and in the process, I have had a few questionnaire’s to fill out.  So I thought that I would share them as a way to get to know me better.How interested are you in learning new application stacks or languages?I have already recognized that I need to add new languages and skills to keep up with the advancements in web development. I do spend some time studying/ learning things on my own time. I love Angular and I have been learning Angular 2/4 recently. I also started a CS101 (I am self taught with no college) which is taught using Python which was my first programming language and I have been enjoying getting to use it again. I would say that I am pretty interested in learning new things and just wish I had more time to do so.What are your long term career goals?I always fear this question. I feel as though I have missed out on opportunities because of how I answer it. The most enjoyable role that I had as at a startup that I worked at until they ran out of funding. I was able to build my own team and manage it. This, I think, would be my dream role. That being said, I am fully capable of being a team member. I do love mentoring new developers. I have been directly responsible for bringing a few people into the web development world.  As for long term, I am looking for a place to stay.  I really thought that I had this at at the startup I was at but that was not the case. I am not one to change jobs and would not be looking now if it were not for my contract expiring.Are there any topics in computer science you have been or would like to research?As stated above, am self-taught so I would have to say that I am interested in all of them!In your ideal work flow how much time would you prefer to spend on maintenance activities vs new development?Interesting question.  In my opinion applications never seem to get to the ‘refactor phase’ as they are continually being updated.  There is no question of the value that comes from refactoring but it is always the last thing that is focused on. I would honestly have to say that I think a solid 20% of the time would be ideal for refactoring.Given limited or ambiguous specifications how do you typically gather information?I have recently coined the term PDD or prayer driven development. When that does not work, I prefer direct contact. Emails are the last resort as we are inundated with too many emails daily. Slack is my favorite go to for messaging. If after a couple of messages the specifications are not clear, then it’s time for a phone call and/or screen share. Many times it is easier for people to relate something to you if they can ‘show’ you what they mean.Given a large number of mutually exclusive tasks how would you prioritize them?I guess this would depend on the business needs. Those are the priorities first and foremost. After that I usually try to look at all of the tasks and prioritize them in a logical manner. If they are all relatively equal, I would probably do the quickest tasks first and get them out of the way.What is your strategy to learn unfamiliar skills in a time effective manner?Repetition is the best way for me to do this.How do you typically assess the viability of your solution to a design problem?In a world of TDD, I will still answer this with by smoke testing the problem. If it is a UI related thing I might just make changes in the browser dev tools to see if the solution works.Would you be willing to abandon a solution you have spent significant time on? If so how do you determine when to abandon the solution?I have had to trash what I was working on and started over before. Deciding when to do that is not easy. You have to take into account the amount of time spent already, and what it would take to change directions. We (we pair program at at my current position) currently have been upgrading Angular 1.3 to Angular 1.6. This resulted in having to change the multi select dropdowns. We ended up trying to use three different libraries before finding the right one. When did we know to try a different one?  When the one we were trying would not work for all of our needs.How would you account for feature breaking changes in a specification after the functionality has been written and tested?This is one of the biggest issues, in my opinion, in software development. Object oriented programming is the key to limiting the chances of this happening.  We are currently reading Sandi Metz’s 99 bottles of OOP. There is no way for us as developers to guess what the future requirements might be or for that matter when the current requirements are changed.Are you most efficient when tasks are dictated or would you prefer to define your own work flow and priorities?I prefer to have tasks (user stories etc..) documented and if they are not already prioritized, then I can set my own priorities.What expectations do you have for the leadership above you, in regards to your professional development?This is probably the easiest question here. Simply put, give me the tools to succeed and provide feedback whether it is good or bad.Why do you want to work at Company X?This is the 4th or 5th time that I started to fill out this form.  I never got past this question.  This is the ‘interview’ question that kills me right from the start.  The short answer is almost always, I do not know if I do want to work for you.  For me, the initial interview/contact is like a first date.  I am obviously interested enough that I am trying to fill out this form but I do not know if I will like Company X and I do not know if you will like me.  Our first date SHOULD consist of a conversation where you tell me why I should want to work there and ultimately; if you even want me to work there.That being said, Company X is a well know and great learning tool.  I have many times found answers to problems on the Company X blog.  I have even hired a developer that had just finished your Rails course and he worked out pretty good.  Another obvious benefit would be the size and therefor the stability of Company X.  I am not looking for a short term relationship, but I am looking for a long term one ;)Can you give us a brief description (in your own words, no resumes or CVs) of your background?I started with RoR in 2010 when the company I was working for created a web based routing application in Rails.  Needless to say I loved it and keep learning until going full time Rails developer in 2011.  I have always been full stack and capable of everything from cutting up a PSD to make the HTML/CSS for the front end thru to server setup and devops.  Last year I started to dig into Angular 2 and I am currently using Angular 1.3 on Rails where I work now.As a manager, what approaches have you used to build and maintain close relationships with your direct reports? Have you found these to be effective? Why/why not?I feel that my military background has made me a great manager.  I also learned that there is a fine line between friend and direct reports.  I am a hands on person and lead by example.  I am also a great people person and know the difference between telling somebody to do something and asking them to do it.  I do walk that fine line where I am friends with those that work for me but that is in the workplace only.  Some might not like this technique but it was ingrained in the military; you don’t party with people that you might have to order to do something that might be deadly.  While there are not normally deadly situations in programming, there are times when you need that separation between friend and manager.Please describe your most challenging experience as a manager. What made the situation difficult for you? How did you resolve the situation? What would you do differently, given the opportunity?The two things that come to mind are the one time I had to fire a developer for lack of skill/productivity and having to keep the balance between the C-level people and/or shareholders and the direction of the team.Firing the developer was difficult because at the end of the day, people need their jobs.  I do not think that I would do anything different though as I had given them ample opportunities to make improvements that went unheeded.The balancing act between the CEO and the project direction was something that I blame myself for and I also feel partially responsible for the startup that I was working for to have failed.  While I did have to take direction from the CEO, I should have pushed back more against things that took more time to build than it was worth.  As the team lead (Director of Software Development) it was my job to ensure that we built a great product and went to market in a timely fashion and by not pushing back on the silly things (e.g. numerous re-styling of front customer facing web pages and rewriting copy repeatedly), that did not happen.Please describe your experience managing software projects. What tools and techniques have you found effective? What tools and techniques have you found to be less than helpful?I feel that we use Scrum and Agile terms way too often.  I agree that they are both software development methodologies but people often get caught up in the term.  I feel that “Agile” is iterative development to include continuous integration.  The best way to manage being agile is using a Kanban board.  I personally love using Pivotal Tracker but I have used many others.  Performing daily standup’s to review the stories that are on the board prevents work from being and staying blocked.  I am also a big fan of weekly retros to discuss development related things that are necessarily connected to existing work.Please describe your experience working with a remote team (as a manager or otherwise). What did you find enjoyable? What did you find challenging?Since 2008 I have mostly worked remotely.  Since that time I have had a couple of jobs that were not remote although I did also have a client from 2011-2016 that was remote.  I have also managed remote employees both in the US as well as in other countries.The biggest issue that I have with remote work is if there are more employees working in house and just a few working remotely.  It is hard to feel like part of the team when the majority of your co-workers are chatting it up around the water cooler and you are left out.  A company that has a mix of onsite and remote workers MUST proactively work on making the remote workers feel like part of the group.  I do love working remotely and I am more efficient when I do work remotely.  With the tools available to us like Slack, Webex, ScreenHero, Skype etc. we do not NEED to be sitting next to each other in order to work effectively.The biggest technical issue that comes to mind is an issue with Elastic Search.  Where I am working now we use ES a lot and probably in ways that it is/was not designed for.  After some fussing around, we ended up actually creating solid expectations based on smoke testing.  On of the side issues was that business was not sure “how” they wanted it to work.  We did a couple of screen shares and created a document of the various edge cases and what the “expectations” were for each.  Figuring out what we wanted to do was the hard part.  Once we got to that stage, adding the code was easy.  I am not always 100% TDD test first but in this case, with so many edge cases, it was the right approach."
+  },
+
+  {
+    "title": "Why software startups are like the Marine Corps",
+    "url": "/2015/why-software-startups-are-like-the-marine-corps/",
+    "date": "2015-11-30T18:00:00-06:00",
+    "tags": ["startups","mindset","leadership"],
+    "excerpt": "  Archived from the original post (2015-12-01). Lightly converted to Markdown; links and formatting preserved where possible.",
+    "content": "  Archived from the original post (2015-12-01). Lightly converted to Markdown; links and formatting preserved where possible.“Improvise, Adapt, Overcome” is the unofficial motto of the Marine Corps and should be the motto for a software startup if they are to be successful.I would imagine that more times than not, the original “idea” for a money-making software application is nothing at all like the end product. In the freelance world, it is common to perform a “needs assessment” when talking with a new client. It is the developer’s job to fully outline everything that the client wants for their dream software application to be and look like. Myself, I prefer to do a full user-story workshop. This entails getting down to the nitty gritty of what every part of the app should look like and do. This is all done with the current/existing vision that the client has. And then development begins …If I use a store-bought box cake mix, I imagine that I can add all of the ingredients and it will come out just fine. If I do it from scratch, well there will be somewhat of a trial and error with the ingredients. Too sweet, not sweet enough — all this can change before the cake is done. Just like software.With software development, there is a general direction that you go. This is based on the client’s needs/wants. But the reality of it is that once you start and they see things begin to take shape, the idea that they had in their head morphs. “I thought it would look good like this but now that I see it I do not like that …” Suddenly the straight line from start to finished product twists this way and that.Many factors can cause a “change in direction” when developing a software application. In the beginning there will be more input once it starts to take shape. Beta testers and market research can cause changes to be necessary.In addition to changes with the software, there will be changes to the team. Hiring more, cutting back, hiring again… All of this is possible. In the pursuit of a self-sustaining product (one that pays the bills) many of these changes might be necessary.It isn’t easy, but in order to make it work, be ready to improvise on what you are building, adapt to trends and changes, and overcome any and all obstacles that get in the way."
+  },
+
+  {
+    "title": "Rails — complex rake task",
+    "url": "/2015/rails-complex-rake-task/",
+    "date": "2015-06-22T19:00:00-05:00",
+    "tags": ["rails","ruby","rake"],
+    "excerpt": "  Archived from the original post (2015-06-23). Lightly converted to Markdown; code examples preserved.",
+    "content": "  Archived from the original post (2015-06-23). Lightly converted to Markdown; code examples preserved.I had to write a pretty complex rake task this evening. I made some seriously big changes to my client app and needed to run some processes to update some big changes in the database.The first question I had was where to add a method that the rake task could call. While this seemed a pretty easy thing to do, a Google search led me nowhere so I went with trial and error. In the end I found that the method needed to go AFTER the task do block and not in it.Example structure:desc 'this is the description of the task'task do_something: :environment do  my_objects.all.each do |object|    object.do_something_cool  endenddef do_something_cool  something_coolendThe next thing I wanted to do was to use an existing helper that was in my Rails project. This was easily found with Google. You simply need to require the helper file and include it. I added this between the desc and the task do block:require \"#{Rails.root}/app/helpers/my_helper\"include MyHelperHope this helps :)"
+  },
+
+  {
+    "title": "Offshore, nearshore, come ashore — bringing Rails team in‑house",
+    "url": "/2015/offshore-nearshore-come-ashore-bringing-rails-team-in-house/",
+    "date": "2015-06-22T19:00:00-05:00",
+    "tags": ["rails","teams","hiring","management"],
+    "excerpt": "  Archived from the original post (2015-06-23). Lightly converted to Markdown.",
+    "content": "  Archived from the original post (2015-06-23). Lightly converted to Markdown.I just made my first year where I work and it has been crazy fun and challenging.When I started a year ago, our application was in the hands of near‑shore developers. They had just taken over from off‑shore developers a couple months prior to my coming on board. They were by far still in the learning curve. The first deployment we did after I got there was a team effort and a load of finger crossing.The near‑shore team did an excellent job learning the application and were churning out user stories like mad. As they were all located in Mexico there was no time difference to speak of and with the help of Skype and daily standups, we were able to work efficiently.Shortly after I started working here, I started to build my in‑house team. Finding good available Rails developers in the Phoenix area is quite impossible.My first hire was somebody that was previously one of my interns for my company. I had to pay pretty good to convince him to come on board. He was quite happy with his current employer.From there the search was difficult. We ended up bringing on a couple of interns from ASU and I just had the pleasure recently to hire one of them on full time. Another developer that was in the learning phase kept hounding me and we brought him on as a junior Rails developer where he has continued to excel. Another developer expressed interest in working with us. We brought him on as an intern and he was recently made a full‑time employee as well.Other additions to the team were a top‑notch Project Manager and a Senior SysAdmin to handle the multiple servers. Last month the contract for the near‑shore developers was up.We are all in‑house now and working on site. The old saying “you can’t teach an old dog new tricks” really means something sometimes with senior developers — they sometimes get stuck in their ways. New junior developers looking to make a living programming are generally eager to learn and so far I have had success with 5 out of 7 interns.They can’t get hired without experience and can’t get experience if they don’t get hired. Try hiring a developer intern. Check out the local universities that have CS programs. If you can’t find great developers; build them."
+  },
+
+  {
+    "title": "Mongodump cron job for nightly backup",
+    "url": "/2015/mongodump-cron-job-for-nightly-backup/",
+    "date": "2015-04-28T19:00:00-05:00",
+    "tags": ["mongodb","backup","cron","ops"],
+    "excerpt": "  Archived from the original post (2015-04-29). Lightly converted to Markdown; command lines preserved.",
+    "content": "  Archived from the original post (2015-04-29). Lightly converted to Markdown; command lines preserved.I recently looked for a way to automatically backup a MongoDB database nightly. There are some nice bash scripts out there but I wanted to just do it in a cron job. After some struggling with taring the huge db directory I came up with this:Cron entry (midnight daily):0 0 * * * /bin/bash -l -c 'cd /my_project_path &amp;&amp; \\  mongodump --host 0.0.0.0 -d mydb --username myusername --password mypassword \\  --out /var/dbbackups/backup_$(date +%Y%m%d) &amp;&amp; \\  cd /var/dbbackups &amp;&amp; tar -zcf backup_$(date +%Y%m%d).tar.gz backup_$(date +%Y%m%d)/mydb'Notes:  mongodump will create a directory like backup_20150429/mydb/ with all of the .bson files in it.  We add the date to both the dump dir and the tarball name.  The -l -c makes sure bash loads your login profile and runs the chained commands correctly."
+  },
+
+  {
+    "title": "Let Go of Me, SSH Session",
+    "url": "/2013/let-go-of-me-ssh-session/",
+    "date": "2013-12-12T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-12-13). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-12-13). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Dealing with Ruby Time",
+    "url": "/2013/dealing-with-ruby-time/",
+    "date": "2013-12-12T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-12-13). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-12-13). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Setting up a Ruby on Rails development environment on Mavericks (Dean.io)",
+    "url": "/2013/setting-up-a-ruby-on-rails-development-environment-on-mavericks-dean-io/",
+    "date": "2013-12-09T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-12-10). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-12-10). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Random Thoughts",
+    "url": "/2013/random-thoughts/",
+    "date": "2013-12-09T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-12-10). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-12-10). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Why is Ruby on Rails server setup so damned hard to do?",
+    "url": "/2013/why-is-ruby-on-rails-server-setup-so-damned-hard-to-do/",
+    "date": "2013-10-16T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-10-17). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-10-17). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "To SaaS or not to SaaS",
+    "url": "/2013/to-saas-or-not-to-saas/",
+    "date": "2013-09-23T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-09-24). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-09-24). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Update from Intern #2 — transition to Rails",
+    "url": "/2013/update-from-intern-2-transition-to-rails/",
+    "date": "2013-07-25T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-07-26). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-07-26). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "New Beginnings",
+    "url": "/2013/new-beginnings/",
+    "date": "2013-06-29T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-06-30). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-06-30). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Make the Unicorns Behave",
+    "url": "/2013/make-the-unicorns-behave/",
+    "date": "2013-04-30T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-05-01). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-05-01). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Ruby expression snippet for Sublime Text 2",
+    "url": "/2013/ruby-expression-snippet-for-sublime-text-2/",
+    "date": "2013-04-13T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-04-14). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-04-14). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rails CRM gets an upgrade",
+    "url": "/2013/rails-crm-gets-an-upgrade/",
+    "date": "2013-03-12T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-03-13). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-03-13). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Merging PDFs in Rails application",
+    "url": "/2013/merging-pdfs-in-rails-application/",
+    "date": "2013-03-07T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-03-08). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-03-08). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Cleanup files created with RSpec",
+    "url": "/2013/cleanup-files-created-with-rspec/",
+    "date": "2013-03-05T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-03-06). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-03-06). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rails/RSpec total test time",
+    "url": "/2013/rails-rspec-total-test-time/",
+    "date": "2013-03-04T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-03-05). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-03-05). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Remote/Telecommuting web development",
+    "url": "/2013/remote-telecommuting-web-development/",
+    "date": "2013-02-07T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-02-08). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-02-08). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "To SaaS or not to SaaS — that is my question",
+    "url": "/2013/to-saas-or-not-to-saas-that-is-my-question/",
+    "date": "2013-02-05T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-02-06). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-02-06). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rebel Outpost and Open Source",
+    "url": "/2013/rebel-outpost-and-open-source/",
+    "date": "2013-01-21T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-01-22). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-01-22). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Plans for 2013",
+    "url": "/2013/plans-for-2013/",
+    "date": "2013-01-06T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2013-01-07). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2013-01-07). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Another year gone by",
+    "url": "/2012/another-year-gone-by/",
+    "date": "2012-12-19T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-12-20). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-12-20). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Ubuntu 12.04: Ruby, Rails, Nginx, Unicorn and Git deploy",
+    "url": "/2012/ubuntu-12-04-ruby-rails-nginx-unicorn-and-git-deploy/",
+    "date": "2012-12-18T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-12-19). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-12-19). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Testing with Rails + Select2",
+    "url": "/2012/testing-with-rails-select2/",
+    "date": "2012-12-18T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-12-19). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-12-19). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Ubuntu 12.10 server setup for Ruby on Rails",
+    "url": "/2012/ubuntu-12-10-server-setup-for-ruby-on-rails/",
+    "date": "2012-12-04T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-12-05). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-12-05). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "What’s new",
+    "url": "/2012/whats-new/",
+    "date": "2012-11-21T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-11-22). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-11-22). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Giving back to the community",
+    "url": "/2012/giving-back-to-the-community/",
+    "date": "2012-10-28T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-10-29). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-10-29). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Startup Weekend Phoenix impression",
+    "url": "/2012/startup-weekend-phoenix-impression/",
+    "date": "2012-10-21T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-10-22). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-10-22). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Hey companies looking for direct hires",
+    "url": "/2012/hey-companies-looking-for-direct-hires/",
+    "date": "2012-10-17T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-10-18). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-10-18). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rails stuck on the tracks",
+    "url": "/2012/rails-stuck-on-the-tracks/",
+    "date": "2012-10-10T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-10-11). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-10-11). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rebel Outpost adds new partner",
+    "url": "/2012/rebel-outpost-adds-new-partner/",
+    "date": "2012-09-20T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-09-21). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-09-21). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Next up: Intern #2",
+    "url": "/2012/next-up-intern-number-2/",
+    "date": "2012-09-19T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-09-20). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-09-20). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Dynamically change options for select based on first drop down",
+    "url": "/2012/dynamically-change-options-for-select-based-on-first-drop-down/",
+    "date": "2012-09-14T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-09-15). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-09-15). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rails CRM",
+    "url": "/2012/rails-crm/",
+    "date": "2012-09-05T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-09-06). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-09-06). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Issue installing Ruby after upgrading to Mountain Lion",
+    "url": "/2012/issue-installing-ruby-after-upgrading-to-mountain-lion/",
+    "date": "2012-09-03T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-09-04). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-09-04). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "What I have learned as a freelance developer",
+    "url": "/2012/what-i-have-learned-as-a-freelance-developer/",
+    "date": "2012-08-29T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-08-30). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-08-30). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Invitation modal",
+    "url": "/2012/invitation-modal/",
+    "date": "2012-08-29T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-08-30). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-08-30). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Writing stories for Pivotal Tracker",
+    "url": "/2012/writing-stories-for-pivotal-tracker/",
+    "date": "2012-08-12T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-08-13). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-08-13). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Twitter Bootstrap — oh how I love thee",
+    "url": "/2012/twitter-bootstrap-oh-how-i-love-thee/",
+    "date": "2012-08-01T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-08-02). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-08-02). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Django or Rails",
+    "url": "/2012/django-or-rails/",
+    "date": "2012-08-01T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-08-02). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-08-02). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "My, how they grow up so fast",
+    "url": "/2012/my-how-they-grow-up-so-fast/",
+    "date": "2012-07-30T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-07-31). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-07-31). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Great read: Egoless Programming",
+    "url": "/2012/great-read-egoless-programming/",
+    "date": "2012-07-30T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-07-31). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-07-31). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "My intern is all grown up",
+    "url": "/2012/my-intern-is-all-grown-up/",
+    "date": "2012-07-18T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-07-19). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-07-19). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "m3talsmith makes daily standup",
+    "url": "/2012/m3talsmith-makes-daily-standup/",
+    "date": "2012-07-17T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-07-18). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-07-18). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rebel Outpost",
+    "url": "/2012/rebel-outpost/",
+    "date": "2012-07-10T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-07-11). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-07-11). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Confirm this web page is being redirected to a new location",
+    "url": "/2012/confirm-this-web-page-is-being-redirected-to-a-new-location/",
+    "date": "2012-07-10T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-07-11). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-07-11). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "The progression of RebelHold",
+    "url": "/2012/the-progression-of-rebelhold/",
+    "date": "2012-07-02T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-07-03). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-07-03). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "RebelHold: Growing the community",
+    "url": "/2012/rebelhold-growing-the-community/",
+    "date": "2012-05-10T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-05-11). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-05-11). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Life as a Rails developer",
+    "url": "/2012/life-as-a-rails-developer/",
+    "date": "2012-04-27T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-04-28). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-04-28). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Ruby and Rails 101 Course",
+    "url": "/2012/ruby-and-rails-101-course/",
+    "date": "2012-03-28T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-03-29). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-03-29). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Why RebelHold kicks ass",
+    "url": "/2012/why-rebelhold-kicks-ass/",
+    "date": "2012-03-03T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-03-04). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-03-04). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Successful entrepreneur in AZ",
+    "url": "/2012/successful-entrepreneur-in-az/",
+    "date": "2012-02-16T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-02-17). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-02-17). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "RebelHold web development collective",
+    "url": "/2012/rebelhold-web-development-collective/",
+    "date": "2012-02-16T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-02-17). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-02-17). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "So you want to be a programmer",
+    "url": "/2012/so-you-want-to-be-a-programmer/",
+    "date": "2012-02-15T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-02-16). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-02-16). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "I want to work for you",
+    "url": "/2012/i-want-to-work-for-you/",
+    "date": "2012-01-12T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-01-13). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-01-13). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Create a Ruby on Rails TODO application (Pt 3)",
+    "url": "/2012/create-a-ruby-on-rails-todo-application-pt-3/",
+    "date": "2012-01-04T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-01-05). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-01-05). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Becoming a better developer",
+    "url": "/2012/becoming-a-better-developer/",
+    "date": "2012-01-01T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2012-01-02). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2012-01-02). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Want to learn a thing or two about programming right here, right now?",
+    "url": "/2011/want-to-learn-a-thing-or-two-about-programming-right-here-right-now/",
+    "date": "2011-12-30T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-12-31). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-12-31). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Create a Ruby on Rails TODO application (Pt 2)",
+    "url": "/2011/create-a-ruby-on-rails-todo-application-pt-2/",
+    "date": "2011-12-29T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-12-30). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-12-30). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Create a Ruby on Rails TODO application",
+    "url": "/2011/create-a-ruby-on-rails-todo-application/",
+    "date": "2011-12-26T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-12-27). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-12-27). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "First month as RoR programmer",
+    "url": "/2011/first-month-as-ror-programmer/",
+    "date": "2011-11-17T18:00:00-06:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-11-18). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-11-18). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "What’s in a name: programmer or developer?",
+    "url": "/2011/whats-in-a-name-programmer-or-developer/",
+    "date": "2011-11-05T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-11-06). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-11-06). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Rails: underestimated",
+    "url": "/2011/rails-underestimated/",
+    "date": "2011-11-04T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-11-05). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-11-05). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Jobless in Arizona",
+    "url": "/2011/jobless-in-arizona/",
+    "date": "2011-10-19T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-10-20). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-10-20). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Why I love Ruby on Rails",
+    "url": "/2011/why-i-love-ruby-on-rails/",
+    "date": "2011-10-05T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-10-06). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-10-06). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "My Ruby on Rails progress",
+    "url": "/2011/my-ruby-on-rails-progress/",
+    "date": "2011-09-02T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-09-03). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-09-03). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Could Phoenix become a technology mecca?",
+    "url": "/2011/could-phoenix-become-a-technology-mecca/",
+    "date": "2011-06-15T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-06-16). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-06-16). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Gangplank: co-working in Arizona",
+    "url": "/2011/gangplank-co-working-in-arizona/",
+    "date": "2011-05-04T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-05-05). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-05-05). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Next steps",
+    "url": "/2011/next-steps/",
+    "date": "2011-05-03T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-05-04). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-05-04). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "What programming language do I learn?",
+    "url": "/2011/what-programming-language-do-i-learn/",
+    "date": "2011-04-10T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-04-11). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-04-11). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "Desert Code Camp, Chandler AZ",
+    "url": "/2011/desert-code-camp-chandler-az/",
+    "date": "2011-04-04T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-04-05). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-04-05). This is a preservation stub; see the original link for full content."
+  },
+
+  {
+    "title": "What’s going on",
+    "url": "/2011/whats-going-on/",
+    "date": "2011-03-25T19:00:00-05:00",
+    "tags": [],
+    "excerpt": "  Archived from the original post (2011-03-26). This is a preservation stub; see the original link for full content.",
+    "content": "  Archived from the original post (2011-03-26). This is a preservation stub; see the original link for full content."
+  }
+
+]
+

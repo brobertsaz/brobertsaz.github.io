@@ -1,0 +1,68 @@
+// Color palette
+:root {
+  // Dark theme colors
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --bg-hover: #30363d;
+  
+  // Text colors
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  
+  // Accent colors
+  --accent-primary: #58a6ff;
+  --accent-secondary: #64ffda;
+  --accent-success: #3fb950;
+  --accent-warning: #d29922;
+  --accent-danger: #f85149;
+  
+  // Border colors
+  --border-primary: #30363d;
+  --border-secondary: #21262d;
+  
+  // Shadow
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+// Typography
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+$font-family-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-sm: 14px;
+$font-size-xs: 12px;
+
+$line-height-base: 1.6;
+$line-height-tight: 1.4;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Container
+$container-max-width: 1200px;
+$content-max-width: 800px;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-base: 0.25s ease;
+$transition-slow: 0.35s ease;

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schema to get end‑to‑end type safety, generated hooks, and faster developer feedback." />
+<meta property="og:description" content="How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schema to get end‑to‑end type safety, generated hooks, and faster developer feedback." />
+<link rel="canonical" href="http://localhost:4001/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" />
+<meta property="og:url" content="http://localhost:4001/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:image" content="http://localhost:4001/assets/images/covers/type-safe-react-rails-pro.svg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-01-17T10:00:00-06:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4001/assets/images/covers/type-safe-react-rails-pro.svg" />
+<meta property="twitter:title" content="Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2025-01-17T10:00:00-06:00","datePublished":"2025-01-17T10:00:00-06:00","description":"How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schema to get end‑to‑end type safety, generated hooks, and faster developer feedback.","headline":"Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises","image":"http://localhost:4001/assets/images/covers/type-safe-react-rails-pro.svg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4001/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4001/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/blog/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises</h1>
+
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-01-17T10:00:00-06:00" itemprop="datePublished">
+        January 17, 2025
+      </time><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span class="p-author h-card" itemprop="name">Bob Roberts</span>
+        </span><span class="reading-time"> • <span id="reading-time"></span></span>
+    </div>
+
+    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav><div class="post-tags"><span class="tag">typescript</span><span class="tag">react</span><span class="tag">graphql</span><span class="tag">codegen</span><span class="tag">ruby-on-rails</span></div>
+      <figure class="post-hero">
+        <img src="/assets/images/covers/type-safe-react-rails-pro.svg" alt="Type-safe React with Rails GraphQL and Codegen" style="object-position: center center;">
+        
+      </figure>
+    
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Type safety is only as strong as your weakest boundary. With GraphQL Code Generator, we can turn our Rails schema into first‑class TypeScript types and ergonomic React hooks.</p>
+
+<h3 id="why-i-lean-hard-on-codegen">Why I lean hard on codegen</h3>
+
+<ul>
+  <li>I prefer fragments‑first documents because they make co‑location natural and keep generated types composable.</li>
+  <li>In my projects, I run <code class="language-plaintext highlighter-rouge">codegen:watch</code> in dev and commit the generated output. CI blocks merges when schema drift isn’t reflected in types.</li>
+  <li>Here’s where this bites you: GraphQL nullability. If the server makes a field nullable, your optional‑chaining spiderweb grows. I lock nullability in the schema where possible, and narrow aggressively in React.</li>
+  <li>I prefer mapping custom scalars (UUID, ISO8601DateTime) to branded string types to catch mixups at compile time without overhead at runtime.</li>
+</ul>
+
+<h2 id="install-codegen">Install Codegen</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm i <span class="nt">-D</span> @graphql-codegen/cli @graphql-codegen/typescript <span class="se">\</span>
+  @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
+</code></pre></div></div>
+
+<p>Add scripts:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"codegen"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graphql-codegen --config codegen.yml"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"codegen:watch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graphql-codegen --config codegen.yml --watch"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="create-codegenyml">Create codegen.yml</h2>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">schema</span><span class="pi">:</span> <span class="s">http://localhost:3000/graphql</span>
+<span class="na">documents</span><span class="pi">:</span> <span class="s2">"</span><span class="s">src/**/*.{ts,tsx,graphql}"</span>
+<span class="na">generates</span><span class="pi">:</span>
+  <span class="s">src/graphql/generated.tsx</span><span class="pi">:</span>
+    <span class="na">plugins</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">typescript</span>
+      <span class="pi">-</span> <span class="s">typescript-operations</span>
+      <span class="pi">-</span> <span class="s">typescript-react-apollo</span>
+    <span class="na">config</span><span class="pi">:</span>
+      <span class="na">withHooks</span><span class="pi">:</span> <span class="no">true</span>
+      <span class="na">scalars</span><span class="pi">:</span>
+        <span class="na">ISO8601DateTime</span><span class="pi">:</span> <span class="s">string</span>
+        <span class="na">JSON</span><span class="pi">:</span> <span class="s">Record&lt;string, unknown&gt;</span>
+        <span class="na">UUID</span><span class="pi">:</span> <span class="s">string</span>
+</code></pre></div></div>
+
+<p>Tip: In CI, point <code class="language-plaintext highlighter-rouge">schema:</code> to a dumped SDL file committed by Rails:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Rails</span>
+bundle <span class="nb">exec </span>rake graphql:schema:dump
+<span class="c"># use schema: schema.graphql in codegen.yml</span>
+</code></pre></div></div>
+
+<h2 id="author-operations">Author Operations</h2>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># src/graphql/queries/users.graphql</span><span class="w">
+</span><span class="k">query</span><span class="w"> </span><span class="n">Users</span><span class="p">(</span><span class="nv">$first</span><span class="p">:</span><span class="w"> </span><span class="nb">Int</span><span class="p">,</span><span class="w"> </span><span class="nv">$after</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">users</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="nv">$first</span><span class="p">,</span><span class="w"> </span><span class="n">after</span><span class="p">:</span><span class="w"> </span><span class="nv">$after</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="n">pageInfo</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">hasNextPage</span><span class="w"> </span><span class="n">endCursor</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run codegen
+</code></pre></div></div>
+
+<p>This emits fully typed hooks:</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">useUsersQuery</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./graphql/generated</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">UsersList</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">loading</span><span class="p">,</span> <span class="nx">fetchMore</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useUsersQuery</span><span class="p">({</span> <span class="na">variables</span><span class="p">:</span> <span class="p">{</span> <span class="na">first</span><span class="p">:</span> <span class="mi">20</span> <span class="p">}</span> <span class="p">});</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">loading</span><span class="p">)</span> <span class="k">return</span> <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Loading</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/p&gt;</span><span class="err">;
+</span>  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">data</span><span class="p">?.</span><span class="nx">users</span><span class="p">.</span><span class="nx">edges</span><span class="p">?.</span><span class="nx">map</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">e</span><span class="p">?.</span><span class="nx">node</span><span class="p">?.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">e</span><span class="p">?.</span><span class="nx">node</span><span class="p">?.</span><span class="nx">email</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="handling-nullability">Handling Nullability</h2>
+
+<p>GraphQL nullability propagates to your types. Prefer <code class="language-plaintext highlighter-rouge">null: false</code> on Rails fields when appropriate, and in React, narrow:</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">edges</span> <span class="o">=</span> <span class="nx">data</span><span class="p">?.</span><span class="nx">users</span><span class="p">.</span><span class="nx">edges</span><span class="p">?.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">e</span><span class="p">):</span> <span class="nx">e</span> <span class="k">is</span> <span class="nx">NonNullable</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">e</span><span class="o">&gt;</span> <span class="o">=&gt;</span> <span class="nb">Boolean</span><span class="p">(</span><span class="nx">e</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h2 id="custom-scalars">Custom Scalars</h2>
+
+<p>Map Rails scalars to TS types in <code class="language-plaintext highlighter-rouge">config.scalars</code>. For complex shapes, create brand types:</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">type</span> <span class="nx">ISO8601</span> <span class="o">=</span> <span class="kr">string</span> <span class="o">&amp;</span> <span class="p">{</span> <span class="k">readonly</span> <span class="na">__brand</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ISO8601</span><span class="dl">'</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="fragments-for-reuse">Fragments for Reuse</h2>
+
+<p>Encapsulate shared shapes:</p>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fragment</span><span class="w"> </span><span class="n">UserCard</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">User</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="n">Users</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="n">UserCard</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="runtime-safety-still-matters">Runtime Safety Still Matters</h2>
+
+<p>Types don’t replace runtime guards. Validate user input server‑side, handle network errors, and design your cache policies to avoid stale data.</p>
+
+<h2 id="developer-experience-checklist">Developer Experience Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" /><code class="language-plaintext highlighter-rouge">codegen:watch</code> running in dev</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />ESLint + <code class="language-plaintext highlighter-rouge">@graphql-eslint/eslint-plugin</code> for documents</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />CI job verifies schema changes regenerate types</li>
+</ul>
+
+<p>With codegen in place, your React codebase gets the confidence boost of compile‑time breakage instead of Friday‑night runtime surprises.</p>
+
+  </div>
+
+  
+    <section class="related-posts">
+      <h3>Related posts</h3>
+      <div class="posts-grid">
+        
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/auth-sessions-vs-jwt-pro.svg" alt="Authentication in Rails and Apollo: Sessions vs JWT" style="object-position: center top;"></div>
+                
+                <h3><a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">Authentication for Rails + Apollo: Secure Sessions vs JWT (and How to Implement Both)</a></h3>
+                <div class="post-meta"><time datetime="2025-01-24T10:00:00-06:00">January 24, 2025</time></div>
+                <div class="post-excerpt">A pragmatic guide to user auth in a Rails API consumed by a React/Apollo/TypeScript app: secure cookies + CSRF vs JWT tokens, trade‑offs, and...</div>
+              </article>
+              
+            
+          
+        
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/rails-graphql-apollo-pro.svg" alt="Production-ready Rails GraphQL API with Apollo Client and TypeScript" style="object-position: center center;"></div>
+                
+                <h3><a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript</a></h3>
+                <div class="post-meta"><time datetime="2025-01-10T10:00:00-06:00">January 10, 2025</time></div>
+                <div class="post-excerpt">A practical, end‑to‑end guide to shipping a production‑ready GraphQL stack: Rails (graphql‑ruby) + Apollo Client + TypeScript with caching, pagination, error handling, and deployment...</div>
+              </article>
+              
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+      </div>
+    </section>
+  
+
+
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4001%2Freact%2Ftypescript%2F2025%2F01%2F17%2Ftype-safe-react-with-rails-graphql-and-codegen%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=Type%E2%80%91Safe+React+with+Rails+GraphQL%3A+Codegen+for+Zero%E2%80%91Runtime+Surprises+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4001%2Freact%2Ftypescript%2F2025%2F01%2F17%2Ftype-safe-react-with-rails-graphql-and-codegen%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4001/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div><div class="post-navigation"><div class="nav-previous">
+          <a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/" class="btn btn-secondary">
+            ← Building a Production‑Ready...
+          </a>
+        </div><div class="nav-next">
+          <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" class="btn btn-secondary">
+            Authentication for Rails + ... →
+          </a>
+        </div></div>
+  </footer>
+
+  <a class="u-url" href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" hidden></a>
+</article>
+
+  <script src="/assets/js/post.js" defer></script>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
+                Real‑Time and Optimistic UI...
+              </a>
+            </li><li>
+              <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
+                Authentication for Rails + ...
+              </a>
+            </li><li>
+              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
+                Type‑Safe React with Rails ...
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

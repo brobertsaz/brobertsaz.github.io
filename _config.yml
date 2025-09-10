@@ -1,0 +1,78 @@
+# Site settings
+title: "Code It Forward"
+email: brobertsaz@users.noreply.github.com
+description: >-
+  Practical Rails · React · GraphQL · TypeScript — pay it forward.
+baseurl: ""
+url: "https://brobertsaz.github.io"
+github_username: brobertsaz
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate
+
+# GitHub Pages specific settings
+safe: true
+incremental: false
+lsi: false
+gist:
+  noscript: false
+kramdown:
+  math_engine: mathjax
+  syntax_highlighter: rouge
+
+# Exclude from processing
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:categories/:year/:month/:day/:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Bob Roberts"
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Pagination
+paginate: 5
+paginate_path: "/page:num/"
+
+# SEO
+author: Bob Roberts
+logo: /assets/images/logo.svg
+social:
+  name: Bob Roberts
+  links:
+    - https://github.com/brobertsaz
+
+# Dark theme settings
+theme_config:
+  dark_mode: true
+  accent_color: "#64ffda"
+  background_color: "#0d1117"
+  text_color: "#c9d1d9"

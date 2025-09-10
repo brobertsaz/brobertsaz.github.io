@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Using Braintree hosted fields with Ruby on Rails | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Using Braintree hosted fields with Ruby on Rails" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible." />
+<meta property="og:description" content="Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible." />
+<link rel="canonical" href="http://localhost:4001/2017/rails-with-braintree-hosted-fields/" />
+<meta property="og:url" content="http://localhost:4001/2017/rails-with-braintree-hosted-fields/" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-09-26T19:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Using Braintree hosted fields with Ruby on Rails" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2017-09-26T19:00:00-05:00","datePublished":"2017-09-26T19:00:00-05:00","description":"Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.","headline":"Using Braintree hosted fields with Ruby on Rails","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4001/2017/rails-with-braintree-hosted-fields/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4001/2017/rails-with-braintree-hosted-fields/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/blog/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Using Braintree hosted fields with Ruby on Rails</h1>
+
+    <div class="post-meta">
+      <time class="dt-published" datetime="2017-09-26T19:00:00-05:00" itemprop="datePublished">
+        September 26, 2017
+      </time><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span class="p-author h-card" itemprop="name">Bob Roberts</span>
+        </span><span class="reading-time"> • <span id="reading-time"></span></span>
+    </div>
+
+    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav><div class="post-tags"><span class="tag">rails</span><span class="tag">ruby</span><span class="tag">braintree</span><span class="tag">payments</span><span class="tag">tutorial</span></div>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <blockquote>
+  <p>Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.</p>
+</blockquote>
+
+<p>While it is possible to create your own credit card process in a Ruby on Rails app, due to the PCI compliance rules, it is just safer to use something like Stripe or Braintree.</p>
+
+<p>I have used Stripe before and it is very easy to set up and use. Stripe now has elements which can be used to create a custom credit card form that can be styled to look exactly like your app.</p>
+
+<p>Previous to this, the dropin solutions were good but just did not look like the rest of the application.</p>
+
+<p>After reading up a bit, I decided that I wanted to try out Braintree hosted fields.</p>
+
+<p>Below is the finished form that I created. I wanted to be able to get more user information at the same time as charging the credit card.</p>
+
+<p>TL/DR
+For the app that I made for this tutorial, it is at https://github.com/brobertsaz/rails_braintree_hosted_fields</p>
+
+<p>Braintree Setup</p>
+
+<p>First thing that you need to do is head on over to Braintree and sign up for sandbox account.  Don’t worry, it’s free.</p>
+
+<p>After you sign up you will need to copy this info:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Braintree::Configuration.environment = :sandbox
+Braintree::Configuration.merchant_id = 'qwertyqwerty'
+Braintree::Configuration.public_key = 'qwertyqwerty'
+Braintree::Configuration.private_key = 'qwertyqwertyqwerty'
+</code></pre></div></div>
+
+<p>Next, create a braintree.rb file in config/initializers/ directory and add these environment variables:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Braintree::Configuration.environment = :sandbox
+Braintree::Configuration.logger = Logger.new('log/braintree.log')
+Braintree::Configuration.merchant_id = ENV['BRAINTREE_MERCHANT_ID']
+Braintree::Configuration.public_key = ENV['BRAINTREE_PUBLIC_KEY']
+Braintree::Configuration.private_key = ENV['BRAINTREE_PRIVATE_KEY']
+</code></pre></div></div>
+
+<p>In order to use these environment variables, we will use the Figaro gem. Add to Gemfile:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'figaro'
+</code></pre></div></div>
+
+<p>You will need to run <code class="language-plaintext highlighter-rouge">bundle</code> to install figaro and then <code class="language-plaintext highlighter-rouge">bundle exec figaro install</code> to install it. This will create a new file config/application.yml. This is where you will set your keys for Braintree.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Braintree configuration keys
+BRAINTREE_MERCHANT_ID: ''
+BRAINTREE_PUBLIC_KEY: ''
+BRAINTREE_PRIVATE_KEY: ''
+</code></pre></div></div>
+
+<p>Make sure that you add config/application.yml to your <code class="language-plaintext highlighter-rouge">.gitignore</code> file as this holds all of your Braintree keys.</p>
+
+<p>Lastly, add the Braintree Ruby gem to your Gemfile,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'braintree', '~&gt; 2.77'
+</code></pre></div></div>
+
+<p>and make sure that you run <code class="language-plaintext highlighter-rouge">bundle</code> to install it.</p>
+
+<p>Note: If you are in newer version of Rails, jQuery is no longer included automatically so you will need to add</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'jquery-rails'
+</code></pre></div></div>
+
+<p>to your Gemfile, and run <code class="language-plaintext highlighter-rouge">bundle</code> to install it.</p>
+
+<p>Customers Setup</p>
+
+<p>For the checkout form that I wanted to use, I needed a Customer that would be saved to the database.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g model Customers
+</code></pre></div></div>
+
+<p>Now open up the db/migrate/new-migration-file and we will add our fields</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class CreateCustomers &lt; ActiveRecord::Migration[5.1]
+  def change
+    create_table :customers do |t|
+      t.string :first_name
+      t.string :last_name
+      t.string :email
+      t.string :phone
+      t.string :address_1
+      t.string :address_2
+      t.string :city
+      t.string :state
+      t.string :zipcode
+      t.integer :braintree_customer_id
+      t.datetime :last_visit
+      t.timestamps null: false
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>We will use the <code class="language-plaintext highlighter-rouge">braintree_customer_id</code> so that in the future if we make a charge for that same customer, we can access the save data.</p>
+
+<p>As we created the model for Customer, we can create a new customer without having to create a Customer controller. This will be done in our Checkouts controller. Let’s create that now. Create new file at <code class="language-plaintext highlighter-rouge">app/controllers/checkouts_controller.rb</code> and add the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class CheckoutsController &lt; ApplicationController
+  def new
+    @customer = Customer.new
+    @client_token = Braintree::ClientToken.generate
+  end
+
+  private
+  def customer_params
+    params.require(:customer).permit(:first_name, :last_name, :address_1, :address_2, :city, :state, :zipcode, :email, :phone)
+  end
+end
+</code></pre></div></div>
+
+<p>In the <code class="language-plaintext highlighter-rouge">new</code> method, we are creating a new customer that we will use in the checkout form. We also need to create a <code class="language-plaintext highlighter-rouge">@client_token</code> using the built in Braintree function <code class="language-plaintext highlighter-rouge">Braintree::ClientToken.generate</code> and we added the strong parameters which we will use later.</p>
+
+<p>Now, let’s make sure that we have our routes setup correctly.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails.application.routes.draw do
+  resources :customers
+  root 'checkouts#new'
+  resources :checkouts,  only: [:new, :create, :show]
+end
+</code></pre></div></div>
+
+<p>We are going to route our app to <code class="language-plaintext highlighter-rouge">checkouts#new</code> which will take us to the <code class="language-plaintext highlighter-rouge">views/checkouts/new.html.erb</code> so lets create that file now.</p>
+
+<p>There are two parts to the new view; there is the HTML markup for the form and the Javascript section that is used by Braintree to create a iframe for the credit card information.</p>
+
+<p>For the sake of the demo, I just used Bootstrap CDN link in the view itself. I also used the <a href="https://github.com/plataformatec/simple_form">simple_form ruby gem</a>. Add the <code class="language-plaintext highlighter-rouge">gem 'simple_form'</code> to Gemfile and run <code class="language-plaintext highlighter-rouge">bundle</code>. Then you will need to run <code class="language-plaintext highlighter-rouge">rails generate simple_form:install --bootstrap</code> to install simple_form.</p>
+
+<p>Form setup</p>
+
+<p>HTML — add the following to the <code class="language-plaintext highlighter-rouge">views/checkouts/new.html.erb</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"&gt;
+...
+&lt;div class="panel panel-default bootstrap-basic"&gt;
+  &lt;div class="panel-heading"&gt;
+    &lt;h3 class="panel-title"&gt;Enter Card Details&lt;/h3&gt;
+  &lt;/div&gt;
+  &lt;div class="panel-body"&gt;
+    &lt;%= simple_form_for @customer, url: {action: 'create'}, method: 'post' do |f| %&gt;
+      ... inputs ...
+    &lt;% end %&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>Javascript — add to the same view:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script src="https://js.braintreegateway.com/js/beta/braintree-hosted-fields-beta.16.min.js"&gt;&lt;/script&gt;
+&lt;script id="braintree-client-token" type="application/json"&gt;&lt;%= @client_token %&gt;&lt;/script&gt;
+&lt;script&gt;
+var clientToken = document.getElementById('braintree-client-token').innerHTML;
+
+braintree.setup(clientToken, 'custom', {
+  id: 'new_customer',
+  hostedFields: {
+    styles: {},
+    number: { selector: '#credit-card-field', placeholder: '4111 1111 1111 1111' },
+    cvv: { selector: '#security-code-field', placeholder: '123' },
+    expirationDate: { selector: '#expiration-field', placeholder: 'MM/YYYY' },
+    postalCode: { selector: '#postal-code-field', placeholder: '12345' }
+  }
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Transaction</p>
+
+<p>When we submit the form it will go to the <code class="language-plaintext highlighter-rouge">checkouts#create</code> method. When this happens, the Braintree form will create a nonce which is basically a tokenized string that contains the credit card data. This data is encrypted when it is sent to the backend and will be decrypted by Braintree on their side.</p>
+
+<p>Let’s start to add the <code class="language-plaintext highlighter-rouge">create</code> method in <code class="language-plaintext highlighter-rouge">controllers/checkouts_controller.rb</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def create
+    amount = params["amount"] ||= 200
+    nonce = params["payment_method_nonce"]
+    result = Braintree::Transaction.sale(
+      amount: amount,
+      payment_method_nonce: nonce,
+    )
+  end
+</code></pre></div></div>
+
+<p>Now the full <code class="language-plaintext highlighter-rouge">create</code> method:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def create
+    amount = params["amount"] ||= 200
+    nonce = params["payment_method_nonce"]
+    result = Braintree::Transaction.sale(
+      amount: amount,
+      payment_method_nonce: nonce,
+      customer: {
+        first_name: customer_params[:first_name],
+        last_name: customer_params[:last_name],
+        email: customer_params[:email],
+        phone: customer_params[:phone]
+      },
+      options: { store_in_vault: true }
+    )
+
+    if result.success? || result.transaction
+      @customer = Customer.create customer_params
+      @customer.braintree_customer_id = result.transaction.customer_details.id
+      @customer.save
+      redirect_to checkout_path(result.transaction.id)
+    else
+      error_messages = result.errors.map { |error| "Error: #{error.code}: #{error.message}" }
+      flash[:error] = error_messages
+      redirect_to new_checkout_path
+    end
+  end
+</code></pre></div></div>
+
+<p>Thanks — helpful resources:</p>
+
+<ul>
+  <li>https://www.sitepoint.com/integrate-braintree-payments-rails/</li>
+  <li>https://github.com/braintree/braintree_rails_example</li>
+  <li>https://developers.braintreepayments.com/start/example-integrations</li>
+  <li>https://developers.braintreepayments.com/guides/hosted-fields/overview/javascript/v3</li>
+</ul>
+
+<p>Demo App: https://github.com/brobertsaz/rails_braintree_hosted_fields</p>
+
+<p>Feedback: If I missed something or made any errors, please let me know so that I can get this updated.</p>
+
+
+  </div>
+
+  
+    <section class="related-posts">
+      <h3>Related posts</h3>
+      <div class="posts-grid">
+        
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/realtime-optimistic-ui-pro.svg" alt="Real-time and optimistic UI with Apollo Client and Rails" style="object-position: center center;"></div>
+                
+                <h3><a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">Real‑Time and Optimistic UI with Apollo and Rails (ActionCable & Subscriptions)</a></h3>
+                <div class="post-meta"><time datetime="2025-02-01T10:00:00-06:00">February 01, 2025</time></div>
+                <div class="post-excerpt">Make your app feel instant. Implement optimistic updates, live queries, and GraphQL subscriptions with Apollo Client and Rails (ActionCable or AnyCable).</div>
+              </article>
+              
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                <h3><a href="/2015/rails-complex-rake-task/">Rails — complex rake task</a></h3>
+                <div class="post-meta"><time datetime="2015-06-22T19:00:00-05:00">June 22, 2015</time></div>
+                <div class="post-excerpt">
+  Archived from the original post (2015-06-23). Lightly converted to Markdown; code examples preserved.
+
+
+</div>
+              </article>
+              
+            
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                <h3><a href="/2015/offshore-nearshore-come-ashore-bringing-rails-team-in-house/">Offshore, nearshore, come ashore — bringing Rails team in‑house</a></h3>
+                <div class="post-meta"><time datetime="2015-06-22T19:00:00-05:00">June 22, 2015</time></div>
+                <div class="post-excerpt">
+  Archived from the original post (2015-06-23). Lightly converted to Markdown.
+
+
+</div>
+              </article>
+              
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+      </div>
+    </section>
+  
+
+
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4001%2F2017%2Frails-with-braintree-hosted-fields%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=Using+Braintree+hosted+fields+with+Ruby+on+Rails+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4001%2F2017%2Frails-with-braintree-hosted-fields%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4001/2017/rails-with-braintree-hosted-fields/">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div><div class="post-navigation"><div class="nav-previous">
+          <a href="/2017/what-oc-means-to-me/" class="btn btn-secondary">
+            ← What Operation Code means t...
+          </a>
+        </div><div class="nav-next">
+          <a href="/general/introduction/2024/01/15/welcome-to-my-blog/" class="btn btn-secondary">
+            Welcome to My Blog →
+          </a>
+        </div></div>
+  </footer>
+
+  <a class="u-url" href="/2017/rails-with-braintree-hosted-fields/" hidden></a>
+</article>
+
+  <script src="/assets/js/post.js" defer></script>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
+                Real‑Time and Optimistic UI...
+              </a>
+            </li><li>
+              <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
+                Authentication for Rails + ...
+              </a>
+            </li><li>
+              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
+                Type‑Safe React with Rails ...
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
