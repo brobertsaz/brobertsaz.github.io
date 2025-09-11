@@ -19,7 +19,7 @@ I used to write regularly about Rails, freelancing, and the Arizona tech scene. 
 
 ## What brought me back
 
-A couple weeks ago I went to a Ruby meetup in Chicago. First one I'd attended in person since probably 2017. I honestly didn't realize how much I missed it.
+A few days ago I went to [XORuby](https://www.linkedin.com/company/xoruby/posts/?feedView=all) in Chicago. First tech event I'd attended in person since probably 2017. I honestly didn't realize how much I missed it.
 
 We talked about _why the lucky stiff, old Ruby legends, and I even mentioned that I once followed a cat named Gorbypuff on Twitter (RIP). It was the kind of conversation that reminded me why I fell in love with the Ruby community in the first place.
 
