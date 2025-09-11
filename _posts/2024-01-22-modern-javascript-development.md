@@ -6,6 +6,10 @@ categories: [javascript, development]
 tags: [javascript, tools, best-practices, modern-development]
 author: Bob Roberts
 excerpt: "My love-hate relationship with the JavaScript ecosystem. How I learned to stop worrying and embrace the chaos of modern JS development."
+image: /assets/images/covers/modern-javascript.svg
+image_alt: Modern JavaScript Development
+image_position: center center
+
 ---
 
 I've been writing JavaScript for over 15 years. I remember when jQuery was revolutionary, when adding `onclick` handlers directly in HTML was normal, and when the biggest decision was whether to minify your one JavaScript file.
@@ -169,7 +173,7 @@ describe('formatUser', () => {
     const user = { id: 1, name: 'John', email: 'john@example.com' };
     expect(formatUser(user)).toBe('John (john@example.com)');
   });
-  
+
   it('handles missing email gracefully', () => {
     const user = { id: 1, name: 'John', email: null };
     expect(formatUser(user)).toBe('John (no email)');

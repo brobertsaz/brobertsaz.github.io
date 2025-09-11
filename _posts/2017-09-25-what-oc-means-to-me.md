@@ -6,6 +6,9 @@ categories: [Legacy]
 tags: [workflow, community, veterans]
 permalink: /2017/what-oc-means-to-me/
 original_url: https://brobertsaz.github.io//2017/what-oc-means-to-me/
+image: /assets/images/covers/operation-code.svg
+image_alt: What Operation Code Means To Me
+image_position: center center
 ---
 
 > Archived from the original post (2017-09-25). Lightly converted to Markdown.

@@ -6,6 +6,9 @@ categories: [Legacy]
 tags: [rails, ruby, braintree, payments, tutorial]
 permalink: /2017/rails-with-braintree-hosted-fields/
 original_url: https://brobertsaz.github.io//2017/rails-with-braintree-hosted-fields/
+image: /assets/images/covers/braintree-hosted-fields.svg
+image_alt: Using Braintree Hosted Fields with Rails
+image_position: center center
 ---
 
 > Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.

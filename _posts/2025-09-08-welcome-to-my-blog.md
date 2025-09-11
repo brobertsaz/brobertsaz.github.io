@@ -6,6 +6,10 @@ categories: [general, meta]
 tags: [blogging, comeback, reflection]
 author: Bob Roberts
 excerpt: "After a long hiatus, I'm bringing this blog back to life. What changed, why I stopped, and what I'm planning to write about this time around."
+image: /assets/images/covers/blog-comeback.svg
+image_alt: Dusting Off the Blog (Again)
+image_position: center center
+
 ---
 
 If you've been following this blog for a while (and there might be a few of you), you'll notice it's been quiet since 2017. Seven years is a long time in tech. A lot has changed.

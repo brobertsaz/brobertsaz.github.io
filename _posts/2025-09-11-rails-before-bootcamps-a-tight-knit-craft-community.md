@@ -7,6 +7,9 @@ tags: [rails, learning, culture, railscasts, why, code-school]
 excerpt: "Before bootcamps, learning Rails was messy and personal: screencasts, mailing lists, and a few strong voices that made the craft stick."
 author: Bob Roberts
 published: false
+image: /assets/images/covers/rails-before-bootcamps.svg
+image_alt: Rails Before Bootcamps: A Tight‑Knit Craft Community
+image_position: center center
 ---
 
 When folks talk about early Rails, they usually talk about the code. What I remember most are the people, the voices, and the quirky ways we learned.

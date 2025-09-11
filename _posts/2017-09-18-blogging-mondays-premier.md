@@ -6,6 +6,9 @@ categories: [Legacy]
 tags: [workflow, writing]
 permalink: /2017/blogging-mondays/
 original_url: https://brobertsaz.github.io//2017/blogging-mondays/
+image: /assets/images/covers/blogging-mondays.svg
+image_alt: Blogging Mondays Premier
+image_position: center center
 ---
 
 > Archived from the original post (2017-09-18). Lightly converted to Markdown.

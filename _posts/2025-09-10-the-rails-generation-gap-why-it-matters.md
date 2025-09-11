@@ -7,6 +7,9 @@ tags: [rails, mentorship, bootcamps, community, culture]
 excerpt: "From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build."
 author: Bob Roberts
 published: false
+image: /assets/images/covers/rails-generation-gap.svg
+image_alt: The Rails Generation Gap
+image_position: center center
 ---
 
 I still remember the first time I got truly stuck on a Rails bug in the late 2000s. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. That was the vibe back then: small, tight knit, and very collaborative.
