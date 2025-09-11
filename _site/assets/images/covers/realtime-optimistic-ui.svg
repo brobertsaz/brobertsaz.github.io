@@ -13,7 +13,7 @@
   <path d="M80 420 Q 180 360, 260 400 T 420 390 T 580 420 T 740 380 T 900 420 T 1120 400" stroke="url(#pulse)" stroke-width="8" fill="none"/>
   <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,sans-serif" fill="#f0f6fc">
     <text x="72" y="160" font-size="46" fill="#8b949e">Apollo • Subscriptions • ActionCable</text>
-    <text x="72" y="240" font-size="72" font-weight="700">Realtime & Optimistic UI</text>
+    <text x="72" y="240" font-size="72" font-weight="700">Realtime &amp; Optimistic UI</text>
     <text x="72" y="300" font-size="56" font-weight="700">with Rails</text>
   </g>
 </svg>
