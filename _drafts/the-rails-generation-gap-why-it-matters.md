@@ -81,3 +81,4 @@ Rails has always been more than code. Community is the multiplier. How we teach,
 This is the first post in a short series on the Rails Generation Gap. Next up, I will rewind to the early era of screencasts, whimsical guides, and in person mentorship, and pull forward the parts that still work today.
 
 If you have lived through both sides of this, what differences have you noticed? How do you think we can build better bridges between generations of Rails developers?
+
