@@ -205,7 +205,7 @@ export function App() {
 
 ## Type Safety with Codegen (Preview)
 
-Use GraphQL Code Generator to emit TS types and hooks (see dedicated post):
+Use GraphQL Code Generator to emit TS types and hooks ([see dedicated post]({% post_url 2025-01-17-type-safe-react-with-rails-graphql-and-codegen %})):
 
 ```bash
 npm i -D @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo

@@ -15,6 +15,8 @@ excerpt: "How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schem
 
 Type safety is only as strong as your weakest boundary. With GraphQL Code Generator, we can turn our Rails schema into first‑class TypeScript types and ergonomic React hooks.
 
+*This post builds on the production GraphQL setup covered in [Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript]({% post_url 2025-01-10-production-rails-graphql-with-apollo-and-typescript %}).*
+
 ### Why I lean hard on codegen
 
 - I prefer fragments‑first documents because they make co‑location natural and keep generated types composable.
