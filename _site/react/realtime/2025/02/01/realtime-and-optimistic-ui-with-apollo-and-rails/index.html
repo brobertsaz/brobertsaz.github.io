@@ -3,28 +3,33 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Real‑Time and Optimistic UI with Apollo and Rails (ActionCable &amp; Subscriptions) | Code It Forward</title>
+<title>Making Apps Feel Instant: My Experience with Realtime Rails and Apollo | Code It Forward</title>
 <meta name="generator" content="Jekyll v3.9.3" />
-<meta property="og:title" content="Real‑Time and Optimistic UI with Apollo and Rails (ActionCable &amp; Subscriptions)" />
+<meta property="og:title" content="Making Apps Feel Instant: My Experience with Realtime Rails and Apollo" />
 <meta name="author" content="Bob Roberts" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="Make your app feel instant. Implement optimistic updates, live queries, and GraphQL subscriptions with Apollo Client and Rails (ActionCable or AnyCable)." />
-<meta property="og:description" content="Make your app feel instant. Implement optimistic updates, live queries, and GraphQL subscriptions with Apollo Client and Rails (ActionCable or AnyCable)." />
-<link rel="canonical" href="http://localhost:4001/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" />
-<meta property="og:url" content="http://localhost:4001/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn’t, and why I switched to AnyCable." />
+<meta property="og:description" content="Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn’t, and why I switched to AnyCable." />
+<link rel="canonical" href="https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" />
+<meta property="og:url" content="https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" />
 <meta property="og:site_name" content="Code It Forward" />
-<meta property="og:image" content="http://localhost:4001/assets/images/covers/realtime-optimistic-ui-pro.svg" />
+<meta property="og:image" content="https://brobertsaz.github.io/assets/images/covers/realtime-optimistic-ui-pro.svg" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2025-02-01T10:00:00-06:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="http://localhost:4001/assets/images/covers/realtime-optimistic-ui-pro.svg" />
-<meta property="twitter:title" content="Real‑Time and Optimistic UI with Apollo and Rails (ActionCable &amp; Subscriptions)" />
+<meta property="twitter:image" content="https://brobertsaz.github.io/assets/images/covers/realtime-optimistic-ui-pro.svg" />
+<meta property="twitter:title" content="Making Apps Feel Instant: My Experience with Realtime Rails and Apollo" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bob Roberts" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2025-02-01T10:00:00-06:00","datePublished":"2025-02-01T10:00:00-06:00","description":"Make your app feel instant. Implement optimistic updates, live queries, and GraphQL subscriptions with Apollo Client and Rails (ActionCable or AnyCable).","headline":"Real‑Time and Optimistic UI with Apollo and Rails (ActionCable &amp; Subscriptions)","image":"http://localhost:4001/assets/images/covers/realtime-optimistic-ui-pro.svg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4001/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4001/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2025-02-01T10:00:00-06:00","datePublished":"2025-02-01T10:00:00-06:00","description":"Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn’t, and why I switched to AnyCable.","headline":"Making Apps Feel Instant: My Experience with Realtime Rails and Apollo","image":"https://brobertsaz.github.io/assets/images/covers/realtime-optimistic-ui-pro.svg","mainEntityOfPage":{"@type":"WebPage","@id":"https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://brobertsaz.github.io/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/css/main.css">
+<meta property="og:image" content="https://brobertsaz.github.io/assets/images/comic-bob.png">
+    <meta name="twitter:image" content="https://brobertsaz.github.io/assets/images/comic-bob.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630"><link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="https://brobertsaz.github.io/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -39,6 +44,13 @@
       <a class="site-title" href="/">
         Code It Forward
       </a>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
 
       <nav class="site-nav">
         <a href="/" >
@@ -63,18 +75,48 @@
           Contact
         </a>
         <a href="/payitforward/" class="payforward-link">#payitforward</a>
-
       </nav>
     </div>
   </div>
 </header>
+
+<script>
+// Mobile navigation toggle
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    nav.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+  }
+})();
+</script>
 <main class="main-content" aria-label="Content">
     <div class="container">
       <div class="content">
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Real‑Time and Optimistic UI with Apollo and Rails (ActionCable &amp; Subscriptions)</h1>
+    <h1 class="post-title p-name" itemprop="name headline">Making Apps Feel Instant: My Experience with Realtime Rails and Apollo</h1>
 
     <div class="post-meta">
       <time class="dt-published" datetime="2025-02-01T10:00:00-06:00" itemprop="datePublished">
@@ -93,128 +135,119 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <p>Fast UIs aren’t just about server speed—they’re about perceived speed. With Apollo’s optimistic updates and Rails subscriptions over ActionCable, you can deliver instant feedback and live data.</p>
+    <p>I’ve been working on a dashboard app lately that needed to feel snappy. You know the feeling when you click “Save” and nothing happens for a second? That pause where users wonder if they actually clicked the button? I wanted to eliminate that.</p>
 
-<h3 id="whats-worked-best-for-me">What’s worked best for me</h3>
+<p>Turns out, making UIs feel instant isn’t just about making the server faster. It’s about making smart choices about what to show users while they wait.</p>
 
-<ul>
-  <li>I prefer optimistic UI for tactile actions (create/toggle/like) and only add subscriptions when users need true live data (chat, dashboards).</li>
-  <li>In my projects, AnyCable replaces ActionCable once WS concurrency climbs; it’s a painless swap with graphql-ruby.</li>
-  <li>Here’s where this bites you: orphaned optimistic items if a mutation fails. I keep IDs stable and roll back in <code class="language-plaintext highlighter-rouge">onError</code>.</li>
-  <li>I also guard against duplicate feed entries by deduping in cache <code class="language-plaintext highlighter-rouge">merge</code> functions and keeping cache size in check with periodic GC.</li>
-</ul>
+<h2 id="the-optimistic-ui-revelation">The optimistic UI revelation</h2>
 
-<h2 id="optimistic-updates">Optimistic Updates</h2>
+<p>A few months ago I was building a simple task management feature. Users could create tasks, toggle them complete, delete them. Standard stuff. But every action felt sluggish because users had to wait for the server response before seeing any change.</p>
 
-<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// optimistic creation</span>
-<span class="nx">useMutation</span><span class="p">(</span><span class="nx">CREATE_POST</span><span class="p">,</span> <span class="p">{</span>
+<p>Then I discovered Apollo’s optimistic responses. Game changer.</p>
+
+<p>Here’s what made the difference. Instead of waiting for the server, I started showing users what they expected to see immediately:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// When someone creates a new task, show it right away</span>
+<span class="kd">const</span> <span class="p">[</span><span class="nx">createTask</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useMutation</span><span class="p">(</span><span class="nx">CREATE_TASK</span><span class="p">,</span> <span class="p">{</span>
   <span class="na">optimisticResponse</span><span class="p">:</span> <span class="p">({</span> <span class="nx">input</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">({</span>
-    <span class="na">createPost</span><span class="p">:</span> <span class="p">{</span>
-      <span class="na">__typename</span><span class="p">:</span> <span class="dl">'</span><span class="s1">CreatePostPayload</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">post</span><span class="p">:</span> <span class="p">{</span> <span class="na">__typename</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Post</span><span class="dl">'</span><span class="p">,</span> <span class="na">id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">temp-id</span><span class="dl">'</span><span class="p">,</span> <span class="na">title</span><span class="p">:</span> <span class="nx">input</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span> <span class="na">body</span><span class="p">:</span> <span class="nx">input</span><span class="p">.</span><span class="nx">body</span> <span class="p">}</span>
+    <span class="na">createTask</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">id</span><span class="p">:</span> <span class="s2">`temp-</span><span class="p">${</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span> <span class="c1">// temporary ID</span>
+      <span class="na">title</span><span class="p">:</span> <span class="nx">input</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+      <span class="na">completed</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="na">__typename</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Task</span><span class="dl">'</span>
     <span class="p">}</span>
   <span class="p">}),</span>
-  <span class="nx">update</span><span class="p">(</span><span class="nx">cache</span><span class="p">,</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">})</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">newPost</span> <span class="o">=</span> <span class="nx">data</span><span class="p">?.</span><span class="nx">createPost</span><span class="p">?.</span><span class="nx">post</span><span class="p">;</span>
-    <span class="nx">cache</span><span class="p">.</span><span class="nx">modify</span><span class="p">({</span>
-      <span class="na">fields</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nx">posts</span><span class="p">(</span><span class="nx">existing</span> <span class="o">=</span> <span class="p">{</span> <span class="na">edges</span><span class="p">:</span> <span class="p">[]</span> <span class="p">})</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="p">{</span> <span class="p">...</span><span class="nx">existing</span><span class="p">,</span> <span class="na">edges</span><span class="p">:</span> <span class="p">[{</span> <span class="na">__typename</span><span class="p">:</span> <span class="dl">'</span><span class="s1">PostEdge</span><span class="dl">'</span><span class="p">,</span> <span class="na">node</span><span class="p">:</span> <span class="nx">newPost</span> <span class="p">},</span> <span class="p">...</span><span class="nx">existing</span><span class="p">.</span><span class="nx">edges</span><span class="p">]</span> <span class="p">};</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
+  <span class="na">onError</span><span class="p">:</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Oops, something went wrong - the UI automatically rolls back</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to create task:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
-<p>Tips:</p>
+<p>The difference was night and day. Click “Add Task” and boom - it’s there. No waiting. If something goes wrong on the server, Apollo handles rolling back the optimistic change.</p>
 
-<ul>
-  <li>Prefer optimistic responses for tactile actions (create, toggle, like)</li>
-  <li>Roll back on error in the <code class="language-plaintext highlighter-rouge">onError</code> callback</li>
-</ul>
+<p>But I learned the hard way that optimistic UI isn’t magic. It works great for simple actions like creating, toggling, or deleting. But I tried to get too clever with complex forms and nested relationships. That’s where things got messy.</p>
 
-<h2 id="graphql-subscriptions-with-rails">GraphQL Subscriptions with Rails</h2>
+<h2 id="when-optimistic-ui-isnt-enough">When optimistic UI isn’t enough</h2>
 
-<p><code class="language-plaintext highlighter-rouge">graphql-ruby</code> supports ActionCable subscriptions out of the box.</p>
+<p>Optimistic updates work great when you’re the only one changing data. But what about when multiple users are working on the same thing? That’s where I needed real-time subscriptions.</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/graphql/types/subscription_type.rb</span>
+<p>I was building a collaborative feature where team members could see each other’s changes live. ActionCable made this surprisingly straightforward with Rails:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># In my Rails GraphQL schema</span>
 <span class="k">class</span> <span class="nc">Types::SubscriptionType</span> <span class="o">&lt;</span> <span class="no">Types</span><span class="o">::</span><span class="no">BaseObject</span>
-  <span class="n">field</span> <span class="ss">:post_created</span><span class="p">,</span> <span class="no">Types</span><span class="o">::</span><span class="no">PostType</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
+  <span class="n">field</span> <span class="ss">:task_updated</span><span class="p">,</span> <span class="no">Types</span><span class="o">::</span><span class="no">TaskType</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
 <span class="k">end</span>
+
+<span class="c1"># After updating a task anywhere in the app</span>
+<span class="no">MySchema</span><span class="p">.</span><span class="nf">subscriptions</span><span class="p">.</span><span class="nf">trigger</span><span class="p">(</span><span class="ss">:task_updated</span><span class="p">,</span> <span class="p">{},</span> <span class="n">updated_task</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># anywhere in app after create</span>
-<span class="no">MySchema</span><span class="p">.</span><span class="nf">subscriptions</span><span class="p">.</span><span class="nf">trigger</span><span class="p">(</span><span class="ss">:post_created</span><span class="p">,</span> <span class="p">{},</span> <span class="vi">@post</span><span class="p">)</span>
-</code></pre></div></div>
+<p>On the client side, I had to set up Apollo to handle both regular HTTP requests and WebSocket subscriptions:</p>
 
-<p>Client side with Apollo:</p>
-
-<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">split</span><span class="p">,</span> <span class="nx">HttpLink</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@apollo/client</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">GraphQLWsLink</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@apollo/client/link/subscriptions</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">createClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">graphql-ws</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">getMainDefinition</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@apollo/client/utilities</span><span class="dl">'</span><span class="p">;</span>
-
-<span class="kd">const</span> <span class="nx">httpLink</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpLink</span><span class="p">({</span> <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/graphql</span><span class="dl">'</span><span class="p">,</span> <span class="na">credentials</span><span class="p">:</span> <span class="dl">'</span><span class="s1">include</span><span class="dl">'</span> <span class="p">});</span>
-
-<span class="kd">const</span> <span class="nx">wsLink</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GraphQLWsLink</span><span class="p">(</span><span class="nx">createClient</span><span class="p">({</span> <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">wss://example.com/cable</span><span class="dl">'</span> <span class="p">}));</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This took me a while to get right</span>
+<span class="kd">const</span> <span class="nx">wsLink</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GraphQLWsLink</span><span class="p">(</span>
+  <span class="nx">createClient</span><span class="p">({</span> <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ws://localhost:3000/cable</span><span class="dl">'</span> <span class="p">})</span>
+<span class="p">);</span>
 
 <span class="kd">const</span> <span class="nx">splitLink</span> <span class="o">=</span> <span class="nx">split</span><span class="p">(</span>
   <span class="p">({</span> <span class="nx">query</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">def</span> <span class="o">=</span> <span class="nx">getMainDefinition</span><span class="p">(</span><span class="nx">query</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">def</span><span class="p">.</span><span class="nx">kind</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">OperationDefinition</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="nx">def</span><span class="p">.</span><span class="nx">operation</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">subscription</span><span class="dl">'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">definition</span> <span class="o">=</span> <span class="nx">getMainDefinition</span><span class="p">(</span><span class="nx">query</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="nx">definition</span><span class="p">.</span><span class="nx">kind</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">OperationDefinition</span><span class="dl">'</span> <span class="o">&amp;&amp;</span>
+      <span class="nx">definition</span><span class="p">.</span><span class="nx">operation</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">subscription</span><span class="dl">'</span>
+    <span class="p">);</span>
   <span class="p">},</span>
   <span class="nx">wsLink</span><span class="p">,</span>
   <span class="nx">httpLink</span>
 <span class="p">);</span>
 </code></pre></div></div>
 
-<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// subscription usage</span>
-<span class="kd">const</span> <span class="nx">POST_CREATED</span> <span class="o">=</span> <span class="nx">gql</span><span class="s2">`
-  subscription { postCreated { id title body } }
-`</span><span class="p">;</span>
+<p>The magic happened when I subscribed to updates:</p>
 
-<span class="nx">useSubscription</span><span class="p">(</span><span class="nx">POST_CREATED</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">onData</span><span class="p">:</span> <span class="p">({</span> <span class="nx">client</span><span class="p">,</span> <span class="nx">data</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">post</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">?.</span><span class="nx">postCreated</span><span class="p">;</span>
-    <span class="nx">client</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">modify</span><span class="p">({</span>
-      <span class="na">fields</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nx">posts</span><span class="p">(</span><span class="nx">existing</span> <span class="o">=</span> <span class="p">{</span> <span class="na">edges</span><span class="p">:</span> <span class="p">[]</span> <span class="p">})</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="p">{</span> <span class="p">...</span><span class="nx">existing</span><span class="p">,</span> <span class="na">edges</span><span class="p">:</span> <span class="p">[{</span> <span class="na">__typename</span><span class="p">:</span> <span class="dl">'</span><span class="s1">PostEdge</span><span class="dl">'</span><span class="p">,</span> <span class="na">node</span><span class="p">:</span> <span class="nx">post</span> <span class="p">},</span> <span class="p">...</span><span class="nx">existing</span><span class="p">.</span><span class="nx">edges</span><span class="p">]</span> <span class="p">};</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useSubscription</span><span class="p">(</span><span class="nx">TASK_UPDATED</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">onData</span><span class="p">:</span> <span class="p">({</span> <span class="nx">data</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// Someone else updated a task - show it immediately</span>
+    <span class="kd">const</span> <span class="nx">updatedTask</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">?.</span><span class="nx">taskUpdated</span><span class="p">;</span>
+    <span class="c1">// Apollo automatically updates the cache</span>
   <span class="p">}</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
-<h2 id="anycable-for-scale">AnyCable for Scale</h2>
+<h2 id="the-actioncable-bottleneck">The ActionCable bottleneck</h2>
 
-<p>For high concurrency, swap ActionCable for AnyCable:</p>
+<p>Everything worked great in development and with a few users. But when I load-tested with a couple hundred concurrent WebSocket connections, ActionCable started to struggle. Ruby isn’t great at handling tons of concurrent connections.</p>
 
-<ul>
-  <li>Offloads WS handling to Go (AnyCable‑Go)</li>
-  <li>Keeps your Ruby app focused on business logic</li>
-  <li>Drop‑in compatible with <code class="language-plaintext highlighter-rouge">graphql-ruby</code> subscriptions</li>
-</ul>
+<p>That’s when I discovered AnyCable. It’s a drop-in replacement that offloads WebSocket handling to a Go process while keeping all my Rails business logic intact. The switch was painless - just changed my cable config and started the AnyCable-Go server.</p>
 
-<h2 id="live-queries-polling">Live Queries (Polling)</h2>
+<p>The performance difference was dramatic. What used to choke at 200 connections now handled thousands without breaking a sweat.</p>
 
-<p>When subscriptions are overkill, use lightweight <code class="language-plaintext highlighter-rouge">pollInterval</code> or manual <code class="language-plaintext highlighter-rouge">refetch</code>.</p>
+<h2 id="sometimes-simple-polling-is-better">Sometimes simple polling is better</h2>
 
-<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useQuery</span><span class="p">(</span><span class="nx">POSTS</span><span class="p">,</span> <span class="p">{</span> <span class="na">pollInterval</span><span class="p">:</span> <span class="mi">10</span><span class="nx">_000</span> <span class="p">});</span>
+<p>Not everything needs WebSockets. For data that updates occasionally - like user counts or notification badges - I just use Apollo’s polling feature:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useQuery</span><span class="p">(</span><span class="nx">GET_NOTIFICATION_COUNT</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">pollInterval</span><span class="p">:</span> <span class="mi">30000</span> <span class="c1">// Check every 30 seconds</span>
+<span class="p">});</span>
 </code></pre></div></div>
 
-<h2 id="reliability-checklist">Reliability Checklist</h2>
+<p>It’s simpler, more reliable, and puts less strain on the server.</p>
 
-<ul class="task-list">
-  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Reconnect logic for websockets (exponential backoff)</li>
-  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Server heartbeats and ping/pong timeouts</li>
-  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Idempotent optimistic updates (stable IDs, dedupe by ID)</li>
-  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Cache GC to avoid unbounded growth</li>
-</ul>
+<h2 id="lessons-learned-the-hard-way">Lessons learned the hard way</h2>
 
-<p>With the right mix of optimistic UI and realtime, your app feels instantaneous—even when the network isn’t.</p>
+<p>Building realtime features taught me a few things:</p>
+
+<p><strong>Optimistic UI is great, but have a rollback plan.</strong> I spent hours debugging “ghost” items that appeared when mutations failed silently.</p>
+
+<p><strong>WebSockets are stateful and fragile.</strong> Always handle reconnections gracefully. Users close laptops, switch networks, go through tunnels.</p>
+
+<p><strong>Not everything needs to be realtime.</strong> I got carried away and made every little thing live. Some data is fine being a few seconds stale.</p>
+
+<p><strong>Test with real network conditions.</strong> Everything works great on localhost. Try it on a flaky mobile connection.</p>
+
+<hr />
+
+<p>The combination of optimistic UI and selective realtime updates has made my apps feel much more responsive. Users notice the difference immediately. The key is being thoughtful about when to use each technique.</p>
 
   </div>
 
@@ -223,6 +256,12 @@
       <h3>Related posts</h3>
       <div class="posts-grid">
         
+        
+          
+            
+            
+            
+          
         
           
         
@@ -234,9 +273,9 @@
                 
                   <div class="post-thumb"><img src="/assets/images/covers/auth-sessions-vs-jwt-pro.svg" alt="Authentication in Rails and Apollo: Sessions vs JWT" style="object-position: center top;"></div>
                 
-                <h3><a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">Authentication for Rails + Apollo: Secure Sessions vs JWT (and How to Implement Both)</a></h3>
+                <h3><a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">The Authentication Dilemma: Sessions vs JWTs in Rails</a></h3>
                 <div class="post-meta"><time datetime="2025-01-24T10:00:00-06:00">January 24, 2025</time></div>
-                <div class="post-excerpt">A pragmatic guide to user auth in a Rails API consumed by a React/Apollo/TypeScript app: secure cookies + CSRF vs JWT tokens, trade‑offs, and...</div>
+                <div class="post-excerpt">Why I usually stick with boring cookie sessions, when I reach for JWTs, and the authentication mistakes that taught me lessons the hard way....</div>
               </article>
               
             
@@ -256,9 +295,9 @@
                 
                   <div class="post-thumb"><img src="/assets/images/covers/rails-graphql-apollo-pro.svg" alt="Production-ready Rails GraphQL API with Apollo Client and TypeScript" style="object-position: center center;"></div>
                 
-                <h3><a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript</a></h3>
+                <h3><a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">My Journey Building a GraphQL API with Rails and Apollo</a></h3>
                 <div class="post-meta"><time datetime="2025-01-10T10:00:00-06:00">January 10, 2025</time></div>
-                <div class="post-excerpt">A practical, end‑to‑end guide to shipping a production‑ready GraphQL stack: Rails (graphql‑ruby) + Apollo Client + TypeScript with caching, pagination, error handling, and deployment...</div>
+                <div class="post-excerpt">What I learned building a GraphQL API that actually works in production. The mistakes I made, the tools that saved me, and why I'd...</div>
               </article>
               
             
@@ -274,19 +313,9 @@
             
             
             
-          
-        
-          
-            
-            
-            
-          
-        
-          
-            
-            
-            
               <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/braintree-hosted-fields.svg" alt="Using Braintree Hosted Fields with Rails" style="object-position: center center;"></div>
                 
                 <h3><a href="/2017/rails-with-braintree-hosted-fields/">Using Braintree hosted fields with Ruby on Rails</a></h3>
                 <div class="post-meta"><time datetime="2017-09-26T19:00:00-05:00">September 26, 2017</time></div>
@@ -771,16 +800,20 @@
     <div class="post-share">
       <span>Share:</span>
       
-      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4001%2Freact%2Frealtime%2F2025%2F02%2F01%2Frealtime-and-optimistic-ui-with-apollo-and-rails%2F" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="share-btn" href="mailto:?subject=Real%E2%80%91Time+and+Optimistic+UI+with+Apollo+and+Rails+%28ActionCable+%26+Subscriptions%29+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4001%2Freact%2Frealtime%2F2025%2F02%2F01%2Frealtime-and-optimistic-ui-with-apollo-and-rails%2F" target="_blank" rel="noopener">Email</a>
-      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4001/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">Copy link</button>
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbrobertsaz.github.io%2Freact%2Frealtime%2F2025%2F02%2F01%2Frealtime-and-optimistic-ui-with-apollo-and-rails%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=Making+Apps+Feel+Instant%3A+My+Experience+with+Realtime+Rails+and+Apollo+%E2%80%94+%23payitforward&body=https%3A%2F%2Fbrobertsaz.github.io%2Freact%2Frealtime%2F2025%2F02%2F01%2Frealtime-and-optimistic-ui-with-apollo-and-rails%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">Copy link</button>
     </div>
 
     <div class="pay-forward-callout">
       <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
     </div><div class="post-navigation"><div class="nav-previous">
           <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" class="btn btn-secondary">
-            ← Authentication for Rails + ...
+            ← The Authentication Dilemma:...
+          </a>
+        </div><div class="nav-next">
+          <a href="/general/meta/2025/09/08/welcome-to-my-blog/" class="btn btn-secondary">
+            Dusting Off the Blog (Again) →
           </a>
         </div></div>
   </footer>
@@ -824,16 +857,16 @@
       <div class="footer-section">
         <h4>Recent Posts</h4>
         <ul><li>
+              <a href="/general/meta/2025/09/08/welcome-to-my-blog/">
+                Dusting Off the Blog (Again)
+              </a>
+            </li><li>
               <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
-                Real‑Time and Optimistic UI...
+                Making Apps Feel Instant: M...
               </a>
             </li><li>
               <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
-                Authentication for Rails + ...
-              </a>
-            </li><li>
-              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
-                Type‑Safe React with Rails ...
+                The Authentication Dilemma:...
               </a>
             </li></ul>
       </div>

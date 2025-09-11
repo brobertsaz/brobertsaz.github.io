@@ -65,6 +65,23 @@ paginate_path: "/page:num/"
 # SEO
 author: Bob Roberts
 logo: /assets/images/logo.svg
+
+# Social sharing defaults
+image:
+  path: /assets/images/social-default.png
+  width: 1200
+  height: 630
+twitter:
+  card: summary_large_image
+
+# Additional SEO defaults
+lang: en
+webmaster_verifications:
+  google: # Add Google Search Console verification if needed
+
+# Open Graph defaults
+og_image: /assets/images/social-default.png
+
 social:
   name: Bob Roberts
   links:

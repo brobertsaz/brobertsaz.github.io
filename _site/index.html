@@ -7,21 +7,23 @@
 <meta name="generator" content="Jekyll v3.9.3" />
 <meta property="og:title" content="Home" />
 <meta name="author" content="Bob Roberts" />
-<meta property="og:locale" content="en_US" />
+<meta property="og:locale" content="en" />
 <meta name="description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
 <meta property="og:description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
-<link rel="canonical" href="http://localhost:4001/" />
-<meta property="og:url" content="http://localhost:4001/" />
+<link rel="canonical" href="https://brobertsaz.github.io/" />
+<meta property="og:url" content="https://brobertsaz.github.io/" />
 <meta property="og:site_name" content="Code It Forward" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Home" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bob Roberts" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Bob Roberts"},"description":"Practical Rails · React · GraphQL · TypeScript — pay it forward.","headline":"Home","name":"Bob Roberts","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"sameAs":["https://github.com/brobertsaz"],"url":"http://localhost:4001/"}</script>
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Bob Roberts"},"description":"Practical Rails · React · GraphQL · TypeScript — pay it forward.","headline":"Home","name":"Bob Roberts","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://brobertsaz.github.io/assets/images/logo.svg"},"name":"Bob Roberts"},"sameAs":["https://github.com/brobertsaz"],"url":"https://brobertsaz.github.io/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="https://brobertsaz.github.io/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -36,6 +38,13 @@
       <a class="site-title" href="/">
         Code It Forward
       </a>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
 
       <nav class="site-nav">
         <a href="/" class="active">
@@ -60,11 +69,41 @@
           Contact
         </a>
         <a href="/payitforward/" class="payforward-link">#payitforward</a>
-
       </nav>
     </div>
   </div>
 </header>
+
+<script>
+// Mobile navigation toggle
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    nav.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+  }
+})();
+</script>
 <main class="main-content" aria-label="Content">
     <div class="container">
       <div class="content">
@@ -94,24 +133,24 @@
 <h2 id="latest-posts">Latest Posts</h2>
 
 <article class="post-preview">
-  <h3><a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">Real‑Time and Optimistic UI with Apollo and Rails (ActionCable &amp; Subscriptions)</a></h3>
+  <h3><a href="/general/meta/2025/09/08/welcome-to-my-blog/">Dusting Off the Blog (Again)</a></h3>
+  <p class="post-meta">September 08, 2025</p>
+  <p>After a long hiatus, I'm bringing this blog back to life. What changed, why I stopped, and what I'm planning to write about this time around.</p>
+  <a href="/general/meta/2025/09/08/welcome-to-my-blog/" class="read-more">Read more →</a>
+</article>
+
+<article class="post-preview">
+  <h3><a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">Making Apps Feel Instant: My Experience with Realtime Rails and Apollo</a></h3>
   <p class="post-meta">February 01, 2025</p>
-  <p>Make your app feel instant. Implement optimistic updates, live queries, and GraphQL subscriptions with Apollo Client and Rails (ActionCable or AnyCable).</p>
+  <p>Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn't, and why I switched to AnyCable.</p>
   <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" class="read-more">Read more →</a>
 </article>
 
 <article class="post-preview">
-  <h3><a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">Authentication for Rails + Apollo: Secure Sessions vs JWT (and How to Implement Both)</a></h3>
+  <h3><a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">The Authentication Dilemma: Sessions vs JWTs in Rails</a></h3>
   <p class="post-meta">January 24, 2025</p>
-  <p>A pragmatic guide to user auth in a Rails API consumed by a React/Apollo/TypeScript app: secure cookies + CSRF vs JWT tokens, trade‑offs, and reference snippets.</p>
+  <p>Why I usually stick with boring cookie sessions, when I reach for JWTs, and the authentication mistakes that taught me lessons the hard way.</p>
   <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" class="read-more">Read more →</a>
-</article>
-
-<article class="post-preview">
-  <h3><a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises</a></h3>
-  <p class="post-meta">January 17, 2025</p>
-  <p>How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schema to get end‑to‑end type safety, generated hooks, and faster developer feedback.</p>
-  <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" class="read-more">Read more →</a>
 </article>
 
 <div class="all-posts">
@@ -123,12 +162,34 @@
       <div class="posts-grid"><article class="post-preview">
             
               <div class="post-thumb">
+                <img src="/assets/images/covers/blog-comeback.svg" alt="Dusting Off the Blog (Again)" style="object-position: center center;">
+              </div>
+            
+            <h3>
+              <a href="/general/meta/2025/09/08/welcome-to-my-blog/">
+                Dusting Off the Blog (Again)
+              </a>
+            </h3>
+
+            <div class="post-meta">
+              <time datetime="2025-09-08T12:00:00-05:00">
+                September 08, 2025
+              </time><span class="author">by Bob Roberts</span></div>
+
+            <div class="post-excerpt">
+              After a long hiatus, I'm bringing this blog back to life. What changed, why I stopped, and what I'm planning to write about this time around.
+            </div><div class="post-tags"><span class="tag">blogging</span><span class="tag">comeback</span><span class="tag">reflection</span></div><a href="/general/meta/2025/09/08/welcome-to-my-blog/" class="read-more">
+              Read more →
+            </a>
+          </article><article class="post-preview">
+            
+              <div class="post-thumb">
                 <img src="/assets/images/covers/realtime-optimistic-ui-pro.svg" alt="Real-time and optimistic UI with Apollo Client and Rails" style="object-position: center center;">
               </div>
             
             <h3>
               <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
-                Real‑Time and Optimistic UI with Apollo and Rails (ActionCable &amp; Subscriptions)
+                Making Apps Feel Instant: My Experience with Realtime Rails and Apollo
               </a>
             </h3>
 
@@ -138,7 +199,7 @@
               </time><span class="author">by Bob Roberts</span></div>
 
             <div class="post-excerpt">
-              Make your app feel instant. Implement optimistic updates, live queries, and GraphQL subscriptions with Apollo Client and Rails (ActionCable or AnyCable).
+              Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn't, and why I switched to AnyCable.
             </div><div class="post-tags"><span class="tag">apollo</span><span class="tag">optimistic-ui</span><span class="tag">subscriptions</span><span class="tag">actioncable</span><span class="tag">anycable</span><span class="tag">rails</span></div><a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" class="read-more">
               Read more →
             </a>
@@ -150,7 +211,7 @@
             
             <h3>
               <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
-                Authentication for Rails + Apollo: Secure Sessions vs JWT (and How to Implement Both)
+                The Authentication Dilemma: Sessions vs JWTs in Rails
               </a>
             </h3>
 
@@ -160,7 +221,7 @@
               </time><span class="author">by Bob Roberts</span></div>
 
             <div class="post-excerpt">
-              A pragmatic guide to user auth in a Rails API consumed by a React/Apollo/TypeScript app: secure cookies + CSRF vs JWT tokens, trade‑offs, and reference snippets.
+              Why I usually stick with boring cookie sessions, when I reach for JWTs, and the authentication mistakes that taught me lessons the hard way.
             </div><div class="post-tags"><span class="tag">authentication</span><span class="tag">authorization</span><span class="tag">jwt</span><span class="tag">sessions</span><span class="tag">apollo</span><span class="tag">react</span><span class="tag">csrf</span></div><a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" class="read-more">
               Read more →
             </a>
@@ -172,7 +233,7 @@
             
             <h3>
               <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
-                Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises
+                Why I Generate All My TypeScript Types (And You Should Too)
               </a>
             </h3>
 
@@ -182,7 +243,7 @@
               </time><span class="author">by Bob Roberts</span></div>
 
             <div class="post-excerpt">
-              How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schema to get end‑to‑end type safety, generated hooks, and faster developer feedback.
+              How GraphQL Code Generator saved me from runtime surprises and made my Rails + React apps much more reliable. Plus the gotchas I wish I'd known earlier.
             </div><div class="post-tags"><span class="tag">typescript</span><span class="tag">react</span><span class="tag">graphql</span><span class="tag">codegen</span><span class="tag">ruby-on-rails</span></div><a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" class="read-more">
               Read more →
             </a>
@@ -194,7 +255,7 @@
             
             <h3>
               <a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">
-                Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript
+                My Journey Building a GraphQL API with Rails and Apollo
               </a>
             </h3>
 
@@ -204,33 +265,19 @@
               </time><span class="author">by Bob Roberts</span></div>
 
             <div class="post-excerpt">
-              A practical, end‑to‑end guide to shipping a production‑ready GraphQL stack: Rails (graphql‑ruby) + Apollo Client + TypeScript with caching, pagination, error handling, and deployment tips.
+              What I learned building a GraphQL API that actually works in production. The mistakes I made, the tools that saved me, and why I'd choose this stack again.
             </div><div class="post-tags"><span class="tag">ruby-on-rails</span><span class="tag">graphql</span><span class="tag">apollo</span><span class="tag">typescript</span><span class="tag">fullstack</span><span class="tag">performance</span></div><a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/" class="read-more">
               Read more →
             </a>
           </article><article class="post-preview">
             
-            <h3>
-              <a href="/architecture/scalability/2024/02/01/building-scalable-web-applications/">
-                Building Scalable Web Applications: Architecture Patterns and Strategies
-              </a>
-            </h3>
-
-            <div class="post-meta">
-              <time datetime="2024-02-01T10:15:00-06:00">
-                February 01, 2024
-              </time><span class="author">by Bob Roberts</span></div>
-
-            <div class="post-excerpt">
-              Exploring proven architectural patterns and strategies for building web applications that can handle growth in users, data, and complexity while maintaining performance and reliability.
-            </div><div class="post-tags"><span class="tag">scalability</span><span class="tag">architecture</span><span class="tag">web-development</span><span class="tag">performance</span></div><a href="/architecture/scalability/2024/02/01/building-scalable-web-applications/" class="read-more">
-              Read more →
-            </a>
-          </article><article class="post-preview">
+              <div class="post-thumb">
+                <img src="/assets/images/covers/modern-javascript.svg" alt="Modern JavaScript Development" style="object-position: center center;">
+              </div>
             
             <h3>
               <a href="/javascript/development/2024/01/22/modern-javascript-development/">
-                Modern JavaScript Development: Tools and Best Practices
+                JavaScript Fatigue is Real (But It&#39;s Worth It)
               </a>
             </h3>
 
@@ -240,7 +287,7 @@
               </time><span class="author">by Bob Roberts</span></div>
 
             <div class="post-excerpt">
-              Exploring the current landscape of JavaScript development tools, from build systems to testing frameworks, and the best practices that make development more efficient and maintainable.
+              My love-hate relationship with the JavaScript ecosystem. How I learned to stop worrying and embrace the chaos of modern JS development.
             </div><div class="post-tags"><span class="tag">javascript</span><span class="tag">tools</span><span class="tag">best-practices</span><span class="tag">modern-development</span></div><a href="/javascript/development/2024/01/22/modern-javascript-development/" class="read-more">
               Read more →
             </a>
@@ -282,16 +329,16 @@
       <div class="footer-section">
         <h4>Recent Posts</h4>
         <ul><li>
+              <a href="/general/meta/2025/09/08/welcome-to-my-blog/">
+                Dusting Off the Blog (Again)
+              </a>
+            </li><li>
               <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
-                Real‑Time and Optimistic UI...
+                Making Apps Feel Instant: M...
               </a>
             </li><li>
               <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
-                Authentication for Rails + ...
-              </a>
-            </li><li>
-              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
-                Type‑Safe React with Rails ...
+                The Authentication Dilemma:...
               </a>
             </li></ul>
       </div>

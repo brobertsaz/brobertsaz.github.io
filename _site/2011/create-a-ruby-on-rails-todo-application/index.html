@@ -7,22 +7,24 @@
 <meta name="generator" content="Jekyll v3.9.3" />
 <meta property="og:title" content="Create a Ruby on Rails TODO application" />
 <meta name="author" content="Bob Roberts" />
-<meta property="og:locale" content="en_US" />
+<meta property="og:locale" content="en" />
 <meta name="description" content="Archived from the original post (2011-12-27). This is a preservation stub; see the original link for full content." />
 <meta property="og:description" content="Archived from the original post (2011-12-27). This is a preservation stub; see the original link for full content." />
-<link rel="canonical" href="http://localhost:4001/2011/create-a-ruby-on-rails-todo-application/" />
-<meta property="og:url" content="http://localhost:4001/2011/create-a-ruby-on-rails-todo-application/" />
+<link rel="canonical" href="https://brobertsaz.github.io/2011/create-a-ruby-on-rails-todo-application/" />
+<meta property="og:url" content="https://brobertsaz.github.io/2011/create-a-ruby-on-rails-todo-application/" />
 <meta property="og:site_name" content="Code It Forward" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2011-12-26T18:00:00-06:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Create a Ruby on Rails TODO application" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bob Roberts" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2011-12-26T18:00:00-06:00","datePublished":"2011-12-26T18:00:00-06:00","description":"Archived from the original post (2011-12-27). This is a preservation stub; see the original link for full content.","headline":"Create a Ruby on Rails TODO application","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4001/2011/create-a-ruby-on-rails-todo-application/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4001/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4001/2011/create-a-ruby-on-rails-todo-application/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2011-12-26T18:00:00-06:00","datePublished":"2011-12-26T18:00:00-06:00","description":"Archived from the original post (2011-12-27). This is a preservation stub; see the original link for full content.","headline":"Create a Ruby on Rails TODO application","mainEntityOfPage":{"@type":"WebPage","@id":"https://brobertsaz.github.io/2011/create-a-ruby-on-rails-todo-application/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://brobertsaz.github.io/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"https://brobertsaz.github.io/2011/create-a-ruby-on-rails-todo-application/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4001/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="https://brobertsaz.github.io/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -37,6 +39,13 @@
       <a class="site-title" href="/">
         Code It Forward
       </a>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
 
       <nav class="site-nav">
         <a href="/" >
@@ -61,11 +70,41 @@
           Contact
         </a>
         <a href="/payitforward/" class="payforward-link">#payitforward</a>
-
       </nav>
     </div>
   </div>
 </header>
+
+<script>
+// Mobile navigation toggle
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    nav.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+  }
+})();
+</script>
 <main class="main-content" aria-label="Content">
     <div class="container">
       <div class="content">
@@ -100,9 +139,9 @@
     <div class="post-share">
       <span>Share:</span>
       
-      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4001%2F2011%2Fcreate-a-ruby-on-rails-todo-application%2F" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="share-btn" href="mailto:?subject=Create+a+Ruby+on+Rails+TODO+application+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4001%2F2011%2Fcreate-a-ruby-on-rails-todo-application%2F" target="_blank" rel="noopener">Email</a>
-      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4001/2011/create-a-ruby-on-rails-todo-application/">Copy link</button>
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fbrobertsaz.github.io%2F2011%2Fcreate-a-ruby-on-rails-todo-application%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=Create+a+Ruby+on+Rails+TODO+application+%E2%80%94+%23payitforward&body=https%3A%2F%2Fbrobertsaz.github.io%2F2011%2Fcreate-a-ruby-on-rails-todo-application%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="https://brobertsaz.github.io/2011/create-a-ruby-on-rails-todo-application/">Copy link</button>
     </div>
 
     <div class="pay-forward-callout">
@@ -157,16 +196,16 @@
       <div class="footer-section">
         <h4>Recent Posts</h4>
         <ul><li>
+              <a href="/general/meta/2025/09/08/welcome-to-my-blog/">
+                Dusting Off the Blog (Again)
+              </a>
+            </li><li>
               <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
-                Real‑Time and Optimistic UI...
+                Making Apps Feel Instant: M...
               </a>
             </li><li>
               <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
-                Authentication for Rails + ...
-              </a>
-            </li><li>
-              <a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">
-                Type‑Safe React with Rails ...
+                The Authentication Dilemma:...
               </a>
             </li></ul>
       </div>

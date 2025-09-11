@@ -1,0 +1,12 @@
+{
+  "name": "brobertsaz-social-image-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "svg2png": "node scripts/convert-svgs.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.4"
+  }
+}
+

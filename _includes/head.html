@@ -4,6 +4,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   {%- seo -%}
+  {%- assign og_image = nil -%}
+  {%- if page.image_social -%}
+    {%- assign og_image = page.image_social -%}
+  {%- elsif page.image -%}
+    {%- if page.image contains '.svg' -%}
+      {%- assign og_image = page.image | replace: '.svg', '.png' -%}
+    {%- else -%}
+      {%- assign og_image = page.image -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- assign og_image = site.image.path | default: site.image -%}
+  {%- endif -%}
+  <meta property="og:image" content="{{ og_image | absolute_url }}">
+  <meta name="twitter:image" content="{{ og_image | absolute_url }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
   <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}">
   <link rel="icon" type="image/svg+xml" href="{{ "/assets/images/favicon.svg" | relative_url }}">
