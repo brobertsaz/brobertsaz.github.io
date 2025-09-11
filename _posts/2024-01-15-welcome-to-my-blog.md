@@ -1,67 +1,66 @@
 ---
 layout: post
-title: "Welcome to My Blog"
+title: "Dusting Off the Blog (Again)"
 date: 2024-01-15 10:00:00 -0700
-categories: [general, introduction]
-tags: [welcome, blog, introduction]
+categories: [general, meta]
+tags: [blogging, comeback, reflection]
 author: Bob Roberts
-excerpt: "Welcome to my new blog! Here's what you can expect to find and why I decided to start sharing my thoughts and experiences in the world of technology."
+excerpt: "After a long hiatus, I'm bringing this blog back to life. What changed, why I stopped, and what I'm planning to write about this time around."
 ---
 
-# Welcome to My Blog
+If you've been following this blog for a while (and there might be a few of you), you'll notice it's been quiet since 2017. Seven years is a long time in tech. A lot has changed.
 
-Hello and welcome to my corner of the internet! I'm excited to finally launch this blog and share my journey, insights, and discoveries in the world of technology and software development.
+I used to write regularly about Rails, freelancing, and the Arizona tech scene. Then life happened, priorities shifted, and the blog went dormant.
 
-## What You'll Find Here
+## What brought me back
 
-This blog will be a mix of technical content, personal reflections, and industry insights. Here's what you can expect:
+A couple weeks ago I went to a Ruby meetup in Chicago. First one I'd attended in person since probably 2017. I honestly didn't realize how much I missed it.
 
-### Technical Deep Dives
-I'll be sharing detailed explorations of:
-- Modern web development frameworks and patterns
-- Cloud architecture and DevOps practices
-- Programming languages and their ecosystems
-- Performance optimization techniques
-- Security best practices
+We talked about _why the lucky stiff, old Ruby legends, and I even mentioned that I once followed a cat named Gorbypuff on Twitter (RIP). It was the kind of conversation that reminded me why I fell in love with the Ruby community in the first place.
 
-### Project Showcases
-I love building things, and I'll be documenting:
-- Personal projects and their technical challenges
-- Open source contributions
-- Interesting problems and their solutions
-- Code reviews and architectural decisions
+Sitting there, I realized we've all gotten lazy since COVID. It's too easy to attend meetings online, watch conference videos from our couch, or just skip community stuff altogether. But we're missing the human interaction. The random conversations. The energy you only get when developers are in the same room geeking out together.
 
-### Industry Insights
-The tech world moves fast, and I'll share my thoughts on:
-- Emerging technologies and trends
-- Developer tools and productivity
-- Career development and learning
-- The intersection of technology and society
+After that meetup, I kept thinking: we need to get back to having fun with this stuff. Back to Rails for Zombies-style learning. Back to _why's talking foxes. Back to the days when Ruby felt like a community of people who genuinely enjoyed building things together.
 
-## Why Start a Blog?
+## What's different this time
 
-After years of consuming content from the developer community, I felt it was time to give back. Writing helps me:
+Back in 2011-2017, I was writing about learning Rails, starting a freelance business, and trying to build a tech community in Phoenix. Those posts are still here (check the archives) - they're a time capsule of a different era in web development.
 
-1. **Solidify my understanding** - Teaching others forces me to truly understand concepts
-2. **Document my learning journey** - A record of growth and discovery
-3. **Connect with the community** - Engage with fellow developers and learners
-4. **Share solutions** - Help others who might face similar challenges
+Now I'm in a different place. Rails is mature. JavaScript has eaten the world. I've worked at companies of different sizes, built systems that actually scaled, and learned from mistakes that seemed impossible at the time.
 
-## What's Next?
+## What I'm planning to write about
 
-I have several posts already in the pipeline covering topics like:
-- Setting up a modern development environment
-- Exploring the latest JavaScript frameworks
-- Building scalable web applications
-- DevOps automation strategies
+This isn't going to be another "here's how to build a todo app" blog. I want to focus on the messy, real-world stuff that doesn't fit neatly into tutorials:
 
-## Let's Connect
+- **War stories from production** - The bugs that kept me up at night and how we fixed them
+- **Technology decisions and their consequences** - Why we chose certain tools and what we learned
+- **The human side of development** - Team dynamics, code reviews, and technical communication
+- **Honest takes on the JavaScript/React/TypeScript ecosystem** - What actually works vs what gets hype
 
-I'd love to hear from you! Whether you have questions, suggestions, or just want to chat about technology, feel free to reach out through the contact page or connect with me on social media.
+Basically, the kind of content I wish I could have read when I was figuring this stuff out.
 
-Thank you for stopping by, and I hope you find the content here valuable. Here's to the journey ahead!
+## So I'm starting with this blog
+
+That meetup reminded me that I used to be part of something. Not just using Rails to build apps, but actually participating in the community. Writing. Sharing what I learned. Connecting with other developers.
+
+Personal blogs used to be how we did this. Before everything moved to LinkedIn posts and Twitter threads. Before algorithms decided what was worth reading.
+
+I miss that version of the web. I miss the version of myself that contributed to it.
+
+The community gave me a lot over the years - knowledge, friendships, opportunities. This blog is how I'm starting to give something back.
+
+## What to expect
+
+I'm not committing to a posting schedule. This isn't a content marketing blog. I'll write when I have something worth saying.
+
+I want to bring back some of that old Ruby community spirit - the curiosity, the willingness to share half-baked ideas, the sense that we're all figuring this out together.
+
+If you've been here since the early days, thanks for sticking around. If you're new, welcome. Either way, I hope you find something useful.
+
+The old posts are still here if you want to see how my thinking has evolved (or laugh at my 2011 predictions about the future of web development). But I'm more interested in what comes next.
 
 ---
 
-*Happy coding!*  
-Bob Roberts
+Back to building things.
+
+Bob
