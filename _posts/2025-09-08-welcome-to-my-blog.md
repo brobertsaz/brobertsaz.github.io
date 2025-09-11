@@ -6,7 +6,8 @@ categories: [general, meta]
 tags: [blogging, comeback, reflection]
 author: Bob Roberts
 excerpt: "After a long hiatus, I'm bringing this blog back to life. What changed, why I stopped, and what I'm planning to write about this time around."
-image: /assets/images/covers/blog-comeback.svg
+image: /assets/images/covers/blog-comeback.png
+image_hero: /assets/images/covers/blog-comeback.svg
 image_alt: Dusting Off the Blog (Again)
 image_position: center center
 

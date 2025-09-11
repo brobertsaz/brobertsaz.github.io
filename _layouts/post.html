@@ -35,9 +35,9 @@ layout: default
         {%- endfor -%}
       </div>
     {%- endif -%}
-    {% if page.image %}
+    {% if page.image or page.image_hero %}
       <figure class="post-hero">
-        <img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: page.title | escape }}" style="object-position: {{ page.image_position | default: 'center center' }};">
+        <img src="{{ page.image_hero | default: page.image | relative_url }}" alt="{{ page.image_alt | default: page.title | escape }}" style="object-position: {{ page.image_position | default: 'center center' }};">
         {% if page.image_credit_text %}
           <figcaption class="image-credit">
             {% if page.image_credit_url %}<a href="{{ page.image_credit_url }}" target="_blank" rel="noopener">{% endif %}{{ page.image_credit_text }}{% if page.image_credit_url %}</a>{% endif %}
