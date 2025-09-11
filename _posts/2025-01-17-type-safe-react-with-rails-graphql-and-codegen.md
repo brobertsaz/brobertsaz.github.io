@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Type‑Safe React with Rails GraphQL: Codegen for Zero‑Runtime Surprises"
+title: "Why I Generate All My TypeScript Types (And You Should Too)"
 date: 2025-01-17 09:00:00 -0700
 categories: [react, typescript]
 tags: [typescript, react, graphql, codegen, ruby-on-rails]
@@ -8,30 +8,31 @@ author: Bob Roberts
 image: /assets/images/covers/type-safe-react-rails-pro.svg
 image_alt: Type-safe React with Rails GraphQL and Codegen
 image_position: center center
-excerpt: "How to wire GraphQL Code Generator with a Rails (graphql‑ruby) schema to get end‑to‑end type safety, generated hooks, and faster developer feedback."
+excerpt: "How GraphQL Code Generator saved me from runtime surprises and made my Rails + React apps much more reliable. Plus the gotchas I wish I'd known earlier."
 ---
 
+I used to hand-write TypeScript interfaces for all my GraphQL queries. It was tedious, error-prone, and I constantly had mismatches between what my Rails API returned and what my React components expected.
 
+Then I discovered GraphQL Code Generator. It's one of those tools that seems too good to be true until you actually use it.
 
-Type safety is only as strong as your weakest boundary. With GraphQL Code Generator, we can turn our Rails schema into first‑class TypeScript types and ergonomic React hooks.
+## The problem I was trying to solve
 
-*This post builds on the production GraphQL setup covered in [Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript]({% post_url 2025-01-10-production-rails-graphql-with-apollo-and-typescript %}).*
+Picture this: I'd build a feature in Rails, add some fields to a GraphQL type, then spend 20 minutes updating TypeScript interfaces across my React app. Inevitably, I'd miss one. The app would compile fine, but then I'd get `Cannot read property 'title' of undefined` at runtime.
 
-### Why I lean hard on codegen
+Or worse - I'd refactor a GraphQL field on the server and forget to update the client types. Everything would seem fine until users started hitting errors in production.
 
-- I prefer fragments‑first documents because they make co‑location natural and keep generated types composable.
-- In my projects, I run `codegen:watch` in dev and commit the generated output. CI blocks merges when schema drift isn’t reflected in types.
-- Here’s where this bites you: GraphQL nullability. If the server makes a field nullable, your optional‑chaining spiderweb grows. I lock nullability in the schema where possible, and narrow aggressively in React.
-- I prefer mapping custom scalars (UUID, ISO8601DateTime) to branded string types to catch mixups at compile time without overhead at runtime.
+## How GraphQL Code Generator changed everything
 
-## Install Codegen
+Instead of manually maintaining TypeScript types, I let the computer generate them directly from my GraphQL schema and queries. Now when I change a field in Rails, my TypeScript types update automatically.
+
+Here's how I set it up:
 
 ```bash
-npm i -D @graphql-codegen/cli @graphql-codegen/typescript \
+npm install -D @graphql-codegen/cli @graphql-codegen/typescript \
   @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
 ```
 
-Add scripts:
+I add these scripts to package.json:
 
 ```json
 {
@@ -42,9 +43,12 @@ Add scripts:
 }
 ```
 
-## Create codegen.yml
+The watch mode is crucial - it regenerates types whenever I change a query or the schema changes.
+
+My configuration file looks like this:
 
 ```yaml
+# codegen.yml
 schema: http://localhost:3000/graphql
 documents: "src/**/*.{ts,tsx,graphql}"
 generates:
@@ -57,90 +61,163 @@ generates:
       withHooks: true
       scalars:
         ISO8601DateTime: string
-        JSON: Record<string, unknown>
         UUID: string
 ```
 
-Tip: In CI, point `schema:` to a dumped SDL file committed by Rails:
+This tells codegen to:
+1. Fetch the schema from my Rails dev server
+2. Find all GraphQL queries/mutations in my React code 
+3. Generate TypeScript types and React hooks
+
+**Pro tip:** For CI builds, I generate a schema file from Rails and point to that instead of hitting the dev server:
 
 ```bash
-# Rails
+# In Rails
 bundle exec rake graphql:schema:dump
-# use schema: schema.graphql in codegen.yml
+# Then use schema: schema.graphql in codegen.yml
 ```
 
-## Author Operations
+## The magic happens when you write queries
+
+I write my GraphQL queries in separate `.graphql` files:
 
 ```graphql
-# src/graphql/queries/users.graphql
-query Users($first: Int, $after: String) {
-  users(first: $first, after: $after) {
-    edges { node { id email name } }
-    pageInfo { hasNextPage endCursor }
+# src/queries/users.graphql
+query GetUsers($first: Int) {
+  users(first: $first) {
+    nodes {
+      id
+      email
+      name
+      createdAt
+    }
   }
 }
 ```
 
-Run:
+When I run `npm run codegen`, it generates a TypeScript hook that knows exactly what this query returns:
 
-```bash
-npm run codegen
-```
+```typescript
+import { useGetUsersQuery } from '../graphql/generated';
 
-This emits fully typed hooks:
+export function UserList() {
+  const { data, loading, error } = useGetUsersQuery({ 
+    variables: { first: 10 } 
+  });
 
-```ts
-import { useUsersQuery } from './graphql/generated';
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
-export function UsersList() {
-  const { data, loading, fetchMore } = useUsersQuery({ variables: { first: 20 } });
-  if (loading) return <p>Loading...</p>;
   return (
     <ul>
-      {data?.users.edges?.map(e => (
-        <li key={e?.node?.id}>{e?.node?.email}</li>
+      {data?.users.nodes.map(user => (
+        <li key={user.id}>
+          {user.name} - {user.email}
+          {/* TypeScript knows these fields exist! */}
+        </li>
       ))}
     </ul>
   );
 }
 ```
 
-## Handling Nullability
+The best part? If I typo a field name or try to access something that doesn't exist, TypeScript catches it at compile time.
 
-GraphQL nullability propagates to your types. Prefer `null: false` on Rails fields when appropriate, and in React, narrow:
+## The nullability challenge
 
-```ts
-const edges = data?.users.edges?.filter((e): e is NonNullable<typeof e> => Boolean(e));
+Here's something that tripped me up early: GraphQL is very explicit about what can be null. If you mark a field as nullable in your Rails schema, TypeScript will reflect that.
+
+This means you end up with code like:
+
+```typescript
+// Lots of optional chaining
+const userName = data?.user?.profile?.name;
 ```
 
-## Custom Scalars
+I learned to be deliberate about nullability in my Rails GraphQL types. If a field should always exist, I mark it `null: false`:
 
-Map Rails scalars to TS types in `config.scalars`. For complex shapes, create brand types:
-
-```ts
-type ISO8601 = string & { readonly __brand: 'ISO8601' };
+```ruby
+# In Rails GraphQL type
+field :email, String, null: false
+field :name, String, null: true # This one can be blank
 ```
 
-## Fragments for Reuse
+For the few cases where I need to filter out nulls on the client side, I use type guards:
 
-Encapsulate shared shapes:
+```typescript
+const validUsers = data?.users.nodes
+  .filter((user): user is NonNullable<typeof user> => Boolean(user));
+```
+
+## Custom scalars made easy
+
+Rails has some types that don't exist in JavaScript - like UUIDs and ISO8601 dates. I map these to string types in my codegen config:
+
+```yaml
+scalars:
+  UUID: string
+  ISO8601DateTime: string
+```
+
+For extra type safety, I sometimes create "branded" types:
+
+```typescript
+type UserId = string & { readonly __brand: 'UserId' };
+type ISO8601Date = string & { readonly __brand: 'ISO8601Date' };
+```
+
+This prevents me from accidentally passing a regular string where I expect a UUID.
+
+## Fragments keep me organized
+
+When the same data appears in multiple queries, I use GraphQL fragments:
 
 ```graphql
-fragment UserCard on User { id name email }
+# fragments/UserCard.graphql
+fragment UserCard on User {
+  id
+  name
+  email
+  avatarUrl
+}
 ```
 
 ```graphql
-query Users { users(first: 20) { edges { node { ...UserCard } } } }
+# queries/dashboard.graphql
+query DashboardData {
+  currentUser { ...UserCard }
+  recentUsers { nodes { ...UserCard } }
+}
 ```
 
-## Runtime Safety Still Matters
+Codegen generates TypeScript types for fragments too, so I can reuse them in components:
 
-Types don’t replace runtime guards. Validate user input server‑side, handle network errors, and design your cache policies to avoid stale data.
+```typescript
+import { UserCardFragment } from '../graphql/generated';
 
-## Developer Experience Checklist
+function UserCard({ user }: { user: UserCardFragment }) {
+  return (
+    <div>
+      <img src={user.avatarUrl} alt={user.name} />
+      <h3>{user.name}</h3>
+      <p>{user.email}</p>
+    </div>
+  );
+}
+```
 
-- [x] `codegen:watch` running in dev
-- [x] ESLint + `@graphql-eslint/eslint-plugin` for documents
-- [x] CI job verifies schema changes regenerate types
+## What I learned the hard way
 
-With codegen in place, your React codebase gets the confidence boost of compile‑time breakage instead of Friday‑night runtime surprises.
+**Generated types aren't magic.** They only reflect what your schema says, not what your server actually returns. I still validate important data at runtime and handle network errors gracefully.
+
+**Keep your queries co-located.** I put GraphQL queries in the same directory as the components that use them. It makes refactoring much easier.
+
+**Run codegen in watch mode during development.** I have `npm run codegen:watch` running alongside my dev server. When I change a query, types update instantly.
+
+**Commit the generated files.** I used to gitignore the generated types, but that created problems in CI. Now I commit them and my build process validates they're up to date.
+
+## The payoff
+
+GraphQL Code Generator eliminated an entire class of bugs from my apps. I catch schema mismatches at compile time instead of in production. Refactoring became fearless - if I change a field in Rails, TypeScript tells me exactly which components need updating.
+
+It took about a day to set up the first time, but it's saved me weeks of debugging over the past year. If you're using GraphQL with TypeScript, this is a no-brainer.

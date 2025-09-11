@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Building a Production‑Ready Rails GraphQL API with Apollo Client and TypeScript"
+title: "My Journey Building a GraphQL API with Rails and Apollo"
 date: 2025-01-10 09:00:00 -0700
 categories: [rails, graphql]
 tags: [ruby-on-rails, graphql, apollo, typescript, fullstack, performance]
@@ -8,37 +8,31 @@ author: Bob Roberts
 image: /assets/images/covers/rails-graphql-apollo-pro.svg
 image_alt: Production-ready Rails GraphQL API with Apollo Client and TypeScript
 image_position: center center
-excerpt: "A practical, end‑to‑end guide to shipping a production‑ready GraphQL stack: Rails (graphql‑ruby) + Apollo Client + TypeScript with caching, pagination, error handling, and deployment tips."
+excerpt: "What I learned building a GraphQL API that actually works in production. The mistakes I made, the tools that saved me, and why I'd choose this stack again."
 ---
 
+Last year I convinced my team to try GraphQL for our new Rails API. "It'll be great," I said. "The frontend can request exactly the data it needs."
 
+Six months later, we had a working GraphQL API serving a React/TypeScript app in production. But getting there taught me more about GraphQL than any tutorial ever did.
 
-Rails + GraphQL + Apollo + TypeScript is a powerful stack for modern product teams. This guide walks through production‑grade setup, from schema design in Rails to a robust Apollo Client configuration in a React/TypeScript app.
+## Why we chose GraphQL (and why we almost regretted it)
 
-### From my projects (opinionated)
+Our Rails API was growing messy. We had endpoints like `/api/users`, `/api/users/:id/posts`, `/api/users/:id/posts/:id/comments`. Each one returned slightly different data depending on what the frontend needed.
 
-- I prefer the built‑in GraphQL::Dataloader over graphql-batch because it’s integrated, easier to reason about, and reduces gem surface area.
-- In my projects, I default to Relay‑style cursor pagination for anything user‑visible; offset pagination only for admin/reporting where exactness beats UX.
-- Here’s where this bites you: nested N+1s hide in fields you don’t suspect (think counts, owner lookups). Add dataloader early and write a regression for any N+1 you fix.
-- I prefer explicit type policies in Apollo (keyArgs, merge) because silent cache misses lead to “ghost” UI bugs later.
-- In my Rails apps (Rails 7 + Ruby 3.x), I keep GraphQL controller fast: authenticate early, memoize current_user, and short‑circuit before hitting resolvers when possible.
+GraphQL promised to fix this. One endpoint, flexible queries, better developer experience. It delivered on those promises, but not without some pain.
 
-## Why GraphQL with Rails?
+**The good:** Our React components could request exactly what they needed. No more over-fetching user avatars for list views or under-fetching when we needed detailed profiles.
 
-- Strong conventions and velocity from Rails
-- GraphQL’s client‑driven queries reduce over/under‑fetching
-- First‑class TypeScript types for safer React
-- Natural fit for mobile and micro‑frontend consumers
+**The challenging:** GraphQL has more moving parts than REST. Schema design matters. Caching is different. N+1 queries are easy to introduce and hard to spot.
 
-## Rails Setup (graphql‑ruby)
+## Getting started with graphql-ruby
 
-Add gems and initialize GraphQL:
+The Rails setup was straightforward. I added the gem and ran the generator:
 
 ```ruby
 # Gemfile
 gem 'graphql'
-# Optional but recommended
-gem 'graphiql-rails', group: :development
+gem 'graphiql-rails', group: :development # GraphQL IDE
 ```
 
 ```bash
@@ -46,14 +40,7 @@ bundle install
 rails generate graphql:install
 ```
 
-This creates:
-
-- `app/graphql/types/*` type system
-- `app/graphql/mutations/*`
-- `app/graphql/queries/*`
-- `app/controllers/graphql_controller.rb`
-
-### Example Type and Query
+This created the basic structure I needed. My first GraphQL type looked like this:
 
 ```ruby
 # app/graphql/types/user_type.rb
@@ -67,105 +54,167 @@ module Types
 end
 ```
 
-```ruby
-# app/graphql/queries/users_query.rb
-module Queries
-  class UsersQuery < Queries::BaseQuery
-    type [Types::UserType], null: false
-    def resolve
-      User.order(created_at: :desc).limit(50)
-    end
-  end
-end
-```
+Simple enough. Then I created a query to fetch users:
 
 ```ruby
 # app/graphql/types/query_type.rb
 module Types
   class QueryType < Types::BaseObject
-    field :users, [Types::UserType], null: false, resolver: Queries::UsersQuery
-  end
-end
-```
-
-## Authorization & N+1 Avoidance
-
-- Use `pundit`/`cancancan` in resolvers or at model layer; raise GraphQL::ExecutionError for forbidden access
-- Use `graphql-batch` or `GraphQL::Dataloader` to batch queries and avoid N+1
-
-```ruby
-# app/graphql/queries/base_query.rb
-module Queries
-  class BaseQuery < GraphQL::Schema::Resolver
-    def pundit_authorize!(record, query)
-      Pundit.authorize!(context[:current_user], record, query)
+    field :users, [Types::UserType], null: false
+    
+    def users
+      User.all
     end
   end
 end
 ```
 
-```ruby
-# app/graphql/types/user_type.rb (with dataloader)
-field :posts_count, Integer, null: false
+That `User.all` would come back to haunt me, but it worked for the demo.
 
-def posts_count
-  dataloader.with(Sources::Association, :posts).load(object).size
+## The N+1 problem hit us hard
+
+Our first production GraphQL queries were slow. Really slow. A simple query to fetch users and their post counts was taking 2+ seconds.
+
+The problem was classic N+1 queries. For every user, Rails was making a separate query to count their posts:
+
+```sql
+SELECT * FROM users;
+SELECT COUNT(*) FROM posts WHERE user_id = 1;
+SELECT COUNT(*) FROM posts WHERE user_id = 2;
+-- ... and so on
+```
+
+I learned about GraphQL::Dataloader the hard way. It batches database queries automatically:
+
+```ruby
+# app/graphql/types/user_type.rb
+class UserType < Types::BaseObject
+  field :posts_count, Integer, null: false
+  
+  def posts_count
+    # This batches queries across all users in the request
+    dataloader.with(Sources::AssociationCount, :posts).load(object)
+  end
 end
 ```
 
-## Error Handling Strategy
-
-Return safe, actionable messages and log details server‑side:
-
 ```ruby
-rescue_from ActiveRecord::RecordNotFound do |err|
-  raise GraphQL::ExecutionError, "Not found"
-end
-
-rescue_from Pundit::NotAuthorizedError do
-  raise GraphQL::ExecutionError, "You are not authorized to perform this action"
+# app/graphql/sources/association_count.rb
+class Sources::AssociationCount < GraphQL::Dataloader::Source
+  def initialize(association_name)
+    @association_name = association_name
+  end
+  
+  def fetch(objects)
+    # Batch count queries for all objects at once
+    counts = @association_name.to_s.classify.constantize
+             .where("#{@association_name.to_s.singularize}_id": objects.map(&:id))
+             .group("#{@association_name.to_s.singularize}_id")
+             .count
+    
+    objects.map { |obj| counts[obj.id] || 0 }
+  end
 end
 ```
 
-## Pagination (Relay‑style)
+That 2-second query dropped to 200ms.
 
-Install connections for cursor pagination:
+## Error handling that doesn't leak secrets
+
+Early on, our GraphQL errors exposed too much. A failed database query would return the raw SQL error to the client.
+
+I learned to be careful about what errors reach users:
+
+```ruby
+# app/graphql/my_schema.rb
+class MySchema < GraphQL::Schema
+  rescue_from ActiveRecord::RecordNotFound do |err, obj, args, ctx, field|
+    raise GraphQL::ExecutionError, "Not found"
+  end
+  
+  rescue_from ActiveRecord::RecordInvalid do |err, obj, args, ctx, field|
+    # Log the real error for debugging
+    Rails.logger.error "GraphQL validation error: #{err.message}"
+    raise GraphQL::ExecutionError, "Invalid input"
+  end
+end
+```
+
+For authorization, I integrated Pundit:
+
+```ruby
+def users
+  # Only return users the current user can see
+  Pundit.policy_scope(context[:current_user], User)
+end
+```
+
+## Pagination without the headaches
+
+Our user list grew to thousands of records. Loading them all at once killed the browser.
+
+GraphQL's cursor-based pagination (Relay-style) was confusing at first, but it's much better than offset pagination for real-time data:
 
 ```ruby
 # app/graphql/types/query_type.rb
 field :users, Types::UserType.connection_type, null: false
+
+def users
+  User.order(:created_at)
+end
 ```
 
+On the client side, Apollo handles most of the complexity:
+
 ```graphql
-# Example client query
-query Users($first: Int, $after: String) {
+query GetUsers($first: Int, $after: String) {
   users(first: $first, after: $after) {
-    edges { node { id email name } }
-    pageInfo { hasNextPage endCursor }
+    edges {
+      node {
+        id
+        name
+        email
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
   }
 }
 ```
 
-## React + Apollo + TypeScript
+The `edges` and `nodes` structure felt weird at first, but it's consistent and works well with Apollo's caching.
 
-Install client deps:
+## The Apollo Client setup that actually works
+
+On the frontend, I needed Apollo Client to talk to my Rails GraphQL endpoint. The basic setup was straightforward:
 
 ```bash
-npm i @apollo/client graphql
+npm install @apollo/client graphql
 ```
 
-Initialize Apollo Client with sane defaults:
+But the configuration took some trial and error:
 
-```ts
+```typescript
 // apollo/client.ts
 import { ApolloClient, InMemoryCache, HttpLink, from } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 
-const httpLink = new HttpLink({ uri: '/graphql', credentials: 'include' });
+const httpLink = new HttpLink({ 
+  uri: '/graphql', 
+  credentials: 'include' // Important for Rails sessions
+});
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) graphQLErrors.forEach(e => console.warn('[GraphQL]', e.message));
-  if (networkError) console.error('[Network]', networkError);
+  if (graphQLErrors) {
+    graphQLErrors.forEach(error => {
+      console.error('GraphQL error:', error.message);
+    });
+  }
+  if (networkError) {
+    console.error('Network error:', networkError);
+  }
 });
 
 export const client = new ApolloClient({
@@ -175,9 +224,12 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           users: {
-            keyArgs: false,
+            // This merges paginated results
             merge(existing = { edges: [] }, incoming) {
-              return { ...incoming, edges: [...(existing.edges || []), ...incoming.edges] };
+              return {
+                ...incoming,
+                edges: [...existing.edges, ...incoming.edges]
+              };
             }
           }
         }
@@ -187,43 +239,60 @@ export const client = new ApolloClient({
 });
 ```
 
-Use in app:
+The `typePolicies` configuration was crucial for pagination to work correctly. Without it, Apollo would replace the entire list instead of appending new items.
 
-```tsx
-// main.tsx
-import { ApolloProvider } from '@apollo/client';
-import { client } from './apollo/client';
+## TypeScript integration that saves your sanity
 
-export function App() {
-  return (
-    <ApolloProvider client={client}>
-      {/* routes */}
-    </ApolloProvider>
-  );
+I wrote about GraphQL Code Generator in detail [in another post]({% post_url 2025-01-17-type-safe-react-with-rails-graphql-and-codegen %}), but it's worth mentioning here because it transformed how I work with GraphQL.
+
+Instead of manually writing TypeScript interfaces that drift out of sync with my schema, I generate them automatically from my GraphQL queries. It caught so many bugs before they reached production.
+
+## What I learned about caching
+
+Apollo's cache is powerful but requires understanding. The key insight: it normalizes data by `id` fields automatically. So this query:
+
+```graphql
+query {
+  user(id: "1") { id name email }
+  users { nodes { id name email } }
 }
 ```
 
-## Type Safety with Codegen (Preview)
+Only stores each user once in the cache. Update the user in one place, and it updates everywhere.
 
-Use GraphQL Code Generator to emit TS types and hooks ([see dedicated post]({% post_url 2025-01-17-type-safe-react-with-rails-graphql-and-codegen %})):
+But mutations need help. After creating a user, I had to tell Apollo to update the cache:
 
-```bash
-npm i -D @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
+```typescript
+const [createUser] = useMutation(CREATE_USER, {
+  update(cache, { data }) {
+    cache.modify({
+      fields: {
+        users(existing = { edges: [] }) {
+          const newEdge = {
+            __typename: 'UserEdge',
+            node: data?.createUser?.user
+          };
+          return {
+            ...existing,
+            edges: [newEdge, ...existing.edges]
+          };
+        }
+      }
+    });
+  }
+});
 ```
 
-## Caching Tips
+## Production lessons
 
-- Normalize by `id` fields; avoid arrays of primitives where possible
-- Use field policies to merge paginated results
-- Invalidate cache via `cache.modify` after mutations
+**Rate limiting is essential.** GraphQL queries can be expensive. I use Rack::Attack to limit query complexity and request rates.
 
-## Deployment Notes
+**Monitor query performance.** I log slow GraphQL queries just like slow SQL queries. Some client queries are accidentally expensive.
 
-- Serve `POST /graphql` behind Rack::Attack and rate limits
-- Enable response compression (Rack::Deflater)
-- Use ETags on persisted queries or CDN caching if applicable
-- Add request timeouts and circuit breakers for external calls
+**Start simple.** I didn't need subscriptions or persisted queries on day one. I added them when the use case was clear.
 
-## Final Thoughts
+---
 
-Rails + GraphQL + Apollo + TypeScript is a strong default for product teams who value velocity and safety. Start simple, add complexity (subscriptions, persisted queries) only when metrics justify it.
+GraphQL with Rails and Apollo has been worth the learning curve. The developer experience is genuinely better than REST for complex UIs. But it's not magic - you still need to think about performance, caching, and security.
+
+Would I choose this stack again? Absolutely. But next time I'd spend more time up front on monitoring and performance tooling.
