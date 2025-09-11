@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Dusting Off the Blog (Again)"
-date: 2024-01-15 10:00:00 -0700
+date: 2025-09-08 10:00:00 -0700
 categories: [general, meta]
 tags: [blogging, comeback, reflection]
 author: Bob Roberts
