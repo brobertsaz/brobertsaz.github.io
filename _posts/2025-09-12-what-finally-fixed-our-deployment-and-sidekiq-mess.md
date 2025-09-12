@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "What finally fixed our deployment and Sidekiq mess"
-date: 2025-09-15 09:00:00 -0700
+date: 2025-09-12 09:00:00 -0700
 categories: [rails, production]
 tags: [sidekiq, deployment, passenger, mysql, redis, activerecord, database-pool]
 author: Bob Roberts
