@@ -72,6 +72,40 @@ Helpful troubleshooting
 - If drafts aren’t showing, include --drafts when serving.
 - If pagination isn’t working, confirm jekyll-paginate is installed and configured and that the relevant layout uses the paginate variables.
 
+Writing voice and style guide
+When creating or reviewing blog posts, maintain consistency with the established voice and tone:
+
+- Voice characteristics:
+  - Practical, experienced developer sharing real-world lessons
+  - Conversational but authoritative ("I've been there, here's what I learned")
+  - Community-minded and humble, admitting mistakes and learning from them
+  - Technical depth made accessible through clear explanations
+  - Learning-focused rather than lecturing
+
+- Content structure patterns:
+  - Hook: Start with relatable pain points or concrete problems
+  - Symptoms: Clear enumeration of what went wrong
+  - Root cause analysis: Walk through the discovery process
+  - Solution: Concrete, actionable fixes with code examples
+  - Reflection: "What I'd do differently" or lessons learned
+  - TL;DR: Clean summary for skimmers
+  - Community engagement: End with questions inviting shared experiences
+
+- Writing style conventions:
+  - Use section breaks (---) between major topics in drafts
+  - Include context lines before code blocks
+  - Maintain personality even in technical sections
+  - Numbered takeaways for key points
+  - Specific technical details that demonstrate expertise
+  - Conversational transitions and authentic voice throughout
+
+- LinkedIn blurb field:
+  - Should mirror the post's voice and key takeaways
+  - Use numbered lists for main points
+  - Include personal learning moments or admissions
+  - End with community engagement questions
+  - Keep technical but accessible
+
 Source references
 - Core config: _config.yml
 - Bundler deps: Gemfile
