@@ -17,10 +17,40 @@
   <rect width="1200" height="630" fill="url(#accent1)"/>
   <rect width="1200" height="630" fill="url(#accent2)"/>
 
-  <!-- subtle grid lines -->
-  <g opacity="0.08" stroke="#8b949e">
-    <path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"/>
-    <path d="M120 0V630M240 0V630M360 0V630M480 0V630M600 0V630M720 0V630M840 0V630M960 0V630M1080 0V630"/>
+  <!-- Generation timeline visualization -->
+  <g transform="translate(700, 150)">
+    <!-- Old school Rails (2005-2012) -->
+    <g transform="translate(0, 0)">
+      <circle cx="50" cy="50" r="35" fill="none" stroke="#58a6ff" stroke-width="3"/>
+      <text x="50" y="55" font-family="Inter" font-size="14" fill="#58a6ff" text-anchor="middle" font-weight="600">2005</text>
+      <text x="50" y="100" font-family="Inter" font-size="12" fill="#8b949e" text-anchor="middle">Mailing Lists</text>
+      <text x="50" y="115" font-family="Inter" font-size="12" fill="#8b949e" text-anchor="middle">IRC • Blogs</text>
+    </g>
+
+    <!-- Bootcamp era (2012-2020) -->
+    <g transform="translate(200, 0)">
+      <circle cx="50" cy="50" r="35" fill="none" stroke="#f85149" stroke-width="3"/>
+      <text x="50" y="55" font-family="Inter" font-size="14" fill="#f85149" text-anchor="middle" font-weight="600">2012</text>
+      <text x="50" y="100" font-family="Inter" font-size="12" fill="#8b949e" text-anchor="middle">Bootcamps</text>
+      <text x="50" y="115" font-family="Inter" font-size="12" fill="#8b949e" text-anchor="middle">Fast Track</text>
+    </g>
+
+    <!-- Modern era (2020+) -->
+    <g transform="translate(400, 0)">
+      <circle cx="50" cy="50" r="35" fill="none" stroke="#22c55e" stroke-width="3"/>
+      <text x="50" y="55" font-family="Inter" font-size="14" fill="#22c55e" text-anchor="middle" font-weight="600">2020</text>
+      <text x="50" y="100" font-family="Inter" font-size="12" fill="#8b949e" text-anchor="middle">Remote</text>
+      <text x="50" y="115" font-family="Inter" font-size="12" fill="#8b949e" text-anchor="middle">Hybrid</text>
+    </g>
+
+    <!-- Timeline connecting line -->
+    <path d="M 85 50 L 265 50 L 465 50" stroke="#30363d" stroke-width="2" fill="none"/>
+
+    <!-- Bridge/gap visualization -->
+    <g transform="translate(150, 200)">
+      <path d="M 0 0 Q 100 -30 200 0" stroke="#f85149" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+      <text x="100" y="-40" font-family="Inter" font-size="14" fill="#f85149" text-anchor="middle">The Gap</text>
+    </g>
   </g>
 
   <!-- headline -->
@@ -29,12 +59,17 @@
     <text x="80" y="330" font-size="30" fill="#9ea7b3">Mentorship • Bootcamps • Community</text>
   </g>
 
-  <!-- rails-ish bars -->
-  <g transform="translate(80,410)" fill="#f85149" opacity="0.9">
-    <rect x="0" y="0" width="10" height="60" rx="2"/>
-    <rect x="22" y="-20" width="10" height="80" rx="2"/>
-    <rect x="44" y="-40" width="10" height="100" rx="2"/>
-    <rect x="66" y="-60" width="10" height="120" rx="2"/>
+  <!-- Community connection nodes -->
+  <g transform="translate(80, 400)">
+    <circle cx="20" cy="20" r="8" fill="#58a6ff" opacity="0.8"/>
+    <circle cx="60" cy="35" r="6" fill="#58a6ff" opacity="0.6"/>
+    <circle cx="100" cy="15" r="7" fill="#58a6ff" opacity="0.7"/>
+    <circle cx="140" cy="30" r="5" fill="#58a6ff" opacity="0.5"/>
+
+    <!-- Connection lines -->
+    <path d="M 28 20 L 52 35" stroke="#58a6ff" stroke-width="2" opacity="0.4"/>
+    <path d="M 67 35 L 93 15" stroke="#58a6ff" stroke-width="2" opacity="0.4"/>
+    <path d="M 107 15 L 135 30" stroke="#58a6ff" stroke-width="2" opacity="0.4"/>
   </g>
 </svg>
 

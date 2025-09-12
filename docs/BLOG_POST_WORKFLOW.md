@@ -84,6 +84,20 @@ Create an SVG file in `assets/images/covers/` with dimensions 1200x630 (LinkedIn
 - **Layout**: Title at y="300", subtitle at y="350", both starting at x="80"
 - **Font sizes**: 56px for main title, 30px for subtitle
 
+### Visual Elements (IMPORTANT!)
+**Don't just create text-only covers!** Add visual elements that relate to the content:
+- **Icons and symbols**: Database cylinders, server boxes, connection lines, chat windows
+- **Visual metaphors**: Waves for realtime, locks for security, timelines for history
+- **Network diagrams**: Nodes and connections for community/architecture topics
+- **UI elements**: Buttons, windows, code blocks, terminal interfaces
+- **Abstract shapes**: That reinforce the theme (gaps, bridges, flows, etc.)
+
+**Examples of good visual elements:**
+- Deployment posts: Server icons, database cylinders, connection pools
+- Community posts: Network nodes, chat windows, timeline elements
+- Technical posts: Code blocks, terminal windows, architecture diagrams
+- Authentication posts: Lock icons, token symbols, security shields
+
 ## Step 3: Convert SVG to PNG
 
 After creating the SVG, run the conversion script to generate the PNG version for LinkedIn sharing:
