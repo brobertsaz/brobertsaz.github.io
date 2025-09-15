@@ -6,7 +6,6 @@ categories: [rails, community, history]
 tags: [rails, mentorship, community, history]
 excerpt: "How the early Rails community learned in public — and what we can bring forward now."
 author: Bob Roberts
-published: false
 image: /assets/images/covers/rails-before-bootcamps.svg
 image_alt: Rails Before Bootcamps
 image_position: center center
