@@ -8,35 +8,10 @@ permalink: /contact/
 
 I'd love to hear from you! Whether you have questions about a blog post, want to discuss a project, or just want to connect, feel free to reach out.
 
-## Contact Form
-
-<form action="https://formspree.io/f/xqadodyj" method="POST" class="contact-form">
-  <div class="form-group">
-    <label for="name">Name *</label>
-    <input type="text" name="name" id="name" required>
-  </div>
-  
-  <div class="form-group">
-    <label for="email">Email *</label>
-    <input type="email" name="email" id="email" required>
-  </div>
-  
-  <div class="form-group">
-    <label for="subject">Subject</label>
-    <input type="text" name="subject" id="subject">
-  </div>
-  
-  <div class="form-group">
-    <label for="message">Message *</label>
-    <textarea name="message" id="message" rows="6" required></textarea>
-  </div>
-  
-  <button type="submit" class="submit-btn">Send Message</button>
-</form>
-
 ## How to Reach Me
 
 ### Email
+
 The best way to reach me is via email:
 **[brobertsaz@users.noreply.github.com](mailto:brobertsaz@users.noreply.github.com)**
 
@@ -84,8 +59,6 @@ Here are some conversation starters:
 - "Thanks for the great content! I especially liked..."
 
 Don't overthink it - I'm always happy to chat about technology, development, or anything else that's on your mind.
-
----
 
 Looking forward to hearing from you!
 
