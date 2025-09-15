@@ -96,3 +96,7 @@ theme_config:
   accent_color: "#64ffda"
   background_color: "#0d1117"
   text_color: "#c9d1d9"
+
+# Comments via Disqus
+disqus:
+  shortname: disqus_9WK2h3l0UZ
