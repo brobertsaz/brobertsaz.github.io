@@ -468,6 +468,80 @@
   a { color: var(--text-secondary); }
 }
 
+// Contact form
+.contact-form {
+  max-width: 600px;
+  margin: $spacing-xl 0;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: $border-radius-lg;
+  padding: $spacing-xl;
+
+  .form-group {
+    margin-bottom: $spacing-lg;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-xs;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: $font-size-sm;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: $spacing-sm $spacing-md;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-primary);
+      border-radius: $border-radius-md;
+      color: var(--text-primary);
+      font-size: $font-size-base;
+      font-family: inherit;
+      transition: all $transition-fast;
+
+      &:focus {
+        outline: none;
+        border-color: var(--accent-danger);
+        box-shadow: 0 0 0 2px rgba(248, 81, 73, 0.25);
+      }
+
+      &::placeholder {
+        color: var(--text-muted);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+  }
+
+  .submit-btn {
+    background-color: var(--accent-danger);
+    color: var(--bg-primary);
+    border: none;
+    padding: $spacing-sm $spacing-xl;
+    border-radius: $border-radius-md;
+    font-size: $font-size-base;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background-color: #ff7b72;
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(248, 81, 73, 0.25);
+    }
+  }
+}
+
 // Mini hero for home page
 .mini-hero {
   display: flex;

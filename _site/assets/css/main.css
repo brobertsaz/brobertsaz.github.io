@@ -211,6 +211,17 @@ hr { border: none; height: 1px; background-color: var(--border-primary); margin:
 .post-toc ol, .post-toc ul { margin: 0; padding-left: 1.25rem; }
 .post-toc a { color: var(--text-secondary); }
 
+.contact-form { max-width: 600px; margin: 2rem 0; background-color: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 12px; padding: 2rem; }
+.contact-form .form-group { margin-bottom: 1.5rem; }
+.contact-form .form-group label { display: block; margin-bottom: 0.25rem; color: var(--text-primary); font-weight: 500; font-size: 14px; }
+.contact-form .form-group input[type="text"], .contact-form .form-group input[type="email"], .contact-form .form-group textarea { width: 100%; padding: 0.5rem 1rem; background-color: var(--bg-primary); border: 1px solid var(--border-primary); border-radius: 8px; color: var(--text-primary); font-size: 16px; font-family: inherit; transition: all 0.15s ease; }
+.contact-form .form-group input[type="text"]:focus, .contact-form .form-group input[type="email"]:focus, .contact-form .form-group textarea:focus { outline: none; border-color: var(--accent-danger); box-shadow: 0 0 0 2px rgba(248, 81, 73, 0.25); }
+.contact-form .form-group input[type="text"]::placeholder, .contact-form .form-group input[type="email"]::placeholder, .contact-form .form-group textarea::placeholder { color: var(--text-muted); }
+.contact-form .form-group textarea { resize: vertical; min-height: 120px; }
+.contact-form .submit-btn { background-color: var(--accent-danger); color: var(--bg-primary); border: none; padding: 0.5rem 2rem; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; }
+.contact-form .submit-btn:hover { background-color: #ff7b72; box-shadow: var(--shadow); transform: translateY(-1px); }
+.contact-form .submit-btn:focus { outline: none; box-shadow: 0 0 0 2px rgba(248, 81, 73, 0.25); }
+
 .mini-hero { display: flex; align-items: center; gap: 1.5rem; padding: 2rem 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-primary); background: radial-gradient(400px 200px at 0% 0%, rgba(88, 166, 255, 0.08), transparent 60%), radial-gradient(400px 200px at 100% 100%, rgba(248, 81, 73, 0.08), transparent 60%); }
 .mini-hero .avatar { width: 160px; height: auto; border-radius: 50%; border: 2px solid var(--border-primary); box-shadow: var(--shadow); flex-shrink: 0; }
 .mini-hero .mini-hero-content h1 { margin: 0 0 0.25rem 0; color: var(--text-primary); font-size: 2rem; }

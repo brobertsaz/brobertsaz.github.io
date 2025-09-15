@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Ensure our PNG og:image appears BEFORE jekyll-seo-tag so crawlers pick it -->
+  <meta property="og:image" content="http://localhost:4000/assets/images/covers/rails-generation-gap.png">
+  <meta name="twitter:image" content="http://localhost:4000/assets/images/covers/rails-generation-gap.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>The Rails Generation Gap: Why It Matters | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="The Rails Generation Gap: Why It Matters" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build." />
+<meta property="og:description" content="From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build." />
+<link rel="canonical" href="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" />
+<meta property="og:url" content="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:image" content="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-12T10:00:00-05:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" />
+<meta property="twitter:title" content="The Rails Generation Gap: Why It Matters" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bob Roberts" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2025-09-12T10:00:00-05:00","datePublished":"2025-09-12T10:00:00-05:00","description":"From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build.","headline":"The Rails Generation Gap: Why It Matters","image":"http://localhost:4000/assets/images/covers/rails-generation-gap.svg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/posts/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/resume/" >
+          Resume
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+// Mobile navigation toggle
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    nav.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+  }
+})();
+</script>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">The Rails Generation Gap: Why It Matters</h1>
+
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-09-12T10:00:00-05:00" itemprop="datePublished">
+        September 12, 2025
+      </time><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span class="p-author h-card" itemprop="name">Bob Roberts</span>
+        </span><span class="reading-time"> • <span id="reading-time"></span></span>
+    </div>
+
+    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav><div class="post-tags"><span class="tag">rails</span><span class="tag">mentorship</span><span class="tag">bootcamps</span><span class="tag">community</span><span class="tag">culture</span></div>
+      <figure class="post-hero">
+        <img src="/assets/images/covers/rails-generation-gap.svg" alt="The Rails Generation Gap" style="object-position: center center;">
+        
+      </figure>
+    
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I still remember the first time I got truly stuck on a Rails bug in the late 2000s. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. Before I knew it, I had met a total stranger and they were mentoring me. That was the vibe back then: small, tight knit, and very collaborative.</p>
+
+<p>Jump ahead a decade and the on ramp looks different. Fewer mailing lists. More bootcamps, YouTube, Discord, and Stack Overflow. Folks learn fast, ship fast, and get help in new places. Rails changed, but the bigger shift was how people came into the community and learned the craft.</p>
+
+<p>That shift is what I think of as the Rails Generation Gap. We do not talk about it enough, and it matters.</p>
+
+<p>I am starting a short series on this. I will look at the early craft culture, the bootcamp boom, the cultural shifts that came with it, and some practical ways to bridge the gap. The idea for this series was what I cam away from with the first Rails meetup I have been to in years, which I wrote about <a href="/general/meta/2025/09/08/welcome-to-my-blog/#what-brought-me-back">here</a>.</p>
+
+<hr />
+
+<h2 id="before-bootcamps-a-craft-culture">Before bootcamps: a craft culture</h2>
+
+<p>When Rails landed in 2004, it felt like magic. Convention over configuration made things click. Getting started was not easy though. Docs were thin, posts were dense, and half the time you learned by reading the source.</p>
+
+<p>The upside was depth. A lot of us learned the how and the why. Mentorship was built in because it had to be.</p>
+
+<p>It also felt closed at times. Fewer entry points. Less diversity. Sometimes it read like an insider club.</p>
+
+<hr />
+
+<h2 id="the-bootcamp-boom">The bootcamp boom</h2>
+
+<p>Around 2013, bootcamps exploded. Course Report counted roughly two thousand grads in 2013. By 2019, it was more than twenty three thousand a year, and Rails was everywhere in those programs.</p>
+
+<p>Rails made sense for teaching. You could get someone to a working web app in weeks, not months. For career changers, that was huge.</p>
+
+<p>More people in the community was a good thing. It opened doors beyond CS degrees and long nights reading code.</p>
+
+<hr />
+
+<h2 id="the-gap">The gap</h2>
+
+<p>Growth comes with tradeoffs. Some of the old guard saw bootcamp grads as folks who could ship but could not explain what Active Record was doing under the hood. Some newcomers saw veterans as unapproachable or stuck in old patterns.</p>
+
+<p>The way we shared knowledge changed too. Long form posts and deep dives gave way to shorter answers and quick videos. Stack Overflow peaked around 2013 to 2015 and then slid. By 2023, new questions were down about seventy seven percent compared to 2009.</p>
+
+<p>That shift in how we learn and teach created friction.</p>
+
+<hr />
+
+<h2 id="why-it-still-matters">Why it still matters</h2>
+
+<p>Rails is mature now. It is not the new hot thing. The gap still shows up in day to day work.</p>
+
+<ul>
+  <li>Hiring and onboarding: I have seen teams struggle to bring on a lot of juniors without strong mentorship in place.</li>
+  <li>Open source health: Rails thrives on contribution. Without context and a habit of paying it forward, it gets harder to sustain.</li>
+  <li>Mixing voices: Veterans bring depth. New folks bring energy and fresh perspective. We need both.</li>
+</ul>
+
+<p>Whether we talk to each other, or past each other, determines a lot about where Rails goes next.</p>
+
+<hr />
+
+<h2 id="closing-the-gap">Closing the gap</h2>
+
+<p>A few practical moves I have seen help:</p>
+
+<ul>
+  <li>Veterans can share not just code, but the history and tradeoffs that shaped Rails.</li>
+  <li>Bootcamp grads can document what they learn and pull others up the ladder behind them.</li>
+  <li>Companies can try apprenticeship style onboarding and give seniors time to mentor.</li>
+</ul>
+
+<p>Rails has always been more than code. Community is the multiplier. How we teach, share, and build will shape the next decade.</p>
+
+<hr />
+
+<h2 id="what-is-next">What is next</h2>
+
+<p>This is the first post in a short series on the Rails Generation Gap. Next up, I will rewind to the early era of screencasts, whimsical guides, and in person mentorship, and pull forward the parts that still work today.</p>
+
+<p>If you have lived through both sides of this, what differences have you noticed? How do you think we can build better bridges between generations of Rails developers?</p>
+
+  </div>
+
+  
+    <section class="related-posts">
+      <h3>Related posts</h3>
+      <div class="posts-grid">
+        
+        
+          
+            
+            
+            
+          
+        
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/realtime-optimistic-ui-pro.svg" alt="Real-time and optimistic UI with Apollo Client and Rails" style="object-position: center center;"></div>
+                
+                <h3><a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">Making Apps Feel Instant: My Experience with Realtime Rails and Apollo</a></h3>
+                <div class="post-meta"><time datetime="2025-02-01T10:00:00-06:00">February 01, 2025</time></div>
+                <div class="post-excerpt">Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn't, and why I switched to AnyCable....</div>
+              </article>
+              
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/braintree-hosted-fields.svg" alt="Using Braintree Hosted Fields with Rails" style="object-position: center center;"></div>
+                
+                <h3><a href="/2017/rails-with-braintree-hosted-fields/">Using Braintree hosted fields with Ruby on Rails</a></h3>
+                <div class="post-meta"><time datetime="2017-09-26T19:00:00-05:00">September 26, 2017</time></div>
+                <div class="post-excerpt">
+  Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.
+
+
+</div>
+              </article>
+              
+            
+          
+        
+          
+            
+            
+            
+              <article class="post-preview">
+                
+                  <div class="post-thumb"><img src="/assets/images/covers/operation-code.svg" alt="What Operation Code Means To Me" style="object-position: center center;"></div>
+                
+                <h3><a href="/2017/what-oc-means-to-me/">What Operation Code means to me.</a></h3>
+                <div class="post-meta"><time datetime="2017-09-24T19:00:00-05:00">September 24, 2017</time></div>
+                <div class="post-excerpt">
+  Archived from the original post (2017-09-25). Lightly converted to Markdown.
+
+
+</div>
+              </article>
+              
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+      </div>
+    </section>
+  
+
+
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4000%2Frails%2Fcommunity%2Fcareer%2F2025%2F09%2F12%2Fthe-rails-generation-gap-why-it-matters%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=The+Rails+Generation+Gap%3A+Why+It+Matters+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4000%2Frails%2Fcommunity%2Fcareer%2F2025%2F09%2F12%2Fthe-rails-generation-gap-why-it-matters%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div><div class="post-navigation"><div class="nav-previous">
+          <a href="/general/meta/2025/09/08/welcome-to-my-blog/" class="btn btn-secondary">
+            ← Dusting Off the Blog (Again)
+          </a>
+        </div><div class="nav-next">
+          <a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/" class="btn btn-secondary">
+            What finally fixed our depl... →
+          </a>
+        </div></div>
+  </footer>
+
+  <a class="u-url" href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" hidden></a>
+</article>
+
+  <script src="/assets/js/post.js" defer></script>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/resume/">Resume</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">
+                What finally fixed our depl...
+              </a>
+            </li><li>
+              <a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">
+                The Rails Generation Gap: W...
+              </a>
+            </li><li>
+              <a href="/general/meta/2025/09/08/welcome-to-my-blog/">
+                Dusting Off the Blog (Again)
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

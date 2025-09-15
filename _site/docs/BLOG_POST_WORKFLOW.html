@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Ensure our PNG og:image appears BEFORE jekyll-seo-tag so crawlers pick it -->
+  <meta property="og:image" content="http://localhost:4000/assets/images/social-default.png">
+  <meta name="twitter:image" content="http://localhost:4000/assets/images/social-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Blog Post Creation Workflow | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Blog Post Creation Workflow" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
+<meta property="og:description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
+<link rel="canonical" href="http://localhost:4000/docs/BLOG_POST_WORKFLOW.html" />
+<meta property="og:url" content="http://localhost:4000/docs/BLOG_POST_WORKFLOW.html" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Blog Post Creation Workflow" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bob Roberts" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Bob Roberts"},"description":"Practical Rails · React · GraphQL · TypeScript — pay it forward.","headline":"Blog Post Creation Workflow","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4000/docs/BLOG_POST_WORKFLOW.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/posts/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/resume/" >
+          Resume
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+// Mobile navigation toggle
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    nav.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+  }
+})();
+</script>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <h1 id="blog-post-creation-workflow">Blog Post Creation Workflow</h1>
+
+<p>This document outlines the complete workflow for creating new blog posts with custom cover images.</p>
+
+<h2 id="step-1-create-the-blog-post">Step 1: Create the Blog Post</h2>
+
+<p>Create the markdown file in <code class="language-plaintext highlighter-rouge">_posts/</code> following the naming convention:
+<code class="language-plaintext highlighter-rouge">YYYY-MM-DD-title-with-hyphens.md</code></p>
+
+<h3 id="required-front-matter">Required Front Matter</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="na">layout</span><span class="pi">:</span> <span class="s">post</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Your</span><span class="nv"> </span><span class="s">Post</span><span class="nv"> </span><span class="s">Title"</span>
+<span class="na">date</span><span class="pi">:</span> <span class="s">YYYY-MM-DD HH:MM:SS -0700</span>
+<span class="na">categories</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">category1</span><span class="pi">,</span> <span class="nv">category2</span><span class="pi">]</span>
+<span class="na">tags</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">tag1</span><span class="pi">,</span> <span class="nv">tag2</span><span class="pi">,</span> <span class="nv">tag3</span><span class="pi">]</span>
+<span class="na">author</span><span class="pi">:</span> <span class="s">Bob Roberts</span>
+<span class="na">image</span><span class="pi">:</span> <span class="s">/assets/images/covers/your-image-name.svg</span>
+<span class="na">image_alt</span><span class="pi">:</span> <span class="s">Alt text for the image</span>
+<span class="na">image_position</span><span class="pi">:</span> <span class="s">center center</span>
+<span class="na">excerpt</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Brief</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">social</span><span class="nv"> </span><span class="s">sharing</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">previews"</span>
+<span class="na">linkedin_blurb</span><span class="pi">:</span> <span class="pi">|</span>
+  <span class="s">Ready-to-use LinkedIn post text that leads with value,</span>
+  <span class="s">tells the story, and invites engagement.</span>
+
+  <span class="s">Keep it conversational and specific. End with a call</span>
+  <span class="s">to action or question to encourage discussion.</span>
+
+  <span class="s">[Link will be auto-added by LinkedIn]</span>
+<span class="s">---</span>
+</code></pre></div></div>
+
+<h3 id="linkedin-blurb-guidelines">LinkedIn Blurb Guidelines</h3>
+<p>The <code class="language-plaintext highlighter-rouge">linkedin_blurb</code> field should:</p>
+<ul>
+  <li><strong>Lead with the key insight or pain point</strong> - Hook readers immediately</li>
+  <li><strong>Be conversational</strong> - Write like you’re talking to a colleague</li>
+  <li><strong>Include specific details</strong> - Concrete examples are more engaging</li>
+  <li><strong>Invite engagement</strong> - Ask questions or share relatable experiences</li>
+  <li><strong>Be 3-5 short paragraphs</strong> - Easy to scan on mobile</li>
+  <li><strong>End naturally</strong> - Don’t include the link (LinkedIn adds it automatically)</li>
+</ul>
+
+<h3 id="image-naming-convention">Image Naming Convention</h3>
+<ul>
+  <li>Use kebab-case (hyphens between words)</li>
+  <li>Keep names descriptive but concise</li>
+  <li>Example: <code class="language-plaintext highlighter-rouge">deployment-sidekiq-fix.svg</code></li>
+</ul>
+
+<h2 id="step-2-create-the-custom-svg-cover-image">Step 2: Create the Custom SVG Cover Image</h2>
+
+<p>Create an SVG file in <code class="language-plaintext highlighter-rouge">assets/images/covers/</code> with dimensions 1200x630 (LinkedIn/social media standard).</p>
+
+<h3 id="svg-template-structure">SVG Template Structure</h3>
+<pre><code class="language-svg">&lt;svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;defs&gt;
+    &lt;linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"&gt;
+      &lt;stop offset="0%" stop-color="#0b0f14"/&gt;
+      &lt;stop offset="100%" stop-color="#0d1117"/&gt;
+    &lt;/linearGradient&gt;
+    &lt;radialGradient id="r" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1040 560) rotate(45) scale(520 340)"&gt;
+      &lt;stop offset="0" stop-color="#f85149" stop-opacity="0.22"/&gt;
+      &lt;stop offset="1" stop-color="#f85149" stop-opacity="0"/&gt;
+    &lt;/radialGradient&gt;
+    &lt;radialGradient id="b" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(200 100) rotate(0) scale(440 300)"&gt;
+      &lt;stop offset="0" stop-color="#58a6ff" stop-opacity="0.18"/&gt;
+      &lt;stop offset="1" stop-color="#58a6ff" stop-opacity="0"/&gt;
+    &lt;/radialGradient&gt;
+  &lt;/defs&gt;
+  &lt;rect width="1200" height="630" fill="url(#bg)"/&gt;
+  &lt;rect width="1200" height="630" fill="url(#r)"/&gt;
+  &lt;rect width="1200" height="630" fill="url(#b)"/&gt;
+  &lt;g font-family="Inter, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" fill="#c9d1d9"&gt;
+    &lt;text x="80" y="300" font-size="56" font-weight="700"&gt;Your Main Title&lt;/text&gt;
+    &lt;text x="80" y="350" font-size="30" fill="#9ea7b3"&gt;Subtitle / Category&lt;/text&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</code></pre>
+
+<h3 id="design-guidelines">Design Guidelines</h3>
+<ul>
+  <li><strong>Background</strong>: Dark gradient (#0b0f14 to #0d1117) matching site theme</li>
+  <li><strong>Accent colors</strong>: Red (#f85149) and blue (#58a6ff) radial gradients for visual interest</li>
+  <li><strong>Typography</strong>: Inter font family, white text (#c9d1d9) for main title</li>
+  <li><strong>Subtitle</strong>: Lighter gray (#9ea7b3) for secondary text</li>
+  <li><strong>Layout</strong>: Title at y=”300”, subtitle at y=”350”, both starting at x=”80”</li>
+  <li><strong>Font sizes</strong>: 56px for main title, 30px for subtitle</li>
+</ul>
+
+<h3 id="visual-elements-important">Visual Elements (IMPORTANT!)</h3>
+<p><strong>Don’t just create text-only covers!</strong> Add visual elements that relate to the content:</p>
+<ul>
+  <li><strong>Icons and symbols</strong>: Database cylinders, server boxes, connection lines, chat windows</li>
+  <li><strong>Visual metaphors</strong>: Waves for realtime, locks for security, timelines for history</li>
+  <li><strong>Network diagrams</strong>: Nodes and connections for community/architecture topics</li>
+  <li><strong>UI elements</strong>: Buttons, windows, code blocks, terminal interfaces</li>
+  <li><strong>Abstract shapes</strong>: That reinforce the theme (gaps, bridges, flows, etc.)</li>
+</ul>
+
+<p><strong>Examples of good visual elements:</strong></p>
+<ul>
+  <li>Deployment posts: Server icons, database cylinders, connection pools</li>
+  <li>Community posts: Network nodes, chat windows, timeline elements</li>
+  <li>Technical posts: Code blocks, terminal windows, architecture diagrams</li>
+  <li>Authentication posts: Lock icons, token symbols, security shields</li>
+</ul>
+
+<h2 id="step-3-convert-svg-to-png">Step 3: Convert SVG to PNG</h2>
+
+<p>After creating the SVG, run the conversion script to generate the PNG version for LinkedIn sharing:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run svg2png
+</code></pre></div></div>
+
+<p>This command:</p>
+<ul>
+  <li>Converts all SVG files in <code class="language-plaintext highlighter-rouge">assets/images/covers/</code> to PNG format</li>
+  <li>Creates 1200x630 PNG files optimized for social media</li>
+  <li>Uses high-quality settings (density: 300, compression: 9)</li>
+  <li>Applies dark background (#0d1117) for transparency safety</li>
+</ul>
+
+<h3 id="what-the-script-does">What the Script Does</h3>
+<ul>
+  <li>Reads all <code class="language-plaintext highlighter-rouge">.svg</code> files in <code class="language-plaintext highlighter-rouge">assets/images/covers/</code></li>
+  <li>Converts each to a same-named <code class="language-plaintext highlighter-rouge">.png</code> file</li>
+  <li>Optimizes for social media sharing (1200x630 resolution)</li>
+  <li>Maintains visual quality with high density and compression settings</li>
+</ul>
+
+<h2 id="step-4-verify-the-results">Step 4: Verify the Results</h2>
+
+<p>After running the conversion:</p>
+<ol>
+  <li>Check that both <code class="language-plaintext highlighter-rouge">.svg</code> and <code class="language-plaintext highlighter-rouge">.png</code> files exist in <code class="language-plaintext highlighter-rouge">assets/images/covers/</code></li>
+  <li>Verify the PNG looks correct (1200x630, proper colors, readable text)</li>
+  <li>Test the blog post locally to ensure images load properly</li>
+</ol>
+
+<h2 id="step-5-linkedin-sharing">Step 5: LinkedIn Sharing</h2>
+
+<h3 id="using-the-linkedin-blurb">Using the LinkedIn Blurb</h3>
+<ol>
+  <li>Copy the <code class="language-plaintext highlighter-rouge">linkedin_blurb</code> content from the post’s front matter</li>
+  <li>Paste it into your LinkedIn post</li>
+  <li>Add the blog post URL (LinkedIn will automatically generate the preview card)</li>
+  <li>The PNG version will be used for the preview card</li>
+</ol>
+
+<h3 id="linkedin-best-practices">LinkedIn Best Practices</h3>
+<ul>
+  <li>The PNG version will be used automatically for the preview card</li>
+  <li>LinkedIn prefers 1200x630 images for optimal display</li>
+  <li>The dark theme and high contrast ensure readability in social feeds</li>
+  <li>Lead with value and invite engagement in your post text</li>
+  <li>Keep the tone conversational and specific</li>
+</ul>
+
+<h2 id="file-structure-example">File Structure Example</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>assets/images/covers/
+├── deployment-sidekiq-fix.svg    # Source SVG (created manually)
+├── deployment-sidekiq-fix.png    # Generated PNG (via npm run svg2png)
+├── other-post.svg
+└── other-post.png
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="svg-not-converting">SVG Not Converting</h3>
+<ul>
+  <li>Ensure the SVG is valid XML</li>
+  <li>Check that the file is in <code class="language-plaintext highlighter-rouge">assets/images/covers/</code></li>
+  <li>Verify Node.js and Sharp dependencies are installed</li>
+</ul>
+
+<h3 id="png-quality-issues">PNG Quality Issues</h3>
+<ul>
+  <li>SVG text should use web-safe fonts</li>
+  <li>Avoid very thin lines or small text</li>
+  <li>Test at actual size (1200x630) before finalizing</li>
+</ul>
+
+<h3 id="missing-images-in-posts">Missing Images in Posts</h3>
+<ul>
+  <li>Verify the <code class="language-plaintext highlighter-rouge">image:</code> path in front matter matches the actual file</li>
+  <li>Ensure both SVG and PNG exist after conversion</li>
+  <li>Check that Jekyll is rebuilding properly</li>
+</ul>
+
+<h2 id="quick-checklist">Quick Checklist</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create blog post with proper front matter (including <code class="language-plaintext highlighter-rouge">linkedin_blurb</code>)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Create custom SVG cover image (1200x630)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Run <code class="language-plaintext highlighter-rouge">npm run svg2png</code> to generate PNG</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Verify both files exist and look correct</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test blog post locally</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Copy <code class="language-plaintext highlighter-rouge">linkedin_blurb</code> for social sharing</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ready for LinkedIn sharing with PNG preview</li>
+</ul>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/resume/">Resume</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">
+                What finally fixed our depl...
+              </a>
+            </li><li>
+              <a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">
+                The Rails Generation Gap: W...
+              </a>
+            </li><li>
+              <a href="/general/meta/2025/09/08/welcome-to-my-blog/">
+                Dusting Off the Blog (Again)
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

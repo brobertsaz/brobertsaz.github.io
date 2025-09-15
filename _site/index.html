@@ -3,8 +3,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Ensure our PNG og:image appears BEFORE jekyll-seo-tag so crawlers pick it -->
-  <meta property="og:image" content="https://brobertsaz.github.io/assets/images/social-default.png">
-  <meta name="twitter:image" content="https://brobertsaz.github.io/assets/images/social-default.png">
+  <meta property="og:image" content="http://localhost:4000/assets/images/social-default.png">
+  <meta name="twitter:image" content="http://localhost:4000/assets/images/social-default.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630"><!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Home | Code It Forward</title>
@@ -14,8 +14,8 @@
 <meta property="og:locale" content="en" />
 <meta name="description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
 <meta property="og:description" content="Practical Rails · React · GraphQL · TypeScript — pay it forward." />
-<link rel="canonical" href="https://brobertsaz.github.io/" />
-<meta property="og:url" content="https://brobertsaz.github.io/" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Code It Forward" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
@@ -23,11 +23,11 @@
 <meta name="twitter:site" content="@" />
 <meta name="twitter:creator" content="@Bob Roberts" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Bob Roberts"},"description":"Practical Rails · React · GraphQL · TypeScript — pay it forward.","headline":"Home","name":"Bob Roberts","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://brobertsaz.github.io/assets/images/logo.svg"},"name":"Bob Roberts"},"sameAs":["https://github.com/brobertsaz"],"url":"https://brobertsaz.github.io/"}</script>
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Bob Roberts"},"description":"Practical Rails · React · GraphQL · TypeScript — pay it forward.","headline":"Home","name":"Bob Roberts","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo.svg"},"name":"Bob Roberts"},"sameAs":["https://github.com/brobertsaz"],"url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="https://brobertsaz.github.io/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -137,24 +137,24 @@
 <h2 id="latest-posts">Latest Posts</h2>
 
 <article class="post-preview">
+  <h3><a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">What finally fixed our deployment and Sidekiq mess</a></h3>
+  <p class="post-meta">September 12, 2025</p>
+  <p>A week of production chaos taught me that Sidekiq failures aren't always about Sidekiq. Sometimes it's your database connection pool that's starving everything else.</p>
+  <a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/" class="read-more">Read more →</a>
+</article>
+
+<article class="post-preview">
+  <h3><a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">The Rails Generation Gap: Why It Matters</a></h3>
+  <p class="post-meta">September 12, 2025</p>
+  <p>From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build.</p>
+  <a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" class="read-more">Read more →</a>
+</article>
+
+<article class="post-preview">
   <h3><a href="/general/meta/2025/09/08/welcome-to-my-blog/">Dusting Off the Blog (Again)</a></h3>
   <p class="post-meta">September 08, 2025</p>
   <p>After a long hiatus, I'm bringing this blog back to life. What changed, why I stopped, and what I'm planning to write about this time around.</p>
   <a href="/general/meta/2025/09/08/welcome-to-my-blog/" class="read-more">Read more →</a>
-</article>
-
-<article class="post-preview">
-  <h3><a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">Making Apps Feel Instant: My Experience with Realtime Rails and Apollo</a></h3>
-  <p class="post-meta">February 01, 2025</p>
-  <p>Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn't, and why I switched to AnyCable.</p>
-  <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" class="read-more">Read more →</a>
-</article>
-
-<article class="post-preview">
-  <h3><a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">The Authentication Dilemma: Sessions vs JWTs in Rails</a></h3>
-  <p class="post-meta">January 24, 2025</p>
-  <p>Why I usually stick with boring cookie sessions, when I reach for JWTs, and the authentication mistakes that taught me lessons the hard way.</p>
-  <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" class="read-more">Read more →</a>
 </article>
 
 <div class="all-posts">
@@ -164,6 +164,50 @@
       <h2>Recent Posts</h2>
 
       <div class="posts-grid"><article class="post-preview">
+            
+              <div class="post-thumb">
+                <img src="/assets/images/covers/deployment-sidekiq-fix.svg" alt="What finally fixed our deployment and Sidekiq mess" style="object-position: center center;">
+              </div>
+            
+            <h3>
+              <a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">
+                What finally fixed our deployment and Sidekiq mess
+              </a>
+            </h3>
+
+            <div class="post-meta">
+              <time datetime="2025-09-12T11:00:00-05:00">
+                September 12, 2025
+              </time><span class="author">by Bob Roberts</span></div>
+
+            <div class="post-excerpt">
+              A week of production chaos taught me that Sidekiq failures aren't always about Sidekiq. Sometimes it's your database connection pool that's starving everything else.
+            </div><div class="post-tags"><span class="tag">sidekiq</span><span class="tag">deployment</span><span class="tag">passenger</span><span class="tag">mysql</span><span class="tag">redis</span><span class="tag">activerecord</span><span class="tag">database-pool</span></div><a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/" class="read-more">
+              Read more →
+            </a>
+          </article><article class="post-preview">
+            
+              <div class="post-thumb">
+                <img src="/assets/images/covers/rails-generation-gap.svg" alt="The Rails Generation Gap" style="object-position: center center;">
+              </div>
+            
+            <h3>
+              <a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">
+                The Rails Generation Gap: Why It Matters
+              </a>
+            </h3>
+
+            <div class="post-meta">
+              <time datetime="2025-09-12T10:00:00-05:00">
+                September 12, 2025
+              </time><span class="author">by Bob Roberts</span></div>
+
+            <div class="post-excerpt">
+              From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build.
+            </div><div class="post-tags"><span class="tag">rails</span><span class="tag">mentorship</span><span class="tag">bootcamps</span><span class="tag">community</span><span class="tag">culture</span></div><a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" class="read-more">
+              Read more →
+            </a>
+          </article><article class="post-preview">
             
               <div class="post-thumb">
                 <img src="/assets/images/covers/blog-comeback.png" alt="Dusting Off the Blog (Again)" style="object-position: center center;">
@@ -251,50 +295,6 @@
             </div><div class="post-tags"><span class="tag">typescript</span><span class="tag">react</span><span class="tag">graphql</span><span class="tag">codegen</span><span class="tag">ruby-on-rails</span></div><a href="/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" class="read-more">
               Read more →
             </a>
-          </article><article class="post-preview">
-            
-              <div class="post-thumb">
-                <img src="/assets/images/covers/rails-graphql-apollo-pro.svg" alt="Production-ready Rails GraphQL API with Apollo Client and TypeScript" style="object-position: center center;">
-              </div>
-            
-            <h3>
-              <a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">
-                My Journey Building a GraphQL API with Rails and Apollo
-              </a>
-            </h3>
-
-            <div class="post-meta">
-              <time datetime="2025-01-10T10:00:00-06:00">
-                January 10, 2025
-              </time><span class="author">by Bob Roberts</span></div>
-
-            <div class="post-excerpt">
-              What I learned building a GraphQL API that actually works in production. The mistakes I made, the tools that saved me, and why I'd choose this stack again.
-            </div><div class="post-tags"><span class="tag">ruby-on-rails</span><span class="tag">graphql</span><span class="tag">apollo</span><span class="tag">typescript</span><span class="tag">fullstack</span><span class="tag">performance</span></div><a href="/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/" class="read-more">
-              Read more →
-            </a>
-          </article><article class="post-preview">
-            
-              <div class="post-thumb">
-                <img src="/assets/images/covers/modern-javascript.svg" alt="Modern JavaScript Development" style="object-position: center center;">
-              </div>
-            
-            <h3>
-              <a href="/javascript/development/2024/01/22/modern-javascript-development/">
-                JavaScript Fatigue is Real (But It&#39;s Worth It)
-              </a>
-            </h3>
-
-            <div class="post-meta">
-              <time datetime="2024-01-22T15:30:00-06:00">
-                January 22, 2024
-              </time><span class="author">by Bob Roberts</span></div>
-
-            <div class="post-excerpt">
-              My love-hate relationship with the JavaScript ecosystem. How I learned to stop worrying and embrace the chaos of modern JS development.
-            </div><div class="post-tags"><span class="tag">javascript</span><span class="tag">tools</span><span class="tag">best-practices</span><span class="tag">modern-development</span></div><a href="/javascript/development/2024/01/22/modern-javascript-development/" class="read-more">
-              Read more →
-            </a>
           </article></div><div class="all-posts">
           <a href="/posts/" class="btn btn-danger">View All Posts</a>
         </div></section></div>
@@ -333,16 +333,16 @@
       <div class="footer-section">
         <h4>Recent Posts</h4>
         <ul><li>
+              <a href="/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">
+                What finally fixed our depl...
+              </a>
+            </li><li>
+              <a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">
+                The Rails Generation Gap: W...
+              </a>
+            </li><li>
               <a href="/general/meta/2025/09/08/welcome-to-my-blog/">
                 Dusting Off the Blog (Again)
-              </a>
-            </li><li>
-              <a href="/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">
-                Making Apps Feel Instant: M...
-              </a>
-            </li><li>
-              <a href="/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">
-                The Authentication Dilemma:...
               </a>
             </li></ul>
       </div>

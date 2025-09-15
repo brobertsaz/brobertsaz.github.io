@@ -1,10 +1,239 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="https://brobertsaz.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://brobertsaz.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-10T22:05:06-05:00</updated><id>https://brobertsaz.github.io/feed.xml</id><title type="html">Code It Forward</title><subtitle>Practical Rails · React · GraphQL · TypeScript — pay it forward.</subtitle><author><name>Bob Roberts</name></author><entry><title type="html">Dusting Off the Blog (Again)</title><link href="https://brobertsaz.github.io/general/meta/2025/09/08/welcome-to-my-blog/" rel="alternate" type="text/html" title="Dusting Off the Blog (Again)" /><published>2025-09-08T12:00:00-05:00</published><updated>2025-09-08T12:00:00-05:00</updated><id>https://brobertsaz.github.io/general/meta/2025/09/08/welcome-to-my-blog</id><content type="html" xml:base="https://brobertsaz.github.io/general/meta/2025/09/08/welcome-to-my-blog/">&lt;p&gt;If you’ve been following this blog for a while (and there might be a few of you), you’ll notice it’s been quiet since 2017. Seven years is a long time in tech. A lot has changed.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-15T13:27:54-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Code It Forward</title><subtitle>Practical Rails · React · GraphQL · TypeScript — pay it forward.</subtitle><author><name>Bob Roberts</name></author><entry><title type="html">What finally fixed our deployment and Sidekiq mess</title><link href="http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/" rel="alternate" type="text/html" title="What finally fixed our deployment and Sidekiq mess" /><published>2025-09-12T11:00:00-05:00</published><updated>2025-09-12T11:00:00-05:00</updated><id>http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess</id><content type="html" xml:base="http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">&lt;p&gt;Over the last week I hit a cluster of production problems that looked unrelated at first: intermittent deploys that “completed” but left the app unresponsive, email blasts that “finished” with zero sends, and a Sidekiq dashboard screaming 60–70% failure rates. This post is my straight‑from-the-console write‑up of what actually broke, how I tracked it down, and the simple changes that stabilized everything.&lt;/p&gt;
+
+&lt;p&gt;If you’re running Rails on Nginx + Passenger with MySQL, Redis, and Sidekiq (and some Delayed Job still hanging around), this will probably feel familiar.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-symptoms&quot;&gt;The symptoms&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Deploy “succeeds,” site feels sluggish or unresponsive afterward.&lt;/li&gt;
+  &lt;li&gt;Sidekiq shows high failure rates, idle workers, and no throughput.&lt;/li&gt;
+  &lt;li&gt;Email blasts target thousands of customers but report zero sent.&lt;/li&gt;
+  &lt;li&gt;Logs full of noise in test and prod, making the real issues easy to miss.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;the-real-root-cause&quot;&gt;The real root cause&lt;/h2&gt;
+
+&lt;p&gt;It wasn’t a single bug. It was a perfect storm:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A Ruby upgrade changed memory/boot characteristics.&lt;/li&gt;
+  &lt;li&gt;I had both Sidekiq and Delayed Job running (historical reasons).&lt;/li&gt;
+  &lt;li&gt;Passenger was running multiple app processes.&lt;/li&gt;
+  &lt;li&gt;And the big one: the database pool was way too small.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Sidekiq wasn’t “broken.” It was starved. Jobs were dying with:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;could not obtain a database connection within 5.000 seconds
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once I stopped staring at Sidekiq’s failure counter and looked at actual error classes in Retry/Dead sets, the picture was obvious: ActiveRecord connection timeouts across the board.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-simple-calculation-that-matters&quot;&gt;The simple calculation that matters&lt;/h2&gt;
+
+&lt;p&gt;This is the mental model I now use and documented in a deployment guide for future reference.&lt;/p&gt;
+
+&lt;p&gt;You need at least:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Passenger processes (each wants a DB connection)&lt;/li&gt;
+  &lt;li&gt;plus Sidekiq threads across all processes&lt;/li&gt;
+  &lt;li&gt;plus a little buffer (console, rake tasks, admin scripts, spikes)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example from my production box:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Passenger: 5 processes&lt;/li&gt;
+  &lt;li&gt;Sidekiq: 1 process × 3 threads (I dialed this down)&lt;/li&gt;
+  &lt;li&gt;Buffer: 5–10 (call it 7 for “stuff you forgot”)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So minimum pool = 5 (Passenger) + 3 (Sidekiq) + 7 (buffer) = 15.
+I set it to 25 because the server has plenty of RAM (32 GB) and I’d rather have headroom than timeouts.&lt;/p&gt;
+
+&lt;p&gt;Production &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;database.yml&lt;/code&gt; ended up like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;production&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;adapter&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mysql2&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;pool&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;25&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;localhost&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# …rest omitted&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After bumping the pool, the connection timeouts disappeared immediately.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-sidekiq-side-of-the-house&quot;&gt;The Sidekiq side of the house&lt;/h2&gt;
+
+&lt;p&gt;I also simplified my worker setup. I don’t need hero numbers here—predictability beats bragging rights. I now run:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Concurrency (threads): 3&lt;/li&gt;
+  &lt;li&gt;Processes: start one Sidekiq process (or two if I’m pushing a big blast)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;My &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sidekiq.yml&lt;/code&gt; reflects that:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s&quot;&gt;:concurrency: &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;:queues:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;- [critical, 10]&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;- [email_blast, 6]&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;- [default, 5]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If I want more fault tolerance or better CPU spread, I start a second Sidekiq process with the same concurrency. Two procs × 3 threads = 6 total DB connections, still fine under a 25‑connection pool.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-email-blast-gotcha-sidekiq-vs-delayed-job&quot;&gt;The email blast gotcha (Sidekiq vs Delayed Job)&lt;/h2&gt;
+
+&lt;p&gt;My email blasts were “completing” with zero sends. The reason: the controller path had been switched to run synchronously during an earlier incident, while mailers still used &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;deliver_later&lt;/code&gt; (which goes through ActiveJob → Delayed Job in this app). That left me in a half‑migrated state: some work in Sidekiq, some in DJ, both competing for the same small pool.&lt;/p&gt;
+
+&lt;p&gt;I re‑enabled async sending for blasts and let Sidekiq handle it. The worker is straight‑forward and logs failures cleanly:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SendEspecialsWorker&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Sidekiq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Worker&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sidekiq_options&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;queue: :email_blast&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;retry: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;perform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;account_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coupons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email_blast_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;account&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;account_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;email_blast&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email_blast_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;EmailBlast&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email_blast_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;account&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;send_especial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coupons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;email_blast&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Key point: pick one background system per workflow. Mixing Sidekiq and Delayed Job on the same hot paths is a great way to create invisible contention.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-i-run-before-deploy-now&quot;&gt;What I run before deploy now&lt;/h2&gt;
+
+&lt;p&gt;I pulled these steps into the deployment guide so I don’t “cowboy fix” at 2am again. The gist:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Clean up any straggler processes (nginx, passenger, delayed_job, ruby)&lt;/li&gt;
+  &lt;li&gt;Drop caches and restart in a clean order&lt;/li&gt;
+  &lt;li&gt;Start Sidekiq to the target concurrency&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl stop nginx
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;pkill &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; delayed_job&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;pkill &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; passenger&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;pkill &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; ruby
+&lt;span class=&quot;nb&quot;&gt;sudo sync&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;3 | &lt;span class=&quot;nb&quot;&gt;sudo tee&lt;/span&gt; /proc/sys/vm/drop_caches
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start nginx
+&lt;span class=&quot;c&quot;&gt;# start sidekiq with -c 3 and proper logs/PIDs&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then I watch the first few minutes like a hawk:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;passenger-status&lt;/code&gt; for process health and queue length&lt;/li&gt;
+  &lt;li&gt;Sidekiq stats for processed/failed trends and queue sizes&lt;/li&gt;
+  &lt;li&gt;Memory and swap to catch early pressure&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;quick-checks-that-saved-me-time&quot;&gt;Quick checks that saved me time&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Confirm Sidekiq’s “Failed” vs Retry/Dead sets. Dashboard counters are cumulative. The real signal is “do new jobs fail?”&lt;/li&gt;
+  &lt;li&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sidekiq::Stats.new&lt;/code&gt; and print before/after numbers around a test job. If processed goes up without failed, you’re good.&lt;/li&gt;
+  &lt;li&gt;Don’t trust logger levels alone in tests if you’re using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puts&lt;/code&gt;. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puts&lt;/code&gt; goes to STDOUT regardless; either switch to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails.logger&lt;/code&gt; or redirect STDOUT in test.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-id-do-differently-next-time&quot;&gt;What I’d do differently next time&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Size the DB pool first. It’s the cheapest lever with the highest upside.&lt;/li&gt;
+  &lt;li&gt;Avoid half‑migrations. If a workflow starts on Sidekiq, finish the job and remove the Delayed Job path (or vice versa).&lt;/li&gt;
+  &lt;li&gt;Keep Sidekiq boring: low concurrency, more processes only when needed, queue weights tuned to business priorities.&lt;/li&gt;
+  &lt;li&gt;Document the decision math in the deployment guide, so future me doesn’t have to reconstruct it under pressure.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;tldr&quot;&gt;TL;DR&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The chronic failures weren’t Sidekiq being flaky—they were ActiveRecord connection timeouts.&lt;/li&gt;
+  &lt;li&gt;Passenger procs + Sidekiq threads + a buffer must fit under your DB &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pool&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;On a 32 GB host, a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pool: 25&lt;/code&gt; is a rounding error in memory and buys you stability.&lt;/li&gt;
+  &lt;li&gt;Run email blasts async in Sidekiq; don’t split them across Sidekiq and Delayed Job.&lt;/li&gt;
+  &lt;li&gt;Keep Sidekiq to 3 threads per process unless you’ve proven you need more.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you want the full step‑by‑step let me know. I put everything into a document including cleanup commands, monitoring, and the connection math. It’s the checklist I wish I’d had before the week started.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="production" /><category term="sidekiq" /><category term="deployment" /><category term="passenger" /><category term="mysql" /><category term="redis" /><category term="activerecord" /><category term="database-pool" /><summary type="html">A week of production chaos taught me that Sidekiq failures aren&apos;t always about Sidekiq. Sometimes it&apos;s your database connection pool that&apos;s starving everything else.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Rails Generation Gap: Why It Matters</title><link href="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" rel="alternate" type="text/html" title="The Rails Generation Gap: Why It Matters" /><published>2025-09-12T10:00:00-05:00</published><updated>2025-09-12T10:00:00-05:00</updated><id>http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters</id><content type="html" xml:base="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">&lt;p&gt;I still remember the first time I got truly stuck on a Rails bug in the late 2000s. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. Before I knew it, I had met a total stranger and they were mentoring me. That was the vibe back then: small, tight knit, and very collaborative.&lt;/p&gt;
+
+&lt;p&gt;Jump ahead a decade and the on ramp looks different. Fewer mailing lists. More bootcamps, YouTube, Discord, and Stack Overflow. Folks learn fast, ship fast, and get help in new places. Rails changed, but the bigger shift was how people came into the community and learned the craft.&lt;/p&gt;
+
+&lt;p&gt;That shift is what I think of as the Rails Generation Gap. We do not talk about it enough, and it matters.&lt;/p&gt;
+
+&lt;p&gt;I am starting a short series on this. I will look at the early craft culture, the bootcamp boom, the cultural shifts that came with it, and some practical ways to bridge the gap. The idea for this series was what I cam away from with the first Rails meetup I have been to in years, which I wrote about &lt;a href=&quot;/general/meta/2025/09/08/welcome-to-my-blog/#what-brought-me-back&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;before-bootcamps-a-craft-culture&quot;&gt;Before bootcamps: a craft culture&lt;/h2&gt;
+
+&lt;p&gt;When Rails landed in 2004, it felt like magic. Convention over configuration made things click. Getting started was not easy though. Docs were thin, posts were dense, and half the time you learned by reading the source.&lt;/p&gt;
+
+&lt;p&gt;The upside was depth. A lot of us learned the how and the why. Mentorship was built in because it had to be.&lt;/p&gt;
+
+&lt;p&gt;It also felt closed at times. Fewer entry points. Less diversity. Sometimes it read like an insider club.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-bootcamp-boom&quot;&gt;The bootcamp boom&lt;/h2&gt;
+
+&lt;p&gt;Around 2013, bootcamps exploded. Course Report counted roughly two thousand grads in 2013. By 2019, it was more than twenty three thousand a year, and Rails was everywhere in those programs.&lt;/p&gt;
+
+&lt;p&gt;Rails made sense for teaching. You could get someone to a working web app in weeks, not months. For career changers, that was huge.&lt;/p&gt;
+
+&lt;p&gt;More people in the community was a good thing. It opened doors beyond CS degrees and long nights reading code.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-gap&quot;&gt;The gap&lt;/h2&gt;
+
+&lt;p&gt;Growth comes with tradeoffs. Some of the old guard saw bootcamp grads as folks who could ship but could not explain what Active Record was doing under the hood. Some newcomers saw veterans as unapproachable or stuck in old patterns.&lt;/p&gt;
+
+&lt;p&gt;The way we shared knowledge changed too. Long form posts and deep dives gave way to shorter answers and quick videos. Stack Overflow peaked around 2013 to 2015 and then slid. By 2023, new questions were down about seventy seven percent compared to 2009.&lt;/p&gt;
+
+&lt;p&gt;That shift in how we learn and teach created friction.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;why-it-still-matters&quot;&gt;Why it still matters&lt;/h2&gt;
+
+&lt;p&gt;Rails is mature now. It is not the new hot thing. The gap still shows up in day to day work.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Hiring and onboarding: I have seen teams struggle to bring on a lot of juniors without strong mentorship in place.&lt;/li&gt;
+  &lt;li&gt;Open source health: Rails thrives on contribution. Without context and a habit of paying it forward, it gets harder to sustain.&lt;/li&gt;
+  &lt;li&gt;Mixing voices: Veterans bring depth. New folks bring energy and fresh perspective. We need both.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Whether we talk to each other, or past each other, determines a lot about where Rails goes next.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;closing-the-gap&quot;&gt;Closing the gap&lt;/h2&gt;
+
+&lt;p&gt;A few practical moves I have seen help:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Veterans can share not just code, but the history and tradeoffs that shaped Rails.&lt;/li&gt;
+  &lt;li&gt;Bootcamp grads can document what they learn and pull others up the ladder behind them.&lt;/li&gt;
+  &lt;li&gt;Companies can try apprenticeship style onboarding and give seniors time to mentor.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Rails has always been more than code. Community is the multiplier. How we teach, share, and build will shape the next decade.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;what-is-next&quot;&gt;What is next&lt;/h2&gt;
+
+&lt;p&gt;This is the first post in a short series on the Rails Generation Gap. Next up, I will rewind to the early era of screencasts, whimsical guides, and in person mentorship, and pull forward the parts that still work today.&lt;/p&gt;
+
+&lt;p&gt;If you have lived through both sides of this, what differences have you noticed? How do you think we can build better bridges between generations of Rails developers?&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="community" /><category term="career" /><category term="rails" /><category term="mentorship" /><category term="bootcamps" /><category term="community" /><category term="culture" /><summary type="html">From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Dusting Off the Blog (Again)</title><link href="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/" rel="alternate" type="text/html" title="Dusting Off the Blog (Again)" /><published>2025-09-08T12:00:00-05:00</published><updated>2025-09-08T12:00:00-05:00</updated><id>http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog</id><content type="html" xml:base="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/">&lt;p&gt;If you’ve been following this blog for a while (and there might be a few of you), you’ll notice it’s been quiet since 2017. Seven years is a long time in tech. A lot has changed.&lt;/p&gt;
 
 &lt;p&gt;I used to write regularly about Rails, freelancing, and the Arizona tech scene. Then life happened, priorities shifted, and the blog went dormant.&lt;/p&gt;
 
 &lt;h2 id=&quot;what-brought-me-back&quot;&gt;What brought me back&lt;/h2&gt;
 
-&lt;p&gt;A couple weeks ago I went to a Ruby meetup in Chicago. First one I’d attended in person since probably 2017. I honestly didn’t realize how much I missed it.&lt;/p&gt;
+&lt;p&gt;A few days ago I went to &lt;a href=&quot;https://www.linkedin.com/company/xoruby/posts/?feedView=all&quot;&gt;XORuby&lt;/a&gt; in Chicago. First tech event I’d attended in person since probably 2017. I honestly didn’t realize how much I missed it.&lt;/p&gt;
 
 &lt;p&gt;We talked about _why the lucky stiff, old Ruby legends, and I even mentioned that I once followed a cat named Gorbypuff on Twitter (RIP). It was the kind of conversation that reminded me why I fell in love with the Ruby community in the first place.&lt;/p&gt;
 
@@ -55,7 +284,7 @@
 
 &lt;p&gt;Back to building things.&lt;/p&gt;
 
-&lt;p&gt;Bob&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="general" /><category term="meta" /><category term="blogging" /><category term="comeback" /><category term="reflection" /><summary type="html">After a long hiatus, I&apos;m bringing this blog back to life. What changed, why I stopped, and what I&apos;m planning to write about this time around.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/blog-comeback.png" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/blog-comeback.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Making Apps Feel Instant: My Experience with Realtime Rails and Apollo</title><link href="https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" rel="alternate" type="text/html" title="Making Apps Feel Instant: My Experience with Realtime Rails and Apollo" /><published>2025-02-01T10:00:00-06:00</published><updated>2025-02-01T10:00:00-06:00</updated><id>https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails</id><content type="html" xml:base="https://brobertsaz.github.io/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">&lt;p&gt;I’ve been working on a dashboard app lately that needed to feel snappy. You know the feeling when you click “Save” and nothing happens for a second? That pause where users wonder if they actually clicked the button? I wanted to eliminate that.&lt;/p&gt;
+&lt;p&gt;Bob&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="general" /><category term="meta" /><category term="blogging" /><category term="comeback" /><category term="reflection" /><summary type="html">After a long hiatus, I&apos;m bringing this blog back to life. What changed, why I stopped, and what I&apos;m planning to write about this time around.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/blog-comeback.png" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/blog-comeback.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Making Apps Feel Instant: My Experience with Realtime Rails and Apollo</title><link href="http://localhost:4000/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" rel="alternate" type="text/html" title="Making Apps Feel Instant: My Experience with Realtime Rails and Apollo" /><published>2025-02-01T10:00:00-06:00</published><updated>2025-02-01T10:00:00-06:00</updated><id>http://localhost:4000/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails</id><content type="html" xml:base="http://localhost:4000/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">&lt;p&gt;I’ve been working on a dashboard app lately that needed to feel snappy. You know the feeling when you click “Save” and nothing happens for a second? That pause where users wonder if they actually clicked the button? I wanted to eliminate that.&lt;/p&gt;
 
 &lt;p&gt;Turns out, making UIs feel instant isn’t just about making the server faster. It’s about making smart choices about what to show users while they wait.&lt;/p&gt;
 
@@ -167,7 +396,7 @@
 
 &lt;hr /&gt;
 
-&lt;p&gt;The combination of optimistic UI and selective realtime updates has made my apps feel much more responsive. Users notice the difference immediately. The key is being thoughtful about when to use each technique.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="react" /><category term="realtime" /><category term="apollo" /><category term="optimistic-ui" /><category term="subscriptions" /><category term="actioncable" /><category term="anycable" /><category term="rails" /><summary type="html">Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn&apos;t, and why I switched to AnyCable.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/realtime-optimistic-ui-pro.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/realtime-optimistic-ui-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Authentication Dilemma: Sessions vs JWTs in Rails</title><link href="https://brobertsaz.github.io/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" rel="alternate" type="text/html" title="The Authentication Dilemma: Sessions vs JWTs in Rails" /><published>2025-01-24T10:00:00-06:00</published><updated>2025-01-24T10:00:00-06:00</updated><id>https://brobertsaz.github.io/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt</id><content type="html" xml:base="https://brobertsaz.github.io/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">&lt;p&gt;I’ve been building Rails apps for over a decade now, and I’ve probably implemented user authentication about fifty different ways. Most of those attempts were overly complicated. I’ve learned that when it comes to auth, boring usually wins.&lt;/p&gt;
+&lt;p&gt;The combination of optimistic UI and selective realtime updates has made my apps feel much more responsive. Users notice the difference immediately. The key is being thoughtful about when to use each technique.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="react" /><category term="realtime" /><category term="apollo" /><category term="optimistic-ui" /><category term="subscriptions" /><category term="actioncable" /><category term="anycable" /><category term="rails" /><summary type="html">Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn&apos;t, and why I switched to AnyCable.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/realtime-optimistic-ui-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/realtime-optimistic-ui-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Authentication Dilemma: Sessions vs JWTs in Rails</title><link href="http://localhost:4000/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" rel="alternate" type="text/html" title="The Authentication Dilemma: Sessions vs JWTs in Rails" /><published>2025-01-24T10:00:00-06:00</published><updated>2025-01-24T10:00:00-06:00</updated><id>http://localhost:4000/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt</id><content type="html" xml:base="http://localhost:4000/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">&lt;p&gt;I’ve been building Rails apps for over a decade now, and I’ve probably implemented user authentication about fifty different ways. Most of those attempts were overly complicated. I’ve learned that when it comes to auth, boring usually wins.&lt;/p&gt;
 
 &lt;p&gt;Last year I was working on a new Rails app with a React frontend. The team immediately started debating: “Should we use JWTs or stick with Rails sessions?” Everyone had strong opinions, most based on blog posts they’d read rather than real experience.&lt;/p&gt;
 
@@ -340,7 +569,7 @@
 
 &lt;hr /&gt;
 
-&lt;p&gt;Authentication doesn’t have to be exciting. Sometimes the boring, well-tested approach is exactly what you need.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="security" /><category term="rails" /><category term="authentication" /><category term="authorization" /><category term="jwt" /><category term="sessions" /><category term="apollo" /><category term="react" /><category term="csrf" /><summary type="html">Why I usually stick with boring cookie sessions, when I reach for JWTs, and the authentication mistakes that taught me lessons the hard way.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/auth-sessions-vs-jwt-pro.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/auth-sessions-vs-jwt-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Why I Generate All My TypeScript Types (And You Should Too)</title><link href="https://brobertsaz.github.io/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" rel="alternate" type="text/html" title="Why I Generate All My TypeScript Types (And You Should Too)" /><published>2025-01-17T10:00:00-06:00</published><updated>2025-01-17T10:00:00-06:00</updated><id>https://brobertsaz.github.io/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen</id><content type="html" xml:base="https://brobertsaz.github.io/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">&lt;p&gt;I used to hand-write TypeScript interfaces for all my GraphQL queries. It was tedious, error-prone, and I constantly had mismatches between what my Rails API returned and what my React components expected.&lt;/p&gt;
+&lt;p&gt;Authentication doesn’t have to be exciting. Sometimes the boring, well-tested approach is exactly what you need.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="security" /><category term="rails" /><category term="authentication" /><category term="authorization" /><category term="jwt" /><category term="sessions" /><category term="apollo" /><category term="react" /><category term="csrf" /><summary type="html">Why I usually stick with boring cookie sessions, when I reach for JWTs, and the authentication mistakes that taught me lessons the hard way.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/auth-sessions-vs-jwt-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/auth-sessions-vs-jwt-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Why I Generate All My TypeScript Types (And You Should Too)</title><link href="http://localhost:4000/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/" rel="alternate" type="text/html" title="Why I Generate All My TypeScript Types (And You Should Too)" /><published>2025-01-17T10:00:00-06:00</published><updated>2025-01-17T10:00:00-06:00</updated><id>http://localhost:4000/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen</id><content type="html" xml:base="http://localhost:4000/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/">&lt;p&gt;I used to hand-write TypeScript interfaces for all my GraphQL queries. It was tedious, error-prone, and I constantly had mismatches between what my Rails API returned and what my React components expected.&lt;/p&gt;
 
 &lt;p&gt;Then I discovered GraphQL Code Generator. It’s one of those tools that seems too good to be true until you actually use it.&lt;/p&gt;
 
@@ -537,7 +766,7 @@ bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake graphql:schema:du
 
 &lt;p&gt;GraphQL Code Generator eliminated an entire class of bugs from my apps. I catch schema mismatches at compile time instead of in production. Refactoring became fearless - if I change a field in Rails, TypeScript tells me exactly which components need updating.&lt;/p&gt;
 
-&lt;p&gt;It took about a day to set up the first time, but it’s saved me weeks of debugging over the past year. If you’re using GraphQL with TypeScript, this is a no-brainer.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="react" /><category term="typescript" /><category term="typescript" /><category term="react" /><category term="graphql" /><category term="codegen" /><category term="ruby-on-rails" /><summary type="html">How GraphQL Code Generator saved me from runtime surprises and made my Rails + React apps much more reliable. Plus the gotchas I wish I&apos;d known earlier.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/type-safe-react-rails-pro.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/type-safe-react-rails-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">My Journey Building a GraphQL API with Rails and Apollo</title><link href="https://brobertsaz.github.io/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/" rel="alternate" type="text/html" title="My Journey Building a GraphQL API with Rails and Apollo" /><published>2025-01-10T10:00:00-06:00</published><updated>2025-01-10T10:00:00-06:00</updated><id>https://brobertsaz.github.io/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript</id><content type="html" xml:base="https://brobertsaz.github.io/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">&lt;p&gt;Last year I convinced my team to try GraphQL for our new Rails API. “It’ll be great,” I said. “The frontend can request exactly the data it needs.”&lt;/p&gt;
+&lt;p&gt;It took about a day to set up the first time, but it’s saved me weeks of debugging over the past year. If you’re using GraphQL with TypeScript, this is a no-brainer.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="react" /><category term="typescript" /><category term="typescript" /><category term="react" /><category term="graphql" /><category term="codegen" /><category term="ruby-on-rails" /><summary type="html">How GraphQL Code Generator saved me from runtime surprises and made my Rails + React apps much more reliable. Plus the gotchas I wish I&apos;d known earlier.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/type-safe-react-rails-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/type-safe-react-rails-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">My Journey Building a GraphQL API with Rails and Apollo</title><link href="http://localhost:4000/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/" rel="alternate" type="text/html" title="My Journey Building a GraphQL API with Rails and Apollo" /><published>2025-01-10T10:00:00-06:00</published><updated>2025-01-10T10:00:00-06:00</updated><id>http://localhost:4000/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript</id><content type="html" xml:base="http://localhost:4000/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">&lt;p&gt;Last year I convinced my team to try GraphQL for our new Rails API. “It’ll be great,” I said. “The frontend can request exactly the data it needs.”&lt;/p&gt;
 
 &lt;p&gt;Six months later, we had a working GraphQL API serving a React/TypeScript app in production. But getting there taught me more about GraphQL than any tutorial ever did.&lt;/p&gt;
 
@@ -806,7 +1035,7 @@ bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake graphql:schema:du
 
 &lt;p&gt;GraphQL with Rails and Apollo has been worth the learning curve. The developer experience is genuinely better than REST for complex UIs. But it’s not magic - you still need to think about performance, caching, and security.&lt;/p&gt;
 
-&lt;p&gt;Would I choose this stack again? Absolutely. But next time I’d spend more time up front on monitoring and performance tooling.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="graphql" /><category term="ruby-on-rails" /><category term="graphql" /><category term="apollo" /><category term="typescript" /><category term="fullstack" /><category term="performance" /><summary type="html">What I learned building a GraphQL API that actually works in production. The mistakes I made, the tools that saved me, and why I&apos;d choose this stack again.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/rails-graphql-apollo-pro.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/rails-graphql-apollo-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">JavaScript Fatigue is Real (But It’s Worth It)</title><link href="https://brobertsaz.github.io/javascript/development/2024/01/22/modern-javascript-development/" rel="alternate" type="text/html" title="JavaScript Fatigue is Real (But It’s Worth It)" /><published>2024-01-22T15:30:00-06:00</published><updated>2024-01-22T15:30:00-06:00</updated><id>https://brobertsaz.github.io/javascript/development/2024/01/22/modern-javascript-development</id><content type="html" xml:base="https://brobertsaz.github.io/javascript/development/2024/01/22/modern-javascript-development/">&lt;p&gt;I’ve been writing JavaScript for over 15 years. I remember when jQuery was revolutionary, when adding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onclick&lt;/code&gt; handlers directly in HTML was normal, and when the biggest decision was whether to minify your one JavaScript file.&lt;/p&gt;
+&lt;p&gt;Would I choose this stack again? Absolutely. But next time I’d spend more time up front on monitoring and performance tooling.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="graphql" /><category term="ruby-on-rails" /><category term="graphql" /><category term="apollo" /><category term="typescript" /><category term="fullstack" /><category term="performance" /><summary type="html">What I learned building a GraphQL API that actually works in production. The mistakes I made, the tools that saved me, and why I&apos;d choose this stack again.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-graphql-apollo-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-graphql-apollo-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">JavaScript Fatigue is Real (But It’s Worth It)</title><link href="http://localhost:4000/javascript/development/2024/01/22/modern-javascript-development/" rel="alternate" type="text/html" title="JavaScript Fatigue is Real (But It’s Worth It)" /><published>2024-01-22T15:30:00-06:00</published><updated>2024-01-22T15:30:00-06:00</updated><id>http://localhost:4000/javascript/development/2024/01/22/modern-javascript-development</id><content type="html" xml:base="http://localhost:4000/javascript/development/2024/01/22/modern-javascript-development/">&lt;p&gt;I’ve been writing JavaScript for over 15 years. I remember when jQuery was revolutionary, when adding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onclick&lt;/code&gt; handlers directly in HTML was normal, and when the biggest decision was whether to minify your one JavaScript file.&lt;/p&gt;
 
 &lt;p&gt;Now I have webpack configs, TypeScript compilers, ESLint rules, Prettier configs, and three different package managers to choose from. Some days I miss the simplicity of the old days.&lt;/p&gt;
 
@@ -1056,7 +1285,7 @@ npx webpack-bundle-analyzer dist/static/js/&lt;span class=&quot;k&quot;&gt;*&lt;
 
 &lt;p&gt;My advice: focus on fundamentals (code quality, testing, performance), pick a stable stack you can be productive with, and upgrade incrementally when you have clear benefits.&lt;/p&gt;
 
-&lt;p&gt;The tools will keep changing. The principles stay the same.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="javascript" /><category term="development" /><category term="javascript" /><category term="tools" /><category term="best-practices" /><category term="modern-development" /><summary type="html">My love-hate relationship with the JavaScript ecosystem. How I learned to stop worrying and embrace the chaos of modern JS development.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/modern-javascript.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/modern-javascript.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Using Braintree hosted fields with Ruby on Rails</title><link href="https://brobertsaz.github.io/2017/rails-with-braintree-hosted-fields/" rel="alternate" type="text/html" title="Using Braintree hosted fields with Ruby on Rails" /><published>2017-09-26T19:00:00-05:00</published><updated>2017-09-26T19:00:00-05:00</updated><id>https://brobertsaz.github.io/2017/rails-with-braintree-hosted-fields</id><content type="html" xml:base="https://brobertsaz.github.io/2017/rails-with-braintree-hosted-fields/">&lt;blockquote&gt;
+&lt;p&gt;The tools will keep changing. The principles stay the same.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="javascript" /><category term="development" /><category term="javascript" /><category term="tools" /><category term="best-practices" /><category term="modern-development" /><summary type="html">My love-hate relationship with the JavaScript ecosystem. How I learned to stop worrying and embrace the chaos of modern JS development.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/modern-javascript.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/modern-javascript.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Using Braintree hosted fields with Ruby on Rails</title><link href="http://localhost:4000/2017/rails-with-braintree-hosted-fields/" rel="alternate" type="text/html" title="Using Braintree hosted fields with Ruby on Rails" /><published>2017-09-26T19:00:00-05:00</published><updated>2017-09-26T19:00:00-05:00</updated><id>http://localhost:4000/2017/rails-with-braintree-hosted-fields</id><content type="html" xml:base="http://localhost:4000/2017/rails-with-braintree-hosted-fields/">&lt;blockquote&gt;
   &lt;p&gt;Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1281,7 +1510,7 @@ braintree.setup(clientToken, &apos;custom&apos;, {
 
 &lt;p&gt;Demo App: https://github.com/brobertsaz/rails_braintree_hosted_fields&lt;/p&gt;
 
-&lt;p&gt;Feedback: If I missed something or made any errors, please let me know so that I can get this updated.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="rails" /><category term="ruby" /><category term="braintree" /><category term="payments" /><category term="tutorial" /><summary type="html">Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/braintree-hosted-fields.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/braintree-hosted-fields.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">What Operation Code means to me.</title><link href="https://brobertsaz.github.io/2017/what-oc-means-to-me/" rel="alternate" type="text/html" title="What Operation Code means to me." /><published>2017-09-24T19:00:00-05:00</published><updated>2017-09-24T19:00:00-05:00</updated><id>https://brobertsaz.github.io/2017/what-oc-means-to-me</id><content type="html" xml:base="https://brobertsaz.github.io/2017/what-oc-means-to-me/">&lt;blockquote&gt;
+&lt;p&gt;Feedback: If I missed something or made any errors, please let me know so that I can get this updated.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="rails" /><category term="ruby" /><category term="braintree" /><category term="payments" /><category term="tutorial" /><summary type="html">Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/braintree-hosted-fields.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/braintree-hosted-fields.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">What Operation Code means to me.</title><link href="http://localhost:4000/2017/what-oc-means-to-me/" rel="alternate" type="text/html" title="What Operation Code means to me." /><published>2017-09-24T19:00:00-05:00</published><updated>2017-09-24T19:00:00-05:00</updated><id>http://localhost:4000/2017/what-oc-means-to-me</id><content type="html" xml:base="http://localhost:4000/2017/what-oc-means-to-me/">&lt;blockquote&gt;
   &lt;p&gt;Archived from the original post (2017-09-25). Lightly converted to Markdown.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1305,66 +1534,4 @@ braintree.setup(clientToken, &apos;custom&apos;, {
 
 &lt;p&gt;What does Operation Code mean to me? Friends, family and a place that feels like home for this vet.&lt;/p&gt;
 
-&lt;p&gt;If you love your freedom, thank a vet. If you really love your freedom, then help a vet become a programmer.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="workflow" /><category term="community" /><category term="veterans" /><summary type="html">Archived from the original post (2017-09-25). Lightly converted to Markdown.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/operation-code.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/operation-code.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Blogging Mondays Premier</title><link href="https://brobertsaz.github.io/2017/blogging-mondays/" rel="alternate" type="text/html" title="Blogging Mondays Premier" /><published>2017-09-17T19:00:00-05:00</published><updated>2017-09-17T19:00:00-05:00</updated><id>https://brobertsaz.github.io/2017/blogging-mondays-premier</id><content type="html" xml:base="https://brobertsaz.github.io/2017/blogging-mondays/">&lt;blockquote&gt;
-  &lt;p&gt;Archived from the original post (2017-09-18). Lightly converted to Markdown.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Welcome the the very first Operation Code Blogging Mondays event for September 2017.&lt;/p&gt;
-
-&lt;p&gt;In an effort to help people get motivated about writing blog posts, Blogging Mondays was created.  Each month, there will be a different host and a different topic.&lt;/p&gt;
-
-&lt;p&gt;To participate:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;To participate, write a blog post!&lt;/li&gt;
-  &lt;li&gt;Although recommended, the post does not have to be on topic.&lt;/li&gt;
-  &lt;li&gt;Please set article to go live the day of the event, preferably, at 0000 hours&lt;/li&gt;
-  &lt;li&gt;Blog post should mention Blogging Mondays&lt;/li&gt;
-  &lt;li&gt;There should be a link back to the invitation post&lt;/li&gt;
-  &lt;li&gt;Somehow add your post to a list somewhere so the host can add you to the event summary&lt;/li&gt;
-  &lt;li&gt;Don’t forget to post your article link in #blogging&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This months Topic is “Why I joined Operation Code”&lt;/p&gt;
-
-&lt;p&gt;I feel that this is a easy topic for us to start off with.  It is also something that we all should (better not) have any issues coming up with something to write.&lt;/p&gt;
-
-&lt;p&gt;Some possible ideas:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;What did you expect from OC?&lt;/li&gt;
-  &lt;li&gt;What do you love about OC?&lt;/li&gt;
-  &lt;li&gt;Why you joined?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Remember that this is for fun and you do NOT have to wite about the topic if you do not want to.&lt;/p&gt;
-
-&lt;p&gt;It will be exciting to read all of the posts after they are done!!&lt;/p&gt;
-
-&lt;p&gt;Let’s start blogging!&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="workflow" /><category term="writing" /><summary type="html">Archived from the original post (2017-09-18). Lightly converted to Markdown.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://brobertsaz.github.io/assets/images/covers/blogging-mondays.svg" /><media:content medium="image" url="https://brobertsaz.github.io/assets/images/covers/blogging-mondays.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Not all recruiters are evil</title><link href="https://brobertsaz.github.io/2017/recruiters-are-not-all-evil/" rel="alternate" type="text/html" title="Not all recruiters are evil" /><published>2017-06-09T19:00:00-05:00</published><updated>2017-06-09T19:00:00-05:00</updated><id>https://brobertsaz.github.io/2017/not-all-recruiters-are-evil</id><content type="html" xml:base="https://brobertsaz.github.io/2017/recruiters-are-not-all-evil/">&lt;blockquote&gt;
-  &lt;p&gt;Archived from the original post (2017-06-10). Lightly converted to Markdown.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;One of the most common topics I see, is about recruiters. Most are complaints about bad ones, and some are compliments of good ones.&lt;/p&gt;
-
-&lt;p&gt;I know a LOT of great people that are great recruiters. I also know that more people take the time to write a complaint than people do to write a compliment.&lt;/p&gt;
-
-&lt;p&gt;It must be a difficult job that they have to do day after day. They work for people that are hiring, they work for people looking to get hired, and the work for both. It must be a balancing act for them; doing a good job for the employer AND for the candidate at the same time. It must be like when a couple gets divorced and use the same attorney. Who’s best interest do they have? Hopefully both.&lt;/p&gt;
-
-&lt;p&gt;LinkedIn has become a prime location for recruiters to find candidates. The good recruiters take the time to look at your profile before contacting you. They send a message apologizing for contacting you and ask if you are in the market. They do not bother you or pester you. The ones that contact you outside of LinkedIn say they are sorry for the interruption and ask if you are interested in a position that they are filling. They use your name in the email and not “Dear first_name.” They do not email you repeatedly. They do their job. They are the ones that we don’t talk about. They are the ones that don’t annoy us. They are not evil. The bad ones on the other hand …&lt;/p&gt;
-
-&lt;p&gt;The bad ones are the evil ones. They are the ones that give recruiters a bad name. They are the ones that we do talk about. We do not like them. They are annoying, they treat you like crap. They play the numbers game; email everybody on the planet and some will reply. They will email you for things that you are not qualified for. They will ask if you want to relocate for a 6 month gig. They paste job descriptions into emails and ask you to fill in the blanks. They email you several times and do not pay attention to when you are nice enough to reply and say that you are not interested.&lt;/p&gt;
-
-&lt;p&gt;If you decide to use a recruiter, that is great. If you are actively looking for work, you SHOULD use a recruiter. When you buy or sell your house, you normally use a Realtor. Let the recruiters do the job searching for you. Let them help you find your next job. Why? Because they know the companies that are hiring. They know where there are jobs. They know what kind of salary you can expect to get. They can tell you the pros and cons of companies that they have worked with before. They have a working relationship with the people that are doing the interviewing/hiring.&lt;/p&gt;
-
-&lt;p&gt;That being said, there are certain things (in my opinion; after all, this is all my opinion) that should not be done by recruiters and there is a specific order in which the interview process should be done. They will and should ‘qualify’ you to see what roles you would be good in. This is a good thing. They do not want to waste time trying to place you into a position for which you do not qualify. Once they know who you are, what you want and what you can do, they have all of the information they need to start the hunt for your next position.&lt;/p&gt;
-
-&lt;p&gt;Once they find a match, they should set you up with an initial conversation with prospective employer. This MUST be the first thing. Not calling references, or coding challenges or any test of any kind. They must NOT waste your time BEFORE you get to talk to somebody with the possible future employer. That initial call is like a first date. That first date is where you see if you are a match and like each other. You need to see if you WANT to go to work there and they need to see if they WANT you to go to work there. The worst question that I have ever gotten on the initial conversation is “why do you want to work for us?” to which I always reply with “why should I work for you?” You need to talk a bit so that you can decide if it is a place that you want to work for.&lt;/p&gt;
-
-&lt;p&gt;If the initial conversation with the prospective employer goes well, then it is appropriate for them to ask you to do some SMALL things to prove that you are capable of performing the position for which they are hiring. Calling references at this point is also appropriate. Do your due diligence and check out the employer. Glassdoor has employee reviews of a ton of companies. Just bear in mind that the reviews are like the comments about recruiters; more people take the time to complain than to compliment.&lt;/p&gt;
-
-&lt;p&gt;Remember that your recruiter wants to help you find a new job. Most agencies that I know of, have a 3 to 6 month retention period (not sure what they call it) where they only get full commission if you get placed and STAY there for the minimum duration.&lt;/p&gt;
-
-&lt;p&gt;Good recruiters, keep up the great work!!&lt;/p&gt;
-
-&lt;p&gt;Evil recruiters, find another career path ;)&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="workflow" /><category term="career" /><summary type="html">Archived from the original post (2017-06-10). Lightly converted to Markdown.</summary></entry></feed>
+&lt;p&gt;If you love your freedom, thank a vet. If you really love your freedom, then help a vet become a programmer.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="workflow" /><category term="community" /><category term="veterans" /><summary type="html">Archived from the original post (2017-09-25). Lightly converted to Markdown.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/operation-code.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/operation-code.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
