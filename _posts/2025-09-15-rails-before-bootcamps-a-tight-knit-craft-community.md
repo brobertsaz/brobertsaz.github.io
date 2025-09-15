@@ -6,6 +6,8 @@ categories: [rails, community, history]
 tags: [rails, mentorship, community, history]
 excerpt: "How the early Rails community learned in public — and what we can bring forward now."
 author: Bob Roberts
+series: "The Rails Generation Gap"
+series_part: 2
 image: /assets/images/covers/rails-before-bootcamps.svg
 image_alt: Rails Before Bootcamps
 image_position: center center
@@ -18,6 +20,8 @@ linkedin_blurb: |
 
   The pre-bootcamp era taught us that learning is cultural, not just technical. What do you remember most from those early days? And what are today's newcomers missing without those touchstones?
 ---
+
+*This is part 2 of [The Rails Generation Gap series]({% post_url 2025-09-12-the-rails-generation-gap-why-it-matters %}).*
 
 When people talk about the early Rails community, they often focus on the code. But for me, what stands out are the characters, the voices, and the quirky ways we learned.
 
