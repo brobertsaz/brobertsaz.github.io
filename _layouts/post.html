@@ -65,14 +65,16 @@ layout: default
               {% endif %}
             {% endfor %}
             {% if matched and count < 3 %}
-              <article class="post-preview">
-                {% if candidate.image %}
-                  <div class="post-thumb"><img src="{{ candidate.image | relative_url }}" alt="{{ candidate.image_alt | default: candidate.title | escape }}" style="object-position: {{ candidate.image_position | default: 'center center' }};"></div>
-                {% endif %}
-                <h3><a href="{{ candidate.url | relative_url }}">{{ candidate.title }}</a></h3>
-                <div class="post-meta"><time datetime="{{ candidate.date | date_to_xmlschema }}">{{ candidate.date | date: "%B %d, %Y" }}</time></div>
-                <div class="post-excerpt">{{ candidate.excerpt | strip_html | truncatewords: 24 }}</div>
-              </article>
+              <a href="{{ candidate.url | relative_url }}" class="post-preview-link">
+                <article class="post-preview">
+                  {% if candidate.image %}
+                    <div class="post-thumb"><img src="{{ candidate.image | relative_url }}" alt="{{ candidate.image_alt | default: candidate.title | escape }}" style="object-position: {{ candidate.image_position | default: 'center center' }};"></div>
+                  {% endif %}
+                  <h3>{{ candidate.title }}</h3>
+                  <div class="post-meta"><time datetime="{{ candidate.date | date_to_xmlschema }}">{{ candidate.date | date: "%B %d, %Y" }}</time></div>
+                  <div class="post-excerpt">{{ candidate.excerpt | strip_html | truncatewords: 24 }}</div>
+                </article>
+              </a>
               {% assign count = count | plus: 1 %}
             {% endif %}
           {% endif %}

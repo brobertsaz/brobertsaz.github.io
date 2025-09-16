@@ -86,23 +86,39 @@
   }
 }
 
+// Post preview links (clickable cards)
+.post-preview-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: $spacing-lg;
+
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+
+    .post-preview {
+      border-color: var(--accent-danger);
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+  }
+}
+
 // Post previews
 .post-preview {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   border-radius: $border-radius-lg;
   padding: $spacing-lg;
-  margin-bottom: $spacing-lg;
   transition: all $transition-base;
+  cursor: pointer;
 
-  &:hover {
-    border-color: var(--accent-danger);
-    box-shadow: var(--shadow);
-    transform: translateY(-2px);
-  }
+
 
   h3 {
     margin: 0 0 $spacing-sm 0;
+    color: var(--text-primary);
 
     a {
       color: var(--text-primary);
@@ -118,6 +134,10 @@
     color: var(--text-muted);
     font-size: $font-size-sm;
     margin: 0 0 $spacing-md 0;
+  }
+
+  .post-excerpt {
+    color: var(--text-secondary);
   }
 
   .read-more {
