@@ -51,6 +51,24 @@ layout: default
     {{ content }}
   </div>
 
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      {% assign share_url = site.url | append: page.url %}
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url | url_encode }}" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject={{ page.title | append: ' — #payitforward' | url_encode }}&body={{ share_url | url_encode }}" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="{{ share_url }}">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div>
+
+    {%- if site.disqus.shortname -%}
+      {%- include disqus_comments.html -%}
+    {%- endif -%}
+  </footer>
+
   {% if page.tags and page.tags != empty %}
     <section class="related-posts">
       <h3>Related posts</h3>
@@ -82,24 +100,6 @@ layout: default
       </div>
     </section>
   {% endif %}
-
-
-  <footer class="post-footer">
-    <div class="post-share">
-      <span>Share:</span>
-      {% assign share_url = site.url | append: page.url %}
-      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url | url_encode }}" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="share-btn" href="mailto:?subject={{ page.title | append: ' — #payitforward' | url_encode }}&body={{ share_url | url_encode }}" target="_blank" rel="noopener">Email</a>
-      <button class="share-btn" type="button" id="copy-link-btn" data-url="{{ share_url }}">Copy link</button>
-    </div>
-
-    <div class="pay-forward-callout">
-      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
-    </div>
-
-    {%- if site.disqus.shortname -%}
-      {%- include disqus_comments.html -%}
-    {%- endif -%}
 
     <div class="post-navigation">
       {%- if page.previous.url -%}
