@@ -122,12 +122,16 @@ hr { border: none; height: 1px; background-color: var(--border-primary); margin:
 .card .card-content { color: var(--text-secondary); }
 .card .card-footer { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-primary); display: flex; justify-content: space-between; align-items: center; }
 
-.post-preview { background-color: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; transition: all 0.25s ease; }
-.post-preview:hover { border-color: var(--accent-danger); box-shadow: var(--shadow); transform: translateY(-2px); }
-.post-preview h3 { margin: 0 0 0.5rem 0; }
+.post-preview-link { display: block; text-decoration: none; color: inherit; margin-bottom: 1.5rem; }
+.post-preview-link:hover { text-decoration: none; color: inherit; }
+.post-preview-link:hover .post-preview { border-color: var(--accent-danger); box-shadow: var(--shadow); transform: translateY(-2px); }
+
+.post-preview { background-color: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 12px; padding: 1.5rem; transition: all 0.25s ease; cursor: pointer; }
+.post-preview h3 { margin: 0 0 0.5rem 0; color: var(--text-primary); }
 .post-preview h3 a { color: var(--text-primary); text-decoration: none; }
 .post-preview h3 a:hover { color: var(--accent-danger); }
 .post-preview .post-meta { color: var(--text-muted); font-size: 14px; margin: 0 0 1rem 0; }
+.post-preview .post-excerpt { color: var(--text-secondary); }
 .post-preview .read-more { color: var(--accent-danger); font-weight: 500; }
 .post-preview .read-more:hover { color: var(--accent-danger); text-decoration: underline; }
 

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Ensure our PNG og:image appears BEFORE jekyll-seo-tag so crawlers pick it -->
+  <meta property="og:image" content="http://localhost:4000/assets/images/covers/rails-future-bridge.png">
+  <meta name="twitter:image" content="http://localhost:4000/assets/images/covers/rails-future-bridge.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>The Future of Rails: Bridging the Generation Gap | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="The Future of Rails: Bridging the Generation Gap" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Rails has lived through multiple generations. The gap between them is real, but it doesn’t have to be a divide. How we bridge these generations will shape Rails’ next chapter." />
+<meta property="og:description" content="Rails has lived through multiple generations. The gap between them is real, but it doesn’t have to be a divide. How we bridge these generations will shape Rails’ next chapter." />
+<link rel="canonical" href="http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/" />
+<meta property="og:url" content="http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:image" content="http://localhost:4000/assets/images/covers/rails-future-bridge.svg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-25T10:00:00-05:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/covers/rails-future-bridge.svg" />
+<meta property="twitter:title" content="The Future of Rails: Bridging the Generation Gap" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bob Roberts" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2025-09-25T10:00:00-05:00","datePublished":"2025-09-25T10:00:00-05:00","description":"Rails has lived through multiple generations. The gap between them is real, but it doesn’t have to be a divide. How we bridge these generations will shape Rails’ next chapter.","headline":"The Future of Rails: Bridging the Generation Gap","image":"http://localhost:4000/assets/images/covers/rails-future-bridge.svg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/posts/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/resume/" >
+          Resume
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+// Mobile navigation toggle
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    nav.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+  }
+})();
+</script>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">The Future of Rails: Bridging the Generation Gap</h1>
+
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-09-25T10:00:00-05:00" itemprop="datePublished">
+        September 25, 2025
+      </time><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span class="p-author h-card" itemprop="name">Bob Roberts</span>
+        </span><span class="reading-time"> • <span id="reading-time"></span></span>
+    </div>
+
+    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav><div class="post-tags"><span class="tag">rails</span><span class="tag">community</span><span class="tag">mentorship</span><span class="tag">future</span><span class="tag">culture</span></div>
+      <figure class="post-hero">
+        <img src="/assets/images/covers/rails-future-bridge.svg" alt="The Future of Rails" style="object-position: center center;">
+        
+      </figure>
+    
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>This is the final post in <a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">The Rails Generation Gap series</a>.</em></p>
+
+<p>Looking back, Rails has lived through at least two “generations.” The early adopters, many of whom were drawn in by _why’s whimsy or Ryan Bates’ RailsCasts, built the culture of long form, handcrafted knowledge. The next wave, fueled by bootcamps, brought scale, diversity, and a flood of new energy.</p>
+
+<p>The gap between those generations is real. You can feel it in the different ways people learn, communicate, and even argue about best practices. But gaps don’t have to be divides. They can be bridges.</p>
+
+<p>What excites me is the chance to combine the best of both worlds. The early Rails culture valued depth, curiosity, and mentorship. The new Rails culture values accessibility, speed, and inclusivity. Imagine if we blended those strengths. If beginners had both the quick answers and the long form context, both the Slack channel and the detailed write up.</p>
+
+<p>Rails isn’t dead, despite what the hot takes say. It’s evolving. And maybe this generation gap is exactly what will keep it alive. Each wave brings something new to the table. The challenge, and the opportunity, is to make sure we don’t lose the best parts of what came before.</p>
+
+<hr />
+
+<h2 id="what-each-generation-brings">What each generation brings</h2>
+
+<p>The early Rails generation brought craftsmanship. They read source code for fun. They wrote blog posts that explained not just how to do something, but why you’d want to. They built tools like RailsCasts and _why’s guides that made learning feel like an adventure.</p>
+
+<p>That generation also brought patience. They were willing to spend hours debugging a problem, not just to fix it, but to understand it. They mentored newcomers one on one, passing down not just techniques but philosophy.</p>
+
+<p>The bootcamp generation brought pragmatism. They focused on shipping working software quickly. They democratized access to Rails knowledge through structured curricula and supportive communities. They proved that you don’t need a computer science degree to build great web applications.</p>
+
+<p>They also brought fresh perspectives. Many bootcamp graduates came from other industries and brought domain expertise that enriched the Rails ecosystem. They asked different questions and solved different problems.</p>
+
+<hr />
+
+<h2 id="where-the-friction-happens">Where the friction happens</h2>
+
+<p>The tension between generations shows up in predictable places.</p>
+
+<p>Code reviews become philosophical debates. A veteran might suggest a more “Rails way” approach, while a newer developer pushes back with “but this works and ships faster.” Both are right, but they’re optimizing for different things.</p>
+
+<p>Hiring conversations get complicated. Teams struggle to evaluate candidates who learned Rails in fundamentally different ways. Do you value someone who can explain Active Record’s internals, or someone who can ship features quickly using modern tools?</p>
+
+<p>Technical decisions become generational markers. Should we use the latest JavaScript framework or stick with Rails’ built in solutions? Should we prioritize developer experience or application performance? Different generations often have different default answers.</p>
+
+<hr />
+
+<h2 id="building-bridges">Building bridges</h2>
+
+<p>The smartest teams I’ve worked with find ways to bridge these differences instead of letting them become divisions.</p>
+
+<p>They create space for both quick answers and deep dives. Code reviews include both “here’s how to fix this” and “here’s why this pattern exists.” Documentation covers both the how and the why. Team discussions welcome both “let’s ship this” and “let’s understand this.”</p>
+
+<p>They also recognize that different situations call for different approaches. When you’re prototyping a new feature, bootcamp style speed might be exactly what you need. When you’re debugging a performance issue, old school depth becomes essential.</p>
+
+<p>The key is making these choices intentional rather than accidental. Teams that bridge the gap well talk explicitly about when to optimize for speed versus understanding, when to use established patterns versus trying new approaches.</p>
+
+<hr />
+
+<h2 id="learning-from-each-other">Learning from each other</h2>
+
+<p>I’ve seen veterans learn as much from newcomers as the other way around. A senior developer who’s been writing Rails for fifteen years might discover a gem or technique that solves a problem they’ve been wrestling with for months.</p>
+
+<p>Newcomers bring fresh eyes to old problems. They question assumptions that veterans take for granted. They’re not weighed down by “we tried that before and it didn’t work” thinking.</p>
+
+<p>Veterans bring context that prevents newcomers from repeating old mistakes. They can explain why certain patterns exist, what problems they solve, and when they might not be the right choice.</p>
+
+<p>The magic happens when these perspectives combine. Veterans who stay curious and newcomers who value context create teams that are both fast and thoughtful.</p>
+
+<hr />
+
+<h2 id="the-community-opportunity">The community opportunity</h2>
+
+<p>Individual teams can only do so much. The Rails community as a whole has an opportunity to model how different generations can work together.</p>
+
+<p>Conference lineups that include both established voices and fresh perspectives. Open source projects that welcome both deep architectural discussions and practical feature requests. Learning resources that cater to both quick reference needs and comprehensive understanding.</p>
+
+<p>The Rails community has always been good at this, but it requires ongoing attention. As the framework matures and the community grows, it’s easy for different groups to drift into their own corners.</p>
+
+<hr />
+
+<h2 id="whats-next-for-rails">What’s next for Rails</h2>
+
+<p>Rails is entering an interesting phase. It’s mature enough to have established patterns and best practices, but still evolving enough to incorporate new ideas and approaches.</p>
+
+<p>The framework itself reflects this balance. Rails 7 includes both time tested conventions and modern innovations like Hotwire. It respects the Rails way while acknowledging that the web has changed since 2004.</p>
+
+<p>The community is following a similar path. Long form blog posts coexist with quick video tutorials. Detailed documentation sits alongside interactive learning platforms. Traditional mentorship happens alongside community driven support.</p>
+
+<p>This isn’t a compromise or a watered down middle ground. It’s a recognition that different people learn differently and different situations require different approaches.</p>
+
+<hr />
+
+<h2 id="making-it-work">Making it work</h2>
+
+<p>The future of Rails depends on how well we navigate this generational transition. Do we let the gap become a divide, with different groups talking past each other? Or do we build bridges that let everyone contribute their strengths?</p>
+
+<p>I’m optimistic because I’ve seen it work. Teams that embrace both speed and depth. Communities that welcome both newcomers and veterans. Projects that balance innovation with stability.</p>
+
+<p>It requires intentionality though. We have to actively create space for different perspectives. We have to resist the urge to dismiss approaches that don’t match our own preferences. We have to remember that the goal is building great software and supporting each other, not proving that our way is the only way.</p>
+
+<hr />
+
+<h2 id="the-long-view">The long view</h2>
+
+<p>When I think about the future of Rails, I don’t picture one side winning out. I picture a conversation across generations. Old guard and new guard alike, figuring out how to build not just great apps, but a community that lasts.</p>
+
+<p>Rails has survived multiple technology cycles, framework wars, and predictions of its demise. It’s survived because it adapts while staying true to its core principles. The generation gap is just the latest challenge, and I think it’s one the community can handle.</p>
+
+<p>The early Rails generation built something special. The bootcamp generation expanded it and made it accessible. The next generation will inherit both legacies and build something even better.</p>
+
+<hr />
+
+<h2 id="closing-thought">Closing thought</h2>
+
+<p>So when I think about the future of Rails, I see opportunity. The chance to combine the craftsmanship of the early days with the accessibility of the modern era. The chance to build a community that values both depth and speed, both tradition and innovation.</p>
+
+<p>The generation gap is real, but it doesn’t have to be permanent. With intention, patience, and mutual respect, it can become a bridge to something better.</p>
+
+<p>What’s your vision for the future of Rails? How do you think we can best bridge the generational differences in our community?</p>
+
+<hr />
+
+<hr />
+
+<p><strong>Previous:</strong> <a href="/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/">Mentorship in Rails: From One-on-One to At-Scale</a></p>
+
+<hr />
+
+<p><em>Thanks for following along with this series. If you missed any posts, you can find them all under the <a href="/tags/rails-generation-gap/">Rails Generation Gap tag</a>. I’d love to hear your thoughts on how we can build better bridges in the Rails community.</em></p>
+
+  </div>
+
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4000%2Frails%2Fcommunity%2Ffuture%2F2025%2F09%2F25%2Fthe-future-of-rails-bridging-the-generation-gap%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=The+Future+of+Rails%3A+Bridging+the+Generation+Gap+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4000%2Frails%2Fcommunity%2Ffuture%2F2025%2F09%2F25%2Fthe-future-of-rails-bridging-the-generation-gap%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div></footer>
+
+  
+    <section class="related-posts">
+      <h3>Related posts</h3>
+      <div class="posts-grid">
+        
+        
+          
+        
+          
+            
+            
+            
+              <a href="/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/" class="post-preview-link">
+                <article class="post-preview">
+                  
+                    <div class="post-thumb"><img src="/assets/images/covers/rails-mentorship-scale.svg" alt="Mentorship in Rails" style="object-position: center center;"></div>
+                  
+                  <h3>Mentorship in Rails: From One-on-One to At-Scale</h3>
+                  <div class="post-meta"><time datetime="2025-09-22T10:00:00-05:00">September 22, 2025</time></div>
+                  <div class="post-excerpt">How Rails mentorship evolved from intimate one-on-one relationships to scaled approaches. What we kept, what we lost, and what we're still figuring out.</div>
+                </article>
+              </a>
+              
+            
+          
+        
+          
+            
+            
+            
+              <a href="/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/" class="post-preview-link">
+                <article class="post-preview">
+                  
+                    <div class="post-thumb"><img src="/assets/images/covers/rails-culture-shift.svg" alt="From Mailing Lists to Slack" style="object-position: center center;"></div>
+                  
+                  <h3>From Mailing Lists to Slack: How Rails Culture Shifted</h3>
+                  <div class="post-meta"><time datetime="2025-09-19T10:00:00-05:00">September 19, 2025</time></div>
+                  <div class="post-excerpt">The way Rails developers find help has changed completely. What we gained and lost in the shift from mailing lists to instant answers.</div>
+                </article>
+              </a>
+              
+            
+          
+        
+          
+            
+            
+            
+              <a href="/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community/" class="post-preview-link">
+                <article class="post-preview">
+                  
+                    <div class="post-thumb"><img src="/assets/images/covers/rails-before-bootcamps.svg" alt="Rails Before Bootcamps" style="object-position: center center;"></div>
+                  
+                  <h3>Rails Before Bootcamps — A Tight‑Knit Craft Community</h3>
+                  <div class="post-meta"><time datetime="2025-09-15T10:00:00-05:00">September 15, 2025</time></div>
+                  <div class="post-excerpt">How the early Rails community learned in public — and what we can bring forward now.</div>
+                </article>
+              </a>
+              
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+      </div>
+    </section>
+  
+
+    <div class="post-navigation"><div class="nav-previous">
+          <a href="/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/" class="btn btn-secondary">
+            ← Mentorship in Rails: From O...
+          </a>
+        </div></div>
+  </footer>
+
+  <a class="u-url" href="/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/" hidden></a>
+</article>
+
+  <script src="/assets/js/post.js" defer></script>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/resume/">Resume</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/">
+                The Future of Rails: Bridgi...
+              </a>
+            </li><li>
+              <a href="/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/">
+                Mentorship in Rails: From O...
+              </a>
+            </li><li>
+              <a href="/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/">
+                From Mailing Lists to Slack...
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

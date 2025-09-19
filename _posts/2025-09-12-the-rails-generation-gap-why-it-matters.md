@@ -26,7 +26,7 @@ series: "The Rails Generation Gap"
 series_part: 1
 ---
 
-I still remember the first time I got truly stuck on a Rails bug in the late 2000s. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. Before I knew it, I had met a total stranger and they were mentoring me. That was the vibe back then: small, tight knit, and very collaborative.
+I still remember the first time I got truly stuck on a Rails bug in 2008. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. Before I knew it, I had met a total stranger and they were mentoring me. That was the vibe when I started: small, tight knit, and very collaborative.
 
 Jump ahead a decade and the on ramp looks different. Fewer mailing lists. More bootcamps, YouTube, Discord, and Stack Overflow. Folks learn fast, ship fast, and get help in new places. Rails changed, but the bigger shift was how people came into the community and learned the craft.
 
@@ -38,9 +38,9 @@ I am starting a short series on this. I will look at the early craft culture, th
 
 ## Before bootcamps: a craft culture
 
-When Rails landed in 2004, it felt like magic. Convention over configuration made things click. Getting started was not easy though. Docs were thin, posts were dense, and half the time you learned by reading the source.
+When I started with Rails in 2008, it still felt like magic. Convention over configuration made things click. Getting started was not easy though. Docs were thin, posts were dense, and half the time you learned by reading the source.
 
-The upside was depth. A lot of us learned the how and the why. Mentorship was built in because it had to be.
+The upside was depth. Those of us who came in during that era learned the how and the why. Mentorship was built in because it had to be.
 
 It also felt closed at times. Fewer entry points. Less diversity. Sometimes it read like an insider club.
 
@@ -95,3 +95,7 @@ Rails has always been more than code. Community is the multiplier. How we teach,
 This is the first post in a short series on the Rails Generation Gap. Next up, I will rewind to the early era of screencasts, whimsical guides, and in person mentorship, and pull forward the parts that still work today.
 
 If you have lived through both sides of this, what differences have you noticed? How do you think we can build better bridges between generations of Rails developers?
+
+---
+
+**Next in this series:** [Rails Before Bootcamps — A Tight‑Knit Craft Community]({% post_url 2025-09-15-rails-before-bootcamps-a-tight-knit-craft-community %})

@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Ensure our PNG og:image appears BEFORE jekyll-seo-tag so crawlers pick it -->
+  <meta property="og:image" content="http://localhost:4000/assets/images/covers/rails-mentorship-scale.png">
+  <meta name="twitter:image" content="http://localhost:4000/assets/images/covers/rails-mentorship-scale.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Mentorship in Rails: From One-on-One to At-Scale | Code It Forward</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="Mentorship in Rails: From One-on-One to At-Scale" />
+<meta name="author" content="Bob Roberts" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="How Rails mentorship evolved from intimate one-on-one relationships to scaled approaches. What we kept, what we lost, and what we’re still figuring out." />
+<meta property="og:description" content="How Rails mentorship evolved from intimate one-on-one relationships to scaled approaches. What we kept, what we lost, and what we’re still figuring out." />
+<link rel="canonical" href="http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/" />
+<meta property="og:url" content="http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/" />
+<meta property="og:site_name" content="Code It Forward" />
+<meta property="og:image" content="http://localhost:4000/assets/images/covers/rails-mentorship-scale.svg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-22T10:00:00-05:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/covers/rails-mentorship-scale.svg" />
+<meta property="twitter:title" content="Mentorship in Rails: From One-on-One to At-Scale" />
+<meta name="twitter:site" content="@" />
+<meta name="twitter:creator" content="@Bob Roberts" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Bob Roberts"},"dateModified":"2025-09-22T10:00:00-05:00","datePublished":"2025-09-22T10:00:00-05:00","description":"How Rails mentorship evolved from intimate one-on-one relationships to scaled approaches. What we kept, what we lost, and what we’re still figuring out.","headline":"Mentorship in Rails: From One-on-One to At-Scale","image":"http://localhost:4000/assets/images/covers/rails-mentorship-scale.svg","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/logo.svg"},"name":"Bob Roberts"},"url":"http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Code It Forward" /><!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Theme color for mobile browsers -->
+  <meta name="theme-color" content="#0d1117">
+  <meta name="msapplication-navbutton-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body><header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">
+        Code It Forward
+      </a>
+
+      <!-- Mobile menu toggle -->
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <nav class="site-nav">
+        <a href="/" >
+          Home
+        </a>
+        <a href="/posts/" >
+          Blog
+        </a>
+        <a href="/archive/" >
+          Archive
+        </a>
+        <a href="/search/" >
+          Search
+        </a>
+        <a href="/about/" >
+          About
+        </a>
+        <a href="/resume/" >
+          Resume
+        </a>
+        <a href="/contact/" >
+          Contact
+        </a>
+        <a href="/payitforward/" class="payforward-link">#payitforward</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+// Mobile navigation toggle
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.site-nav');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', function() {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    nav.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('active');
+        toggle.classList.remove('active');
+      }
+    });
+  }
+})();
+</script>
+<main class="main-content" aria-label="Content">
+    <div class="container">
+      <div class="content">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Mentorship in Rails: From One-on-One to At-Scale</h1>
+
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-09-22T10:00:00-05:00" itemprop="datePublished">
+        September 22, 2025
+      </time><span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span class="p-author h-card" itemprop="name">Bob Roberts</span>
+        </span><span class="reading-time"> • <span id="reading-time"></span></span>
+    </div>
+
+    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav><div class="post-tags"><span class="tag">rails</span><span class="tag">mentorship</span><span class="tag">bootcamps</span><span class="tag">career</span><span class="tag">teaching</span></div>
+      <figure class="post-hero">
+        <img src="/assets/images/covers/rails-mentorship-scale.svg" alt="Mentorship in Rails" style="object-position: center center;">
+        
+      </figure>
+    
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><em>This is part 4 of <a href="/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">The Rails Generation Gap series</a>.</em></p>
+
+<p>Early in my career, mentorship was intimate. You had one person, maybe two, showing you the ropes. They’d sit with you, review your code, explain why Rails did things a certain way. That relationship shaped not just your code, but your habits and your confidence.</p>
+
+<p>But as bootcamps took off, companies suddenly had to onboard groups of juniors at once. I remember watching teams try to scale mentorship in real time. Pair programming rotations, “office hours,” internal wikis. It wasn’t bad, but it was different. Instead of a single guide, you got a patchwork of advice from whoever had time that day.</p>
+
+<p>I’ve been on both sides of that equation. I’ve been the junior, grateful for a patient mentor who explained things three different ways until it finally clicked. And I’ve been the mentor, with limited hours, trying to balance teaching with shipping. Scaling mentorship is hard. You want to give each person that “deep dive” experience, but reality often means handing out quick fixes instead.</p>
+
+<p>The Rails community has always valued helping others grow. The question is, how do we maintain that spirit when the numbers don’t add up? When there are more new developers than seasoned ones? Maybe it’s about rethinking what mentorship looks like. Maybe it’s not one to one anymore, but one to many: blog posts, screencasts, livestreams, open source.</p>
+
+<hr />
+
+<h2 id="the-old-model">The old model</h2>
+
+<p>When I started Rails in 2008, mentorship felt more like an apprenticeship. You’d find someone who knew the framework, and they’d take you under their wing. Not because they had to, but because that’s how the community worked.</p>
+
+<p>I remember my first Rails mentor. He’d spend an hour walking me through a single method, explaining not just what it did, but why it existed, what problems it solved, and what could go wrong if I used it incorrectly. He’d show me the source code, point me to related patterns, and give me homework: “Go read this chapter, then come back with questions.”</p>
+
+<p>That kind of mentorship was slow, but it was thorough. You didn’t just learn Rails, you learned how to think about Rails. You absorbed the philosophy along with the syntax.</p>
+
+<p>The relationship mattered too. When you hit a wall, you knew exactly who to ask. When you made progress, you had someone to share it with. That mentor became invested in your growth in a way that felt personal.</p>
+
+<hr />
+
+<h2 id="the-scaling-challenge">The scaling challenge</h2>
+
+<p>Then bootcamps changed the math. Suddenly, companies weren’t hiring one junior developer every few months. They were hiring cohorts of five, ten, sometimes twenty new developers at once.</p>
+
+<p>The old mentorship model broke down fast. You can’t assign twenty juniors to five seniors and expect the same quality of guidance. The seniors burn out, the juniors get frustrated, and everyone starts looking for shortcuts.</p>
+
+<p>I watched teams try different approaches. Some did pair programming rotations where juniors worked with a different senior each week. Others set up “office hours” where seniors made themselves available for questions at specific times. A few tried to document everything in internal wikis and hope for the best.</p>
+
+<p>Each approach had tradeoffs. Rotation meant juniors got exposure to different styles, but lost the continuity of a single relationship. Office hours were efficient, but felt transactional. Documentation was scalable, but couldn’t answer follow up questions or adapt to individual learning styles.</p>
+
+<hr />
+
+<h2 id="what-we-lost">What we lost</h2>
+
+<p>The shift to scaled mentorship solved the numbers problem, but it changed the experience in ways we’re still figuring out.</p>
+
+<p>The biggest loss was depth. When you have one mentor, they can tailor their teaching to how you learn. They know your strengths and blind spots. They can push you when you need it and slow down when you’re struggling.</p>
+
+<p>With scaled approaches, you often get generic advice. The person helping you today doesn’t know what you learned yesterday or what you’re planning to work on tomorrow. They solve your immediate problem, but they can’t help you connect the dots.</p>
+
+<p>The relationship aspect suffered too. It’s harder to build trust and rapport when you’re working with a different person each week. Juniors become more hesitant to ask “dumb” questions. Seniors become more focused on quick fixes than deep understanding.</p>
+
+<p>I’ve seen this play out in code reviews. In the old model, a mentor might spend twenty minutes explaining why a particular approach was problematic and walking through alternatives. In the scaled model, you’re more likely to get a comment like “use includes here” without much context about why.</p>
+
+<hr />
+
+<h2 id="what-we-kept">What we kept</h2>
+
+<p>But scaled mentorship isn’t all bad. In some ways, it’s better than the old model.</p>
+
+<p>Exposure to different perspectives is valuable. When you work with multiple seniors, you see different approaches to the same problems. You learn that there’s often more than one “right” way to do something.</p>
+
+<p>It’s also more resilient. In the old model, if your mentor left the company or got busy with other projects, you were stuck. With scaled approaches, there’s always someone else who can help.</p>
+
+<p>The documentation and process focus has benefits too. When teams are forced to write down their knowledge, it becomes more accessible to everyone. New hires can get up to speed faster, and existing team members can reference shared resources instead of asking the same questions over and over.</p>
+
+<hr />
+
+<h2 id="new-forms-of-mentorship">New forms of mentorship</h2>
+
+<p>The most interesting development has been the emergence of new mentorship models that work at scale.</p>
+
+<p>Some companies have started formal apprenticeship programs where juniors spend their first six months rotating through different teams and projects. It’s structured, but it preserves some of the depth of traditional mentorship.</p>
+
+<p>Others have embraced asynchronous mentorship through internal blogs, recorded code reviews, and shared learning resources. Seniors document their decision making process, and juniors can learn from it even when they’re not working directly together.</p>
+
+<p>Open source has become a mentorship platform too. Contributing to Rails or popular gems gives you access to feedback from experienced developers around the world. It’s not as personal as traditional mentorship, but it’s incredibly scalable.</p>
+
+<p>The Rails community has also gotten better at creating learning content. Podcasts, YouTube channels, newsletters, and blogs provide ongoing education that supplements whatever formal mentorship exists at work.</p>
+
+<hr />
+
+<h2 id="making-it-work">Making it work</h2>
+
+<p>Successful teams I’ve worked with combine multiple approaches. They might have formal mentor assignments for the first few months, then transition to more flexible arrangements as juniors gain confidence.</p>
+
+<p>They also recognize that different people need different kinds of support. Some juniors thrive with lots of independence and occasional check ins. Others need more hands on guidance. Scaled mentorship works better when it’s flexible enough to accommodate both.</p>
+
+<p>The key is being intentional about it. Teams that just throw juniors into the mix and hope for the best usually struggle. Teams that think carefully about how to provide guidance and support at scale tend to do better.</p>
+
+<hr />
+
+<h2 id="the-community-angle">The community angle</h2>
+
+<p>Individual companies can only do so much. The Rails community as a whole has a role to play in mentorship too.</p>
+
+<p>The culture of helping others is still there, but it’s expressed differently now. Instead of one on one relationships, it’s blog posts that explain complex concepts, conference talks that share hard won lessons, and open source contributions that make the framework better for everyone.</p>
+
+<p>Social media has become a mentorship platform too. Twitter threads, LinkedIn posts, and Discord conversations provide bite sized learning opportunities. It’s not as deep as traditional mentorship, but it’s accessible to anyone with an internet connection.</p>
+
+<p>The challenge is signal to noise. There’s so much content out there that it can be hard to find the good stuff. Curation becomes important. Lists of recommended resources, community endorsed tutorials, and trusted voices help filter the noise.</p>
+
+<hr />
+
+<h2 id="looking-ahead">Looking ahead</h2>
+
+<p>Mentorship in Rails will keep evolving. Remote work has changed the dynamics again. AI tools are starting to provide some of the quick answers that used to require human help. The next generation of developers will have different expectations and different needs.</p>
+
+<p>But the core principle remains the same: experienced developers helping newer ones grow. The format might change, but the spirit endures.</p>
+
+<p>The question isn’t whether scaled mentorship is better or worse than the old model. It’s how we can make it work better. How do we preserve the depth and relationship building that made traditional mentorship valuable while still serving the larger numbers of people who want to learn Rails today?</p>
+
+<p>I think the answer is hybrid approaches. Formal programs for structure, informal relationships for depth, community resources for scale, and flexibility to adapt as people’s needs change.</p>
+
+<hr />
+
+<h2 id="closing-thought">Closing thought</h2>
+
+<p>Mentorship is still here. It just doesn’t always look like sitting next to someone at their desk. The challenge is making sure it doesn’t get lost in the noise.</p>
+
+<p>If you’re a senior developer, think about how you can contribute to mentorship at scale. Write that blog post. Record that screencast. Answer questions in community forums. Review that open source PR with detailed feedback.</p>
+
+<p>If you’re a junior developer, seek out multiple sources of guidance. Find formal mentors when you can, but also build relationships with peers, contribute to open source, and engage with the broader community.</p>
+
+<p>The Rails community has always been about helping each other grow. That hasn’t changed, even if the methods have.</p>
+
+<p>What’s your experience with mentorship in Rails? How has it evolved in your career, and what approaches have worked best for you?</p>
+
+<hr />
+
+<p><strong>Previous:</strong> <a href="/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/">From Mailing Lists to Slack: How Rails Culture Shifted</a>
+<!-- | **Next:** [The Future of Rails: Bridging the Generation Gap](/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/) --></p>
+
+  </div>
+
+  <footer class="post-footer">
+    <div class="post-share">
+      <span>Share:</span>
+      
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2Flocalhost%3A4000%2Frails%2Fmentorship%2Fcareer%2F2025%2F09%2F22%2Fmentorship-in-rails-from-one-on-one-to-at-scale%2F" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="share-btn" href="mailto:?subject=Mentorship+in+Rails%3A+From+One-on-One+to+At-Scale+%E2%80%94+%23payitforward&body=http%3A%2F%2Flocalhost%3A4000%2Frails%2Fmentorship%2Fcareer%2F2025%2F09%2F22%2Fmentorship-in-rails-from-one-on-one-to-at-scale%2F" target="_blank" rel="noopener">Email</a>
+      <button class="share-btn" type="button" id="copy-link-btn" data-url="http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/">Copy link</button>
+    </div>
+
+    <div class="pay-forward-callout">
+      <strong>Pay it forward.</strong> If this helped you, consider sharing it with a colleague, mentoring someone, or contributing a tip to the <a href="/payitforward/">#payitforward</a> page.
+    </div></footer>
+
+  
+    <section class="related-posts">
+      <h3>Related posts</h3>
+      <div class="posts-grid">
+        
+        
+          
+            
+            
+            
+              <a href="/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/" class="post-preview-link">
+                <article class="post-preview">
+                  
+                    <div class="post-thumb"><img src="/assets/images/covers/rails-future-bridge.svg" alt="The Future of Rails" style="object-position: center center;"></div>
+                  
+                  <h3>The Future of Rails: Bridging the Generation Gap</h3>
+                  <div class="post-meta"><time datetime="2025-09-25T10:00:00-05:00">September 25, 2025</time></div>
+                  <div class="post-excerpt">Rails has lived through multiple generations. The gap between them is real, but it doesn't have to be a divide. How we bridge these...</div>
+                </article>
+              </a>
+              
+            
+          
+        
+          
+        
+          
+            
+            
+            
+              <a href="/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/" class="post-preview-link">
+                <article class="post-preview">
+                  
+                    <div class="post-thumb"><img src="/assets/images/covers/rails-culture-shift.svg" alt="From Mailing Lists to Slack" style="object-position: center center;"></div>
+                  
+                  <h3>From Mailing Lists to Slack: How Rails Culture Shifted</h3>
+                  <div class="post-meta"><time datetime="2025-09-19T10:00:00-05:00">September 19, 2025</time></div>
+                  <div class="post-excerpt">The way Rails developers find help has changed completely. What we gained and lost in the shift from mailing lists to instant answers.</div>
+                </article>
+              </a>
+              
+            
+          
+        
+          
+            
+            
+            
+              <a href="/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community/" class="post-preview-link">
+                <article class="post-preview">
+                  
+                    <div class="post-thumb"><img src="/assets/images/covers/rails-before-bootcamps.svg" alt="Rails Before Bootcamps" style="object-position: center center;"></div>
+                  
+                  <h3>Rails Before Bootcamps — A Tight‑Knit Craft Community</h3>
+                  <div class="post-meta"><time datetime="2025-09-15T10:00:00-05:00">September 15, 2025</time></div>
+                  <div class="post-excerpt">How the early Rails community learned in public — and what we can bring forward now.</div>
+                </article>
+              </a>
+              
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+          
+            
+            
+            
+          
+        
+      </div>
+    </section>
+  
+
+    <div class="post-navigation"><div class="nav-previous">
+          <a href="/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/" class="btn btn-secondary">
+            ← From Mailing Lists to Slack...
+          </a>
+        </div><div class="nav-next">
+          <a href="/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/" class="btn btn-secondary">
+            The Future of Rails: Bridgi... →
+          </a>
+        </div></div>
+  </footer>
+
+  <a class="u-url" href="/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/" hidden></a>
+</article>
+
+  <script src="/assets/js/post.js" defer></script>
+
+      </div>
+    </div>
+  </main><footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Code It Forward</h4>
+        <p>Practical Rails · React · GraphQL · TypeScript — pay it forward.</p>
+
+        <div class="social-links"><a href="https://github.com/brobertsaz" title="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a><a href="mailto:brobertsaz@users.noreply.github.com" title="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a></div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts/">Blog</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/resume/">Resume</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Recent Posts</h4>
+        <ul><li>
+              <a href="/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/">
+                The Future of Rails: Bridgi...
+              </a>
+            </li><li>
+              <a href="/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/">
+                Mentorship in Rails: From O...
+              </a>
+            </li><li>
+              <a href="/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/">
+                From Mailing Lists to Slack...
+              </a>
+            </li></ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Code It Forward. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>

@@ -1,4 +1,425 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-15T13:27:54-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Code It Forward</title><subtitle>Practical Rails · React · GraphQL · TypeScript — pay it forward.</subtitle><author><name>Bob Roberts</name></author><entry><title type="html">What finally fixed our deployment and Sidekiq mess</title><link href="http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/" rel="alternate" type="text/html" title="What finally fixed our deployment and Sidekiq mess" /><published>2025-09-12T11:00:00-05:00</published><updated>2025-09-12T11:00:00-05:00</updated><id>http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess</id><content type="html" xml:base="http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">&lt;p&gt;Over the last week I hit a cluster of production problems that looked unrelated at first: intermittent deploys that “completed” but left the app unresponsive, email blasts that “finished” with zero sends, and a Sidekiq dashboard screaming 60–70% failure rates. This post is my straight‑from-the-console write‑up of what actually broke, how I tracked it down, and the simple changes that stabilized everything.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-19T11:25:49-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Code It Forward</title><subtitle>Practical Rails · React · GraphQL · TypeScript — pay it forward.</subtitle><author><name>Bob Roberts</name></author><entry><title type="html">The Future of Rails: Bridging the Generation Gap</title><link href="http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/" rel="alternate" type="text/html" title="The Future of Rails: Bridging the Generation Gap" /><published>2025-09-25T10:00:00-05:00</published><updated>2025-09-25T10:00:00-05:00</updated><id>http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap</id><content type="html" xml:base="http://localhost:4000/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/">&lt;p&gt;&lt;em&gt;This is the final post in &lt;a href=&quot;/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/&quot;&gt;The Rails Generation Gap series&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Looking back, Rails has lived through at least two “generations.” The early adopters, many of whom were drawn in by _why’s whimsy or Ryan Bates’ RailsCasts, built the culture of long form, handcrafted knowledge. The next wave, fueled by bootcamps, brought scale, diversity, and a flood of new energy.&lt;/p&gt;
+
+&lt;p&gt;The gap between those generations is real. You can feel it in the different ways people learn, communicate, and even argue about best practices. But gaps don’t have to be divides. They can be bridges.&lt;/p&gt;
+
+&lt;p&gt;What excites me is the chance to combine the best of both worlds. The early Rails culture valued depth, curiosity, and mentorship. The new Rails culture values accessibility, speed, and inclusivity. Imagine if we blended those strengths. If beginners had both the quick answers and the long form context, both the Slack channel and the detailed write up.&lt;/p&gt;
+
+&lt;p&gt;Rails isn’t dead, despite what the hot takes say. It’s evolving. And maybe this generation gap is exactly what will keep it alive. Each wave brings something new to the table. The challenge, and the opportunity, is to make sure we don’t lose the best parts of what came before.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;what-each-generation-brings&quot;&gt;What each generation brings&lt;/h2&gt;
+
+&lt;p&gt;The early Rails generation brought craftsmanship. They read source code for fun. They wrote blog posts that explained not just how to do something, but why you’d want to. They built tools like RailsCasts and _why’s guides that made learning feel like an adventure.&lt;/p&gt;
+
+&lt;p&gt;That generation also brought patience. They were willing to spend hours debugging a problem, not just to fix it, but to understand it. They mentored newcomers one on one, passing down not just techniques but philosophy.&lt;/p&gt;
+
+&lt;p&gt;The bootcamp generation brought pragmatism. They focused on shipping working software quickly. They democratized access to Rails knowledge through structured curricula and supportive communities. They proved that you don’t need a computer science degree to build great web applications.&lt;/p&gt;
+
+&lt;p&gt;They also brought fresh perspectives. Many bootcamp graduates came from other industries and brought domain expertise that enriched the Rails ecosystem. They asked different questions and solved different problems.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;where-the-friction-happens&quot;&gt;Where the friction happens&lt;/h2&gt;
+
+&lt;p&gt;The tension between generations shows up in predictable places.&lt;/p&gt;
+
+&lt;p&gt;Code reviews become philosophical debates. A veteran might suggest a more “Rails way” approach, while a newer developer pushes back with “but this works and ships faster.” Both are right, but they’re optimizing for different things.&lt;/p&gt;
+
+&lt;p&gt;Hiring conversations get complicated. Teams struggle to evaluate candidates who learned Rails in fundamentally different ways. Do you value someone who can explain Active Record’s internals, or someone who can ship features quickly using modern tools?&lt;/p&gt;
+
+&lt;p&gt;Technical decisions become generational markers. Should we use the latest JavaScript framework or stick with Rails’ built in solutions? Should we prioritize developer experience or application performance? Different generations often have different default answers.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;building-bridges&quot;&gt;Building bridges&lt;/h2&gt;
+
+&lt;p&gt;The smartest teams I’ve worked with find ways to bridge these differences instead of letting them become divisions.&lt;/p&gt;
+
+&lt;p&gt;They create space for both quick answers and deep dives. Code reviews include both “here’s how to fix this” and “here’s why this pattern exists.” Documentation covers both the how and the why. Team discussions welcome both “let’s ship this” and “let’s understand this.”&lt;/p&gt;
+
+&lt;p&gt;They also recognize that different situations call for different approaches. When you’re prototyping a new feature, bootcamp style speed might be exactly what you need. When you’re debugging a performance issue, old school depth becomes essential.&lt;/p&gt;
+
+&lt;p&gt;The key is making these choices intentional rather than accidental. Teams that bridge the gap well talk explicitly about when to optimize for speed versus understanding, when to use established patterns versus trying new approaches.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;learning-from-each-other&quot;&gt;Learning from each other&lt;/h2&gt;
+
+&lt;p&gt;I’ve seen veterans learn as much from newcomers as the other way around. A senior developer who’s been writing Rails for fifteen years might discover a gem or technique that solves a problem they’ve been wrestling with for months.&lt;/p&gt;
+
+&lt;p&gt;Newcomers bring fresh eyes to old problems. They question assumptions that veterans take for granted. They’re not weighed down by “we tried that before and it didn’t work” thinking.&lt;/p&gt;
+
+&lt;p&gt;Veterans bring context that prevents newcomers from repeating old mistakes. They can explain why certain patterns exist, what problems they solve, and when they might not be the right choice.&lt;/p&gt;
+
+&lt;p&gt;The magic happens when these perspectives combine. Veterans who stay curious and newcomers who value context create teams that are both fast and thoughtful.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-community-opportunity&quot;&gt;The community opportunity&lt;/h2&gt;
+
+&lt;p&gt;Individual teams can only do so much. The Rails community as a whole has an opportunity to model how different generations can work together.&lt;/p&gt;
+
+&lt;p&gt;Conference lineups that include both established voices and fresh perspectives. Open source projects that welcome both deep architectural discussions and practical feature requests. Learning resources that cater to both quick reference needs and comprehensive understanding.&lt;/p&gt;
+
+&lt;p&gt;The Rails community has always been good at this, but it requires ongoing attention. As the framework matures and the community grows, it’s easy for different groups to drift into their own corners.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;whats-next-for-rails&quot;&gt;What’s next for Rails&lt;/h2&gt;
+
+&lt;p&gt;Rails is entering an interesting phase. It’s mature enough to have established patterns and best practices, but still evolving enough to incorporate new ideas and approaches.&lt;/p&gt;
+
+&lt;p&gt;The framework itself reflects this balance. Rails 7 includes both time tested conventions and modern innovations like Hotwire. It respects the Rails way while acknowledging that the web has changed since 2004.&lt;/p&gt;
+
+&lt;p&gt;The community is following a similar path. Long form blog posts coexist with quick video tutorials. Detailed documentation sits alongside interactive learning platforms. Traditional mentorship happens alongside community driven support.&lt;/p&gt;
+
+&lt;p&gt;This isn’t a compromise or a watered down middle ground. It’s a recognition that different people learn differently and different situations require different approaches.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;making-it-work&quot;&gt;Making it work&lt;/h2&gt;
+
+&lt;p&gt;The future of Rails depends on how well we navigate this generational transition. Do we let the gap become a divide, with different groups talking past each other? Or do we build bridges that let everyone contribute their strengths?&lt;/p&gt;
+
+&lt;p&gt;I’m optimistic because I’ve seen it work. Teams that embrace both speed and depth. Communities that welcome both newcomers and veterans. Projects that balance innovation with stability.&lt;/p&gt;
+
+&lt;p&gt;It requires intentionality though. We have to actively create space for different perspectives. We have to resist the urge to dismiss approaches that don’t match our own preferences. We have to remember that the goal is building great software and supporting each other, not proving that our way is the only way.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-long-view&quot;&gt;The long view&lt;/h2&gt;
+
+&lt;p&gt;When I think about the future of Rails, I don’t picture one side winning out. I picture a conversation across generations. Old guard and new guard alike, figuring out how to build not just great apps, but a community that lasts.&lt;/p&gt;
+
+&lt;p&gt;Rails has survived multiple technology cycles, framework wars, and predictions of its demise. It’s survived because it adapts while staying true to its core principles. The generation gap is just the latest challenge, and I think it’s one the community can handle.&lt;/p&gt;
+
+&lt;p&gt;The early Rails generation built something special. The bootcamp generation expanded it and made it accessible. The next generation will inherit both legacies and build something even better.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;closing-thought&quot;&gt;Closing thought&lt;/h2&gt;
+
+&lt;p&gt;So when I think about the future of Rails, I see opportunity. The chance to combine the craftsmanship of the early days with the accessibility of the modern era. The chance to build a community that values both depth and speed, both tradition and innovation.&lt;/p&gt;
+
+&lt;p&gt;The generation gap is real, but it doesn’t have to be permanent. With intention, patience, and mutual respect, it can become a bridge to something better.&lt;/p&gt;
+
+&lt;p&gt;What’s your vision for the future of Rails? How do you think we can best bridge the generational differences in our community?&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Previous:&lt;/strong&gt; &lt;a href=&quot;/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/&quot;&gt;Mentorship in Rails: From One-on-One to At-Scale&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;em&gt;Thanks for following along with this series. If you missed any posts, you can find them all under the &lt;a href=&quot;/tags/rails-generation-gap/&quot;&gt;Rails Generation Gap tag&lt;/a&gt;. I’d love to hear your thoughts on how we can build better bridges in the Rails community.&lt;/em&gt;&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="community" /><category term="future" /><category term="rails" /><category term="community" /><category term="mentorship" /><category term="future" /><category term="culture" /><summary type="html">Rails has lived through multiple generations. The gap between them is real, but it doesn&apos;t have to be a divide. How we bridge these generations will shape Rails&apos; next chapter.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-future-bridge.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-future-bridge.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Mentorship in Rails: From One-on-One to At-Scale</title><link href="http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/" rel="alternate" type="text/html" title="Mentorship in Rails: From One-on-One to At-Scale" /><published>2025-09-22T10:00:00-05:00</published><updated>2025-09-22T10:00:00-05:00</updated><id>http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale</id><content type="html" xml:base="http://localhost:4000/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/">&lt;p&gt;&lt;em&gt;This is part 4 of &lt;a href=&quot;/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/&quot;&gt;The Rails Generation Gap series&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Early in my career, mentorship was intimate. You had one person, maybe two, showing you the ropes. They’d sit with you, review your code, explain why Rails did things a certain way. That relationship shaped not just your code, but your habits and your confidence.&lt;/p&gt;
+
+&lt;p&gt;But as bootcamps took off, companies suddenly had to onboard groups of juniors at once. I remember watching teams try to scale mentorship in real time. Pair programming rotations, “office hours,” internal wikis. It wasn’t bad, but it was different. Instead of a single guide, you got a patchwork of advice from whoever had time that day.&lt;/p&gt;
+
+&lt;p&gt;I’ve been on both sides of that equation. I’ve been the junior, grateful for a patient mentor who explained things three different ways until it finally clicked. And I’ve been the mentor, with limited hours, trying to balance teaching with shipping. Scaling mentorship is hard. You want to give each person that “deep dive” experience, but reality often means handing out quick fixes instead.&lt;/p&gt;
+
+&lt;p&gt;The Rails community has always valued helping others grow. The question is, how do we maintain that spirit when the numbers don’t add up? When there are more new developers than seasoned ones? Maybe it’s about rethinking what mentorship looks like. Maybe it’s not one to one anymore, but one to many: blog posts, screencasts, livestreams, open source.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-old-model&quot;&gt;The old model&lt;/h2&gt;
+
+&lt;p&gt;When I started Rails in 2008, mentorship felt more like an apprenticeship. You’d find someone who knew the framework, and they’d take you under their wing. Not because they had to, but because that’s how the community worked.&lt;/p&gt;
+
+&lt;p&gt;I remember my first Rails mentor. He’d spend an hour walking me through a single method, explaining not just what it did, but why it existed, what problems it solved, and what could go wrong if I used it incorrectly. He’d show me the source code, point me to related patterns, and give me homework: “Go read this chapter, then come back with questions.”&lt;/p&gt;
+
+&lt;p&gt;That kind of mentorship was slow, but it was thorough. You didn’t just learn Rails, you learned how to think about Rails. You absorbed the philosophy along with the syntax.&lt;/p&gt;
+
+&lt;p&gt;The relationship mattered too. When you hit a wall, you knew exactly who to ask. When you made progress, you had someone to share it with. That mentor became invested in your growth in a way that felt personal.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-scaling-challenge&quot;&gt;The scaling challenge&lt;/h2&gt;
+
+&lt;p&gt;Then bootcamps changed the math. Suddenly, companies weren’t hiring one junior developer every few months. They were hiring cohorts of five, ten, sometimes twenty new developers at once.&lt;/p&gt;
+
+&lt;p&gt;The old mentorship model broke down fast. You can’t assign twenty juniors to five seniors and expect the same quality of guidance. The seniors burn out, the juniors get frustrated, and everyone starts looking for shortcuts.&lt;/p&gt;
+
+&lt;p&gt;I watched teams try different approaches. Some did pair programming rotations where juniors worked with a different senior each week. Others set up “office hours” where seniors made themselves available for questions at specific times. A few tried to document everything in internal wikis and hope for the best.&lt;/p&gt;
+
+&lt;p&gt;Each approach had tradeoffs. Rotation meant juniors got exposure to different styles, but lost the continuity of a single relationship. Office hours were efficient, but felt transactional. Documentation was scalable, but couldn’t answer follow up questions or adapt to individual learning styles.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;what-we-lost&quot;&gt;What we lost&lt;/h2&gt;
+
+&lt;p&gt;The shift to scaled mentorship solved the numbers problem, but it changed the experience in ways we’re still figuring out.&lt;/p&gt;
+
+&lt;p&gt;The biggest loss was depth. When you have one mentor, they can tailor their teaching to how you learn. They know your strengths and blind spots. They can push you when you need it and slow down when you’re struggling.&lt;/p&gt;
+
+&lt;p&gt;With scaled approaches, you often get generic advice. The person helping you today doesn’t know what you learned yesterday or what you’re planning to work on tomorrow. They solve your immediate problem, but they can’t help you connect the dots.&lt;/p&gt;
+
+&lt;p&gt;The relationship aspect suffered too. It’s harder to build trust and rapport when you’re working with a different person each week. Juniors become more hesitant to ask “dumb” questions. Seniors become more focused on quick fixes than deep understanding.&lt;/p&gt;
+
+&lt;p&gt;I’ve seen this play out in code reviews. In the old model, a mentor might spend twenty minutes explaining why a particular approach was problematic and walking through alternatives. In the scaled model, you’re more likely to get a comment like “use includes here” without much context about why.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;what-we-kept&quot;&gt;What we kept&lt;/h2&gt;
+
+&lt;p&gt;But scaled mentorship isn’t all bad. In some ways, it’s better than the old model.&lt;/p&gt;
+
+&lt;p&gt;Exposure to different perspectives is valuable. When you work with multiple seniors, you see different approaches to the same problems. You learn that there’s often more than one “right” way to do something.&lt;/p&gt;
+
+&lt;p&gt;It’s also more resilient. In the old model, if your mentor left the company or got busy with other projects, you were stuck. With scaled approaches, there’s always someone else who can help.&lt;/p&gt;
+
+&lt;p&gt;The documentation and process focus has benefits too. When teams are forced to write down their knowledge, it becomes more accessible to everyone. New hires can get up to speed faster, and existing team members can reference shared resources instead of asking the same questions over and over.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;new-forms-of-mentorship&quot;&gt;New forms of mentorship&lt;/h2&gt;
+
+&lt;p&gt;The most interesting development has been the emergence of new mentorship models that work at scale.&lt;/p&gt;
+
+&lt;p&gt;Some companies have started formal apprenticeship programs where juniors spend their first six months rotating through different teams and projects. It’s structured, but it preserves some of the depth of traditional mentorship.&lt;/p&gt;
+
+&lt;p&gt;Others have embraced asynchronous mentorship through internal blogs, recorded code reviews, and shared learning resources. Seniors document their decision making process, and juniors can learn from it even when they’re not working directly together.&lt;/p&gt;
+
+&lt;p&gt;Open source has become a mentorship platform too. Contributing to Rails or popular gems gives you access to feedback from experienced developers around the world. It’s not as personal as traditional mentorship, but it’s incredibly scalable.&lt;/p&gt;
+
+&lt;p&gt;The Rails community has also gotten better at creating learning content. Podcasts, YouTube channels, newsletters, and blogs provide ongoing education that supplements whatever formal mentorship exists at work.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;making-it-work&quot;&gt;Making it work&lt;/h2&gt;
+
+&lt;p&gt;Successful teams I’ve worked with combine multiple approaches. They might have formal mentor assignments for the first few months, then transition to more flexible arrangements as juniors gain confidence.&lt;/p&gt;
+
+&lt;p&gt;They also recognize that different people need different kinds of support. Some juniors thrive with lots of independence and occasional check ins. Others need more hands on guidance. Scaled mentorship works better when it’s flexible enough to accommodate both.&lt;/p&gt;
+
+&lt;p&gt;The key is being intentional about it. Teams that just throw juniors into the mix and hope for the best usually struggle. Teams that think carefully about how to provide guidance and support at scale tend to do better.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-community-angle&quot;&gt;The community angle&lt;/h2&gt;
+
+&lt;p&gt;Individual companies can only do so much. The Rails community as a whole has a role to play in mentorship too.&lt;/p&gt;
+
+&lt;p&gt;The culture of helping others is still there, but it’s expressed differently now. Instead of one on one relationships, it’s blog posts that explain complex concepts, conference talks that share hard won lessons, and open source contributions that make the framework better for everyone.&lt;/p&gt;
+
+&lt;p&gt;Social media has become a mentorship platform too. Twitter threads, LinkedIn posts, and Discord conversations provide bite sized learning opportunities. It’s not as deep as traditional mentorship, but it’s accessible to anyone with an internet connection.&lt;/p&gt;
+
+&lt;p&gt;The challenge is signal to noise. There’s so much content out there that it can be hard to find the good stuff. Curation becomes important. Lists of recommended resources, community endorsed tutorials, and trusted voices help filter the noise.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;looking-ahead&quot;&gt;Looking ahead&lt;/h2&gt;
+
+&lt;p&gt;Mentorship in Rails will keep evolving. Remote work has changed the dynamics again. AI tools are starting to provide some of the quick answers that used to require human help. The next generation of developers will have different expectations and different needs.&lt;/p&gt;
+
+&lt;p&gt;But the core principle remains the same: experienced developers helping newer ones grow. The format might change, but the spirit endures.&lt;/p&gt;
+
+&lt;p&gt;The question isn’t whether scaled mentorship is better or worse than the old model. It’s how we can make it work better. How do we preserve the depth and relationship building that made traditional mentorship valuable while still serving the larger numbers of people who want to learn Rails today?&lt;/p&gt;
+
+&lt;p&gt;I think the answer is hybrid approaches. Formal programs for structure, informal relationships for depth, community resources for scale, and flexibility to adapt as people’s needs change.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;closing-thought&quot;&gt;Closing thought&lt;/h2&gt;
+
+&lt;p&gt;Mentorship is still here. It just doesn’t always look like sitting next to someone at their desk. The challenge is making sure it doesn’t get lost in the noise.&lt;/p&gt;
+
+&lt;p&gt;If you’re a senior developer, think about how you can contribute to mentorship at scale. Write that blog post. Record that screencast. Answer questions in community forums. Review that open source PR with detailed feedback.&lt;/p&gt;
+
+&lt;p&gt;If you’re a junior developer, seek out multiple sources of guidance. Find formal mentors when you can, but also build relationships with peers, contribute to open source, and engage with the broader community.&lt;/p&gt;
+
+&lt;p&gt;The Rails community has always been about helping each other grow. That hasn’t changed, even if the methods have.&lt;/p&gt;
+
+&lt;p&gt;What’s your experience with mentorship in Rails? How has it evolved in your career, and what approaches have worked best for you?&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Previous:&lt;/strong&gt; &lt;a href=&quot;/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/&quot;&gt;From Mailing Lists to Slack: How Rails Culture Shifted&lt;/a&gt;
+&lt;!-- | **Next:** [The Future of Rails: Bridging the Generation Gap](/rails/community/future/2025/09/25/the-future-of-rails-bridging-the-generation-gap/) --&gt;&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="mentorship" /><category term="career" /><category term="rails" /><category term="mentorship" /><category term="bootcamps" /><category term="career" /><category term="teaching" /><summary type="html">How Rails mentorship evolved from intimate one-on-one relationships to scaled approaches. What we kept, what we lost, and what we&apos;re still figuring out.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-mentorship-scale.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-mentorship-scale.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">From Mailing Lists to Slack: How Rails Culture Shifted</title><link href="http://localhost:4000/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/" rel="alternate" type="text/html" title="From Mailing Lists to Slack: How Rails Culture Shifted" /><published>2025-09-19T10:00:00-05:00</published><updated>2025-09-19T10:00:00-05:00</updated><id>http://localhost:4000/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted</id><content type="html" xml:base="http://localhost:4000/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/">&lt;p&gt;&lt;em&gt;This is part 3 of &lt;a href=&quot;/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/&quot;&gt;The Rails Generation Gap series&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The platforms changed everything. Not just how we get help, but what kind of help we expect and how we relate to each other while getting it.&lt;/p&gt;
+
+&lt;p&gt;I was thinking about this after watching a new Rails developer post the same question in three different Discord channels, get three different answers in under five minutes, pick one that worked, and move on. No follow up. No “thanks, that makes sense now.” Just problem solved, next task.&lt;/p&gt;
+
+&lt;p&gt;Compare that to the mailing list thread I still have bookmarked from 2009. Someone asked about routing constraints. The first reply explained how constraints work. The second added context about performance implications. The third linked to a blog post about advanced routing patterns. By the end, five people had chimed in, and the original poster understood not just how to fix their immediate problem, but why the solution worked and what to watch out for next time.&lt;/p&gt;
+
+&lt;p&gt;Both approaches get you unstuck. But they create very different learning experiences and very different communities.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-mailing-list-era&quot;&gt;The mailing list era&lt;/h2&gt;
+
+&lt;p&gt;Back in the day, Rails had a few key gathering spots. The Rails mailing list. The Ruby Talk list. IRC channels like #rubyonrails on Freenode. These weren’t fast, but they were thoughtful.&lt;/p&gt;
+
+&lt;p&gt;When you posted a question, you knew you might wait. That waiting time wasn’t wasted though. You’d often spend it digging deeper into the problem, reading source code, or trying different approaches. By the time someone replied, you had context for their answer.&lt;/p&gt;
+
+&lt;p&gt;The replies themselves were different too. People didn’t just drop a code snippet and disappear. They’d explain the why, point you to related concepts, and often end with something like “let me know if that helps” or “feel free to ask follow ups.”&lt;/p&gt;
+
+&lt;p&gt;I remember one thread where I asked about caching strategies. The response wasn’t just the syntax I needed. It was a mini lesson on cache invalidation, Rails conventions, and a suggestion to read a specific chapter of the Pickaxe book. That person took time to teach, not just solve.&lt;/p&gt;
+
+&lt;p&gt;IRC was the closest thing we had to instant help, but even there, the culture was different. Channels had regulars who knew each other. There were inside jokes, ongoing conversations, and a sense of continuity. When you asked a question, someone might say “hang on, let me check something” and disappear for ten minutes. Then they’d come back with a detailed explanation or a link to a blog post they’d written about the exact same problem.&lt;/p&gt;
+
+&lt;p&gt;The pace was slower, but the depth was there. People stuck around for follow up questions. They’d check in later to see if their suggestion worked. It felt like a workshop where everyone was learning together.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-shift-to-instant-everything&quot;&gt;The shift to instant everything&lt;/h2&gt;
+
+&lt;p&gt;Then came the platforms we know today. Stack Overflow launched in 2008 and quickly became the go to for programming questions. Discord and Slack made real time chat mainstream. Bootcamp communities created their own support networks.&lt;/p&gt;
+
+&lt;p&gt;The speed improvement was dramatic. Post a question on Stack Overflow and you might get an answer in minutes. Jump into a Discord channel and someone’s usually around to help immediately.&lt;/p&gt;
+
+&lt;p&gt;But something changed in the process. The incentives shifted from teaching to solving. Stack Overflow rewards quick, correct answers. Discord conversations move fast and get buried. The patient, context rich exchanges of the mailing list era became harder to find.&lt;/p&gt;
+
+&lt;p&gt;The new platforms brought real benefits. You don’t need to know about mailing lists or IRC to get help. The barriers to entry dropped significantly. When you’re stuck and need to ship something, getting unstuck in minutes instead of hours matters. More people asking and answering questions means more edge cases get covered. Stack Overflow’s format makes it easy to find existing answers to common problems.&lt;/p&gt;
+
+&lt;p&gt;The Rails community became more welcoming to newcomers. If you’re learning Rails today, you have resources that would have seemed magical in 2008.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;what-we-lost&quot;&gt;What we lost&lt;/h2&gt;
+
+&lt;p&gt;But we also lost some things that mattered.&lt;/p&gt;
+
+&lt;p&gt;Quick answers often skip the why. You get the fix without understanding the underlying concepts. Transactional help doesn’t build the same bonds as ongoing mentorship. The pressure to answer fast can lead to surface level solutions that work but aren’t optimal. The expectation of instant answers can make people less willing to struggle with problems on their own first.&lt;/p&gt;
+
+&lt;p&gt;I’ve seen this play out in hiring. Candidates who learned Rails through bootcamps and Stack Overflow can often ship features quickly, but struggle when asked to explain the tradeoffs behind their choices. They know the how, but not always the why.&lt;/p&gt;
+
+&lt;p&gt;On the flip side, I’ve worked with veterans who dismiss newer developers as “just copying and pasting from Stack Overflow” without recognizing that those same developers often bring fresh perspectives and aren’t weighed down by legacy assumptions.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;bridging-old-and-new&quot;&gt;Bridging old and new&lt;/h2&gt;
+
+&lt;p&gt;The most effective teams I’ve worked with find ways to blend both approaches.&lt;/p&gt;
+
+&lt;p&gt;They use modern tools for speed and accessibility, but create space for deeper learning. Code reviews become teaching moments. Senior developers write internal blog posts explaining not just what they built, but why they made specific choices. Teams have “office hours” where anyone can ask questions and get more than just a quick fix.&lt;/p&gt;
+
+&lt;p&gt;Some companies have started formal mentorship programs. Others encourage developers to write long form posts about problems they’ve solved. A few have experimented with “slow” Slack channels where the expectation is thoughtful responses, not instant fixes.&lt;/p&gt;
+
+&lt;p&gt;The tools have changed, but the human need for mentorship and community hasn’t. We just need to be more intentional about creating space for it.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-hybrid-approach&quot;&gt;The hybrid approach&lt;/h2&gt;
+
+&lt;p&gt;I think the ideal is a hybrid approach. Keep the accessibility and speed of modern platforms, but find ways to inject more depth and relationship building.&lt;/p&gt;
+
+&lt;p&gt;Some Discord servers have dedicated channels for deeper discussions. Some Stack Overflow answers go well beyond the minimum viable solution. Some bootcamps pair students with mentors for ongoing guidance beyond the curriculum.&lt;/p&gt;
+
+&lt;p&gt;Rails is at an interesting inflection point. It’s mature enough that the basics are well documented, but complex enough that there’s still plenty to learn. The community is bigger and more diverse than ever, but also more fragmented.&lt;/p&gt;
+
+&lt;p&gt;How we handle that fragmentation will shape the next generation of Rails developers. Do we optimize purely for speed and efficiency? Or do we find ways to preserve some of the mentorship culture that made Rails special in the first place?&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;whats-next&quot;&gt;What’s next&lt;/h2&gt;
+
+&lt;p&gt;The shift from mailing lists to Slack isn’t just about technology. It reflects how Rails grew from a tight knit craft community to a mainstream framework. Both eras had their strengths.&lt;/p&gt;
+
+&lt;p&gt;The question isn’t whether the old ways were better. It’s what we can learn from them to make the current community even stronger.&lt;/p&gt;
+
+&lt;p&gt;If you’ve lived through both sides of this shift, what differences have you noticed? How do you think we can bring back some of that depth and mentorship in today’s fast paced world?&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Previous:&lt;/strong&gt; &lt;a href=&quot;/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community/&quot;&gt;Rails Before Bootcamps — A Tight‑Knit Craft Community&lt;/a&gt;
+&lt;!-- | **Next:** [Mentorship in Rails: From One-on-One to At-Scale](/rails/mentorship/career/2025/09/22/mentorship-in-rails-from-one-on-one-to-at-scale/) --&gt;&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="community" /><category term="culture" /><category term="rails" /><category term="mentorship" /><category term="community" /><category term="culture" /><category term="communication" /><summary type="html">The way Rails developers find help has changed completely. What we gained and lost in the shift from mailing lists to instant answers.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-culture-shift.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-culture-shift.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Rails Before Bootcamps — A Tight‑Knit Craft Community</title><link href="http://localhost:4000/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community/" rel="alternate" type="text/html" title="Rails Before Bootcamps — A Tight‑Knit Craft Community" /><published>2025-09-15T10:00:00-05:00</published><updated>2025-09-15T10:00:00-05:00</updated><id>http://localhost:4000/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community</id><content type="html" xml:base="http://localhost:4000/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community/">&lt;p&gt;&lt;em&gt;This is part 2 of &lt;a href=&quot;/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/&quot;&gt;The Rails Generation Gap series&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;When people talk about the early Rails community, they often focus on the code. But for me, what stands out are the characters, the voices, and the quirky ways people learned.&lt;/p&gt;
+
+&lt;p&gt;When I started Rails in 2008, the framework had been around for a few years but learning it wasn’t as structured as it is today. There weren’t week-by-week curricula, Slack mentors on call, or neat tutorials for every error message. Instead, newcomers like me relied on a patchwork of pioneers who shared their wisdom in creative, sometimes eccentric ways.&lt;/p&gt;
+
+&lt;p&gt;It was messy. It was magical. And it shaped those of us who learned Rails in that era.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;railscasts-mentorship-at-scale&quot;&gt;RailsCasts: Mentorship at Scale&lt;/h2&gt;
+
+&lt;p&gt;If you were learning Rails in 2008 or the early 2010s, chances are you watched Ryan Bates’ RailsCasts. My daughter knew the opening music from RailsCasts and would ask “Are you watching that guy again?”&lt;/p&gt;
+
+&lt;p&gt;Every week, Ryan released a short screencast walking through a gem, a pattern, or a tricky concept. They weren’t flashy. They were practical, approachable, and packed with insight. For many of us who started around that time, RailsCasts was the bootcamp before bootcamps existed.&lt;/p&gt;
+
+&lt;p&gt;I still remember pausing a RailsCasts episode every 30 seconds to copy code into my editor, rewinding when I inevitably missed a step. Ryan had this gift for making complex things feel doable. He wasn’t just teaching features—he was teaching how to think in Rails.&lt;/p&gt;
+
+&lt;p&gt;To this day, &lt;a href=&quot;http://railscasts.com/&quot;&gt;RailsCasts&lt;/a&gt; remains a cultural landmark. The catalog stopped updating in 2013, but developers still revisit those episodes like treasured textbooks.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;_why-the-lucky-stiff-the-poet-of-ruby&quot;&gt;_why the Lucky Stiff: The Poet of Ruby&lt;/h2&gt;
+
+&lt;p&gt;The Rails community also had its artists. None more famous—or infamous—than _why the lucky stiff.&lt;/p&gt;
+
+&lt;p&gt;_why wasn’t about documentation or best practices. He was about joy. His works—like Why’s (Poignant) Guide to Ruby—were whimsical, surreal, and filled with cartoon foxes. It was less a tutorial and more a love letter to programming.&lt;/p&gt;
+
+&lt;p&gt;For many newcomers, _why’s writing made Ruby feel human. He reminded us that code wasn’t just logic; it was creativity. His sudden disappearance in 2009 left a hole, but his spirit still lingers in how Rubyists value expressiveness and fun.&lt;/p&gt;
+
+&lt;p&gt;I won’t go into the details here but check out these articles to learn more about _why:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.slate.com/articles/technology/technology/2012/03/ruby_ruby_on_rails_and__why_the_disappearance_of_one_of_the_world_s_most_beloved_computer_programmers_.html&quot;&gt;slate.com article&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.smashingmagazine.com/2010/05/why-a-tale-of-a-post-modern-genius/&quot;&gt;smashingmagizine.com article&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://poignant.guide/&quot;&gt;Why’s (Poignant) Guide to Ruby&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;rails-for-zombies-learning-could-be-playful&quot;&gt;Rails for Zombies: Learning Could Be Playful&lt;/h2&gt;
+
+&lt;p&gt;Not long after, platforms like Code School (before it became Pluralsight) gave us Rails for Zombies, an interactive, gamified way to learn Rails right in the browser.&lt;/p&gt;
+
+&lt;p&gt;Instead of dry documentation, you solved challenges to help animated zombies complete tasks. It was playful, experimental, and hinted at what was coming: a world where Rails education could be accessible to anyone, not just those willing to dig through mailing lists and source code.&lt;/p&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;https://www.youtube.com/watch?v=4Vk4W767lak&quot;&gt;Rails Conf 2013 Rails for Zombies talk&lt;/a&gt; to see what I mean.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;what-this-era-felt-like&quot;&gt;What This Era Felt Like&lt;/h2&gt;
+
+&lt;p&gt;Taken together, RailsCasts, _why, and Rails for Zombies illustrate the unique vibe of the pre-bootcamp era:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;DIY Learning&lt;/strong&gt; → You pieced things together from blogs, screencasts, and mailing lists.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Personal Mentorship&lt;/strong&gt; → Help often came from a single person’s voice, not a company’s curriculum.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Culture &amp;amp; Quirk&lt;/strong&gt; → Learning Rails wasn’t sterile; it was filled with personality, creativity, and play.&lt;/p&gt;
+
+&lt;p&gt;It felt like joining a small club where everyone knew each other’s names. But it also meant access was uneven. If you didn’t stumble onto RailsCasts, or if _why’s whimsical style didn’t click with you, your learning curve could be brutal.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;what-we-carry-forward&quot;&gt;What We Carry Forward&lt;/h2&gt;
+
+&lt;p&gt;Looking back, I think this era left us with two big lessons:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Learning is cultural, not just technical.&lt;/strong&gt; The Rails community thrived because it had voices like Ryan Bates and _why who made knowledge stick.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Accessibility matters.&lt;/strong&gt; Rails for Zombies hinted at something powerful—that playful, approachable learning could open doors to more people. Bootcamps would later take this idea to scale.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;closing-thought&quot;&gt;Closing Thought&lt;/h2&gt;
+
+&lt;p&gt;The Rails of yesterday was small, quirky, and often hard to penetrate. But it was also a place where creativity, mentorship, and community shone through individual voices.&lt;/p&gt;
+
+&lt;p&gt;If you learned Rails through RailsCasts, _why, or Rails for Zombies—what do you remember most? And what do you think today’s newcomers are missing without those touchstones?&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;Previous:&lt;/strong&gt; &lt;a href=&quot;/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/&quot;&gt;The Rails Generation Gap: Why It Matters&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;Next:&lt;/strong&gt; &lt;a href=&quot;/rails/community/culture/2025/09/19/from-mailing-lists-to-slack-how-rails-culture-shifted/&quot;&gt;From Mailing Lists to Slack: How Rails Culture Shifted&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="community" /><category term="history" /><category term="rails" /><category term="mentorship" /><category term="community" /><category term="history" /><summary type="html">How the early Rails community learned in public — and what we can bring forward now.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-before-bootcamps.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-before-bootcamps.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">What finally fixed our deployment and Sidekiq mess</title><link href="http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/" rel="alternate" type="text/html" title="What finally fixed our deployment and Sidekiq mess" /><published>2025-09-12T11:00:00-05:00</published><updated>2025-09-12T11:00:00-05:00</updated><id>http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess</id><content type="html" xml:base="http://localhost:4000/rails/production/2025/09/12/what-finally-fixed-our-deployment-and-sidekiq-mess/">&lt;p&gt;Over the last week I hit a cluster of production problems that looked unrelated at first: intermittent deploys that “completed” but left the app unresponsive, email blasts that “finished” with zero sends, and a Sidekiq dashboard screaming 60–70% failure rates. This post is my straight‑from-the-console write‑up of what actually broke, how I tracked it down, and the simple changes that stabilized everything.&lt;/p&gt;
 
 &lt;p&gt;If you’re running Rails on Nginx + Passenger with MySQL, Redis, and Sidekiq (and some Delayed Job still hanging around), this will probably feel familiar.&lt;/p&gt;
 
@@ -155,7 +576,7 @@ I set it to 25 because the server has plenty of RAM (32 GB) and I’d rather hav
   &lt;li&gt;Keep Sidekiq to 3 threads per process unless you’ve proven you need more.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;If you want the full step‑by‑step let me know. I put everything into a document including cleanup commands, monitoring, and the connection math. It’s the checklist I wish I’d had before the week started.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="production" /><category term="sidekiq" /><category term="deployment" /><category term="passenger" /><category term="mysql" /><category term="redis" /><category term="activerecord" /><category term="database-pool" /><summary type="html">A week of production chaos taught me that Sidekiq failures aren&apos;t always about Sidekiq. Sometimes it&apos;s your database connection pool that&apos;s starving everything else.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Rails Generation Gap: Why It Matters</title><link href="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" rel="alternate" type="text/html" title="The Rails Generation Gap: Why It Matters" /><published>2025-09-12T10:00:00-05:00</published><updated>2025-09-12T10:00:00-05:00</updated><id>http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters</id><content type="html" xml:base="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">&lt;p&gt;I still remember the first time I got truly stuck on a Rails bug in the late 2000s. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. Before I knew it, I had met a total stranger and they were mentoring me. That was the vibe back then: small, tight knit, and very collaborative.&lt;/p&gt;
+&lt;p&gt;If you want the full step‑by‑step let me know. I put everything into a document including cleanup commands, monitoring, and the connection math. It’s the checklist I wish I’d had before the week started.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="production" /><category term="sidekiq" /><category term="deployment" /><category term="passenger" /><category term="mysql" /><category term="redis" /><category term="activerecord" /><category term="database-pool" /><summary type="html">A week of production chaos taught me that Sidekiq failures aren&apos;t always about Sidekiq. Sometimes it&apos;s your database connection pool that&apos;s starving everything else.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Rails Generation Gap: Why It Matters</title><link href="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" rel="alternate" type="text/html" title="The Rails Generation Gap: Why It Matters" /><published>2025-09-12T10:00:00-05:00</published><updated>2025-09-12T10:00:00-05:00</updated><id>http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters</id><content type="html" xml:base="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">&lt;p&gt;I still remember the first time I got truly stuck on a Rails bug in 2008. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. Before I knew it, I had met a total stranger and they were mentoring me. That was the vibe when I started: small, tight knit, and very collaborative.&lt;/p&gt;
 
 &lt;p&gt;Jump ahead a decade and the on ramp looks different. Fewer mailing lists. More bootcamps, YouTube, Discord, and Stack Overflow. Folks learn fast, ship fast, and get help in new places. Rails changed, but the bigger shift was how people came into the community and learned the craft.&lt;/p&gt;
 
@@ -167,9 +588,9 @@ I set it to 25 because the server has plenty of RAM (32 GB) and I’d rather hav
 
 &lt;h2 id=&quot;before-bootcamps-a-craft-culture&quot;&gt;Before bootcamps: a craft culture&lt;/h2&gt;
 
-&lt;p&gt;When Rails landed in 2004, it felt like magic. Convention over configuration made things click. Getting started was not easy though. Docs were thin, posts were dense, and half the time you learned by reading the source.&lt;/p&gt;
+&lt;p&gt;When I started with Rails in 2008, it still felt like magic. Convention over configuration made things click. Getting started was not easy though. Docs were thin, posts were dense, and half the time you learned by reading the source.&lt;/p&gt;
 
-&lt;p&gt;The upside was depth. A lot of us learned the how and the why. Mentorship was built in because it had to be.&lt;/p&gt;
+&lt;p&gt;The upside was depth. Those of us who came in during that era learned the how and the why. Mentorship was built in because it had to be.&lt;/p&gt;
 
 &lt;p&gt;It also felt closed at times. Fewer entry points. Less diversity. Sometimes it read like an insider club.&lt;/p&gt;
 
@@ -227,7 +648,11 @@ I set it to 25 because the server has plenty of RAM (32 GB) and I’d rather hav
 
 &lt;p&gt;This is the first post in a short series on the Rails Generation Gap. Next up, I will rewind to the early era of screencasts, whimsical guides, and in person mentorship, and pull forward the parts that still work today.&lt;/p&gt;
 
-&lt;p&gt;If you have lived through both sides of this, what differences have you noticed? How do you think we can build better bridges between generations of Rails developers?&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="community" /><category term="career" /><category term="rails" /><category term="mentorship" /><category term="bootcamps" /><category term="community" /><category term="culture" /><summary type="html">From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Dusting Off the Blog (Again)</title><link href="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/" rel="alternate" type="text/html" title="Dusting Off the Blog (Again)" /><published>2025-09-08T12:00:00-05:00</published><updated>2025-09-08T12:00:00-05:00</updated><id>http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog</id><content type="html" xml:base="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/">&lt;p&gt;If you’ve been following this blog for a while (and there might be a few of you), you’ll notice it’s been quiet since 2017. Seven years is a long time in tech. A lot has changed.&lt;/p&gt;
+&lt;p&gt;If you have lived through both sides of this, what differences have you noticed? How do you think we can build better bridges between generations of Rails developers?&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Next in this series:&lt;/strong&gt; &lt;a href=&quot;/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community/&quot;&gt;Rails Before Bootcamps — A Tight‑Knit Craft Community&lt;/a&gt;&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="community" /><category term="career" /><category term="rails" /><category term="mentorship" /><category term="bootcamps" /><category term="community" /><category term="culture" /><summary type="html">From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Dusting Off the Blog (Again)</title><link href="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/" rel="alternate" type="text/html" title="Dusting Off the Blog (Again)" /><published>2025-09-08T12:00:00-05:00</published><updated>2025-09-08T12:00:00-05:00</updated><id>http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog</id><content type="html" xml:base="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/">&lt;p&gt;If you’ve been following this blog for a while (and there might be a few of you), you’ll notice it’s been quiet since 2017. Seven years is a long time in tech. A lot has changed.&lt;/p&gt;
 
 &lt;p&gt;I used to write regularly about Rails, freelancing, and the Arizona tech scene. Then life happened, priorities shifted, and the blog went dormant.&lt;/p&gt;
 
@@ -766,772 +1191,4 @@ bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake graphql:schema:du
 
 &lt;p&gt;GraphQL Code Generator eliminated an entire class of bugs from my apps. I catch schema mismatches at compile time instead of in production. Refactoring became fearless - if I change a field in Rails, TypeScript tells me exactly which components need updating.&lt;/p&gt;
 
-&lt;p&gt;It took about a day to set up the first time, but it’s saved me weeks of debugging over the past year. If you’re using GraphQL with TypeScript, this is a no-brainer.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="react" /><category term="typescript" /><category term="typescript" /><category term="react" /><category term="graphql" /><category term="codegen" /><category term="ruby-on-rails" /><summary type="html">How GraphQL Code Generator saved me from runtime surprises and made my Rails + React apps much more reliable. Plus the gotchas I wish I&apos;d known earlier.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/type-safe-react-rails-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/type-safe-react-rails-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">My Journey Building a GraphQL API with Rails and Apollo</title><link href="http://localhost:4000/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/" rel="alternate" type="text/html" title="My Journey Building a GraphQL API with Rails and Apollo" /><published>2025-01-10T10:00:00-06:00</published><updated>2025-01-10T10:00:00-06:00</updated><id>http://localhost:4000/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript</id><content type="html" xml:base="http://localhost:4000/rails/graphql/2025/01/10/production-rails-graphql-with-apollo-and-typescript/">&lt;p&gt;Last year I convinced my team to try GraphQL for our new Rails API. “It’ll be great,” I said. “The frontend can request exactly the data it needs.”&lt;/p&gt;
-
-&lt;p&gt;Six months later, we had a working GraphQL API serving a React/TypeScript app in production. But getting there taught me more about GraphQL than any tutorial ever did.&lt;/p&gt;
-
-&lt;h2 id=&quot;why-we-chose-graphql-and-why-we-almost-regretted-it&quot;&gt;Why we chose GraphQL (and why we almost regretted it)&lt;/h2&gt;
-
-&lt;p&gt;Our Rails API was growing messy. We had endpoints like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/api/users&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/api/users/:id/posts&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/api/users/:id/posts/:id/comments&lt;/code&gt;. Each one returned slightly different data depending on what the frontend needed.&lt;/p&gt;
-
-&lt;p&gt;GraphQL promised to fix this. One endpoint, flexible queries, better developer experience. It delivered on those promises, but not without some pain.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;The good:&lt;/strong&gt; Our React components could request exactly what they needed. No more over-fetching user avatars for list views or under-fetching when we needed detailed profiles.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;The challenging:&lt;/strong&gt; GraphQL has more moving parts than REST. Schema design matters. Caching is different. N+1 queries are easy to introduce and hard to spot.&lt;/p&gt;
-
-&lt;h2 id=&quot;getting-started-with-graphql-ruby&quot;&gt;Getting started with graphql-ruby&lt;/h2&gt;
-
-&lt;p&gt;The Rails setup was straightforward. I added the gem and ran the generator:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Gemfile&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;graphql&apos;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;graphiql-rails&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;group: :development&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# GraphQL IDE&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle &lt;span class=&quot;nb&quot;&gt;install
-&lt;/span&gt;rails generate graphql:install
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This created the basic structure I needed. My first GraphQL type looked like this:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# app/graphql/types/user_type.rb&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Types&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UserType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;BaseObject&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:created_at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GraphQL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ISO8601DateTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Simple enough. Then I created a query to fetch users:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# app/graphql/types/query_type.rb&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Types&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;QueryType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;BaseObject&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;UserType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-    
-    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;users&lt;/span&gt;
-      &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;That &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;User.all&lt;/code&gt; would come back to haunt me, but it worked for the demo.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-n1-problem-hit-us-hard&quot;&gt;The N+1 problem hit us hard&lt;/h2&gt;
-
-&lt;p&gt;Our first production GraphQL queries were slow. Really slow. A simple query to fetch users and their post counts was taking 2+ seconds.&lt;/p&gt;
-
-&lt;p&gt;The problem was classic N+1 queries. For every user, Rails was making a separate query to count their posts:&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;-- ... and so on&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;I learned about GraphQL::Dataloader the hard way. It batches database queries automatically:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# app/graphql/types/user_type.rb&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UserType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;BaseObject&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:posts_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-  
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;posts_count&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;# This batches queries across all users in the request&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;dataloader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Sources&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;AssociationCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# app/graphql/sources/association_count.rb&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Sources::AssociationCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GraphQL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Dataloader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Source&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;association_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@association_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;association_name&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;# Batch count queries for all objects at once&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@association_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;classify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;constantize&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@association_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;singularize&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;_id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@association_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;singularize&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;_id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;count&lt;/span&gt;
-    
-    &lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;That 2-second query dropped to 200ms.&lt;/p&gt;
-
-&lt;h2 id=&quot;error-handling-that-doesnt-leak-secrets&quot;&gt;Error handling that doesn’t leak secrets&lt;/h2&gt;
-
-&lt;p&gt;Early on, our GraphQL errors exposed too much. A failed database query would return the raw SQL error to the client.&lt;/p&gt;
-
-&lt;p&gt;I learned to be careful about what errors reach users:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# app/graphql/my_schema.rb&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MySchema&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GraphQL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Schema&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;rescue_from&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;RecordNotFound&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GraphQL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ExecutionError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Not found&quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  
-  &lt;span class=&quot;n&quot;&gt;rescue_from&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;RecordInvalid&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;# Log the real error for debugging&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;GraphQL validation error: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GraphQL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;ExecutionError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Invalid input&quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;For authorization, I integrated Pundit:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;users&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# Only return users the current user can see&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;Pundit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;policy_scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:current_user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;pagination-without-the-headaches&quot;&gt;Pagination without the headaches&lt;/h2&gt;
-
-&lt;p&gt;Our user list grew to thousands of records. Loading them all at once killed the browser.&lt;/p&gt;
-
-&lt;p&gt;GraphQL’s cursor-based pagination (Relay-style) was confusing at first, but it’s much better than offset pagination for real-time data:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# app/graphql/types/query_type.rb&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;UserType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;connection_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;users&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;order&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:created_at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;On the client side, Apollo handles most of the complexity:&lt;/p&gt;
-
-&lt;div class=&quot;language-graphql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GetUsers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$after&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;after&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$after&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pageInfo&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hasNextPage&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;endCursor&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edges&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nodes&lt;/code&gt; structure felt weird at first, but it’s consistent and works well with Apollo’s caching.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-apollo-client-setup-that-actually-works&quot;&gt;The Apollo Client setup that actually works&lt;/h2&gt;
-
-&lt;p&gt;On the frontend, I needed Apollo Client to talk to my Rails GraphQL endpoint. The basic setup was straightforward:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; @apollo/client graphql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;But the configuration took some trial and error:&lt;/p&gt;
-
-&lt;div class=&quot;language-typescript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// apollo/client.ts&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ApolloClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;InMemoryCache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HttpLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;@apollo/client&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onError&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;@apollo/client/link/error&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;httpLink&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HttpLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; 
-  &lt;span class=&quot;na&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;/graphql&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-  &lt;span class=&quot;na&quot;&gt;credentials&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Important for Rails sessions&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errorLink&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(({&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;graphQLErrors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;networkError&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;graphQLErrors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;graphQLErrors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;GraphQL error:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;networkError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Network error:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;networkError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ApolloClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;errorLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;httpLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;InMemoryCache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;typePolicies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;Query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;c1&quot;&gt;// This merges paginated results&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;existing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;incoming&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-              &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;incoming&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;na&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;existing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;incoming&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-              &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;typePolicies&lt;/code&gt; configuration was crucial for pagination to work correctly. Without it, Apollo would replace the entire list instead of appending new items.&lt;/p&gt;
-
-&lt;h2 id=&quot;typescript-integration-that-saves-your-sanity&quot;&gt;TypeScript integration that saves your sanity&lt;/h2&gt;
-
-&lt;p&gt;I wrote about GraphQL Code Generator in detail &lt;a href=&quot;/react/typescript/2025/01/17/type-safe-react-with-rails-graphql-and-codegen/&quot;&gt;in another post&lt;/a&gt;, but it’s worth mentioning here because it transformed how I work with GraphQL.&lt;/p&gt;
-
-&lt;p&gt;Instead of manually writing TypeScript interfaces that drift out of sync with my schema, I generate them automatically from my GraphQL queries. It caught so many bugs before they reached production.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-i-learned-about-caching&quot;&gt;What I learned about caching&lt;/h2&gt;
-
-&lt;p&gt;Apollo’s cache is powerful but requires understanding. The key insight: it normalizes data by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id&lt;/code&gt; fields automatically. So this query:&lt;/p&gt;
-
-&lt;div class=&quot;language-graphql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nodes&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Only stores each user once in the cache. Update the user in one place, and it updates everywhere.&lt;/p&gt;
-
-&lt;p&gt;But mutations need help. After creating a user, I had to tell Apollo to update the cache:&lt;/p&gt;
-
-&lt;div class=&quot;language-typescript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useMutation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CREATE_USER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;modify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;existing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newEdge&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;na&quot;&gt;__typename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;UserEdge&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;na&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-          &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;existing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;na&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;newEdge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;existing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;edges&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-          &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;production-lessons&quot;&gt;Production lessons&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Rate limiting is essential.&lt;/strong&gt; GraphQL queries can be expensive. I use Rack::Attack to limit query complexity and request rates.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Monitor query performance.&lt;/strong&gt; I log slow GraphQL queries just like slow SQL queries. Some client queries are accidentally expensive.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Start simple.&lt;/strong&gt; I didn’t need subscriptions or persisted queries on day one. I added them when the use case was clear.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;GraphQL with Rails and Apollo has been worth the learning curve. The developer experience is genuinely better than REST for complex UIs. But it’s not magic - you still need to think about performance, caching, and security.&lt;/p&gt;
-
-&lt;p&gt;Would I choose this stack again? Absolutely. But next time I’d spend more time up front on monitoring and performance tooling.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="graphql" /><category term="ruby-on-rails" /><category term="graphql" /><category term="apollo" /><category term="typescript" /><category term="fullstack" /><category term="performance" /><summary type="html">What I learned building a GraphQL API that actually works in production. The mistakes I made, the tools that saved me, and why I&apos;d choose this stack again.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-graphql-apollo-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-graphql-apollo-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">JavaScript Fatigue is Real (But It’s Worth It)</title><link href="http://localhost:4000/javascript/development/2024/01/22/modern-javascript-development/" rel="alternate" type="text/html" title="JavaScript Fatigue is Real (But It’s Worth It)" /><published>2024-01-22T15:30:00-06:00</published><updated>2024-01-22T15:30:00-06:00</updated><id>http://localhost:4000/javascript/development/2024/01/22/modern-javascript-development</id><content type="html" xml:base="http://localhost:4000/javascript/development/2024/01/22/modern-javascript-development/">&lt;p&gt;I’ve been writing JavaScript for over 15 years. I remember when jQuery was revolutionary, when adding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;onclick&lt;/code&gt; handlers directly in HTML was normal, and when the biggest decision was whether to minify your one JavaScript file.&lt;/p&gt;
-
-&lt;p&gt;Now I have webpack configs, TypeScript compilers, ESLint rules, Prettier configs, and three different package managers to choose from. Some days I miss the simplicity of the old days.&lt;/p&gt;
-
-&lt;p&gt;But then I remember what it was like to debug IE6 compatibility issues and I appreciate how far we’ve come.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-bundler-evolution&quot;&gt;The bundler evolution&lt;/h2&gt;
-
-&lt;p&gt;I started with manually including &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;script&amp;gt;&lt;/code&gt; tags in order. Then came task runners like Grunt and Gulp. Then webpack changed everything.&lt;/p&gt;
-
-&lt;p&gt;Webpack was powerful but complicated. I spent more time configuring it than writing actual code. The config files grew into monsters:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// webpack.config.js (the horror)&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;./src/index.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;rules&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;js$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;babel-loader&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;css$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;style-loader&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;css-loader&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-      &lt;span class=&quot;c1&quot;&gt;// ... 20 more rules&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// ... 15 plugins&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// ... 100 more lines&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Then Vite came along and made me happy again:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// vite.config.js (the relief)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// That&apos;s it. It just works.&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Vite’s dev server is blazing fast. Hot module replacement actually works. I can focus on building features instead of fighting build tools.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;My current stack:&lt;/strong&gt; Vite for new projects, webpack only when I’m stuck with legacy code.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-package-manager-wars&quot;&gt;The package manager wars&lt;/h2&gt;
-
-&lt;p&gt;I lived through the npm vs Yarn wars. Yarn was faster and had better lockfiles when it launched. Then npm caught up. Then pnpm showed up promising to save disk space.&lt;/p&gt;
-
-&lt;p&gt;Honestly? They’re all fine now. I use npm because it’s everywhere, but I won’t fight you if you prefer Yarn or pnpm.&lt;/p&gt;
-
-&lt;p&gt;What I will fight you on: commit your lockfiles. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;package-lock.json&lt;/code&gt; is not optional. I’ve debugged too many “works on my machine” issues caused by different dependency versions.&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# My typical workflow&lt;/span&gt;
-npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;        &lt;span class=&quot;c&quot;&gt;# Install dependencies&lt;/span&gt;
-npm run dev        &lt;span class=&quot;c&quot;&gt;# Start development&lt;/span&gt;
-npm run build      &lt;span class=&quot;c&quot;&gt;# Build for production&lt;/span&gt;
-npm &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;           &lt;span class=&quot;c&quot;&gt;# Run tests&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Keep it simple.&lt;/p&gt;
-
-&lt;h2 id=&quot;code-quality-tools-that-actually-help&quot;&gt;Code quality tools that actually help&lt;/h2&gt;
-
-&lt;p&gt;I used to think linters were annoying. Then I worked on a team where everyone had different coding styles. Debugging became a nightmare because I couldn’t recognize patterns in unfamiliar formatting.&lt;/p&gt;
-
-&lt;p&gt;Now I’m a believer in automated code quality:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ESLint&lt;/strong&gt; catches bugs before they happen:&lt;/p&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// .eslintrc.js - my basic setup&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;extends&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;eslint:recommended&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;rules&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;no-unused-vars&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;no-console&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;warn&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;prefer-const&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;Prettier&lt;/strong&gt; ends formatting debates:&lt;/p&gt;
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;semi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;singleQuote&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;trailingComma&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es5&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;I run both on save in my editor and in pre-commit hooks. No more arguing about semicolons or tabs vs spaces.&lt;/p&gt;
-
-&lt;h2 id=&quot;typescript-changed-my-life&quot;&gt;TypeScript changed my life&lt;/h2&gt;
-
-&lt;p&gt;I resisted TypeScript for years. “I don’t need types,” I said. “JavaScript is fine.”&lt;/p&gt;
-
-&lt;p&gt;Then I joined a team with a large TypeScript codebase. The developer experience was incredible. My editor knew exactly what properties every object had. Refactoring was fearless. Runtime errors dropped dramatically.&lt;/p&gt;
-
-&lt;div class=&quot;language-typescript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Before: hoping this object has the right shape&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;formatUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; (&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;)`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 🤞&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// After: knowing exactly what I&apos;m working with&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nl&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;nl&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;nl&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;formatUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; (&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;)`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ✨&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The initial setup cost is worth it. Start new projects with TypeScript. Gradually migrate existing ones.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Pro tip:&lt;/strong&gt; Don’t go crazy with complex types at first. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;any&lt;/code&gt; is okay while you’re learning. Better to have some type safety than none.&lt;/p&gt;
-
-&lt;h2 id=&quot;modern-javascript-is-actually-good&quot;&gt;Modern JavaScript is actually good&lt;/h2&gt;
-
-&lt;p&gt;Remember when we had to do this?&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// The bad old days&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;email&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;assign&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({},&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;active&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Welcome, &lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;city&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we can write:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Modern JavaScript is beautiful&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;email&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;active&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}));&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`Welcome, &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;!`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;city&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Optional chaining (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?.&lt;/code&gt;) alone has saved me from so many “Cannot read property of undefined” errors.&lt;/p&gt;
-
-&lt;p&gt;Don’t be afraid to use modern features. Browsers support them, and if you need to support old browsers, your bundler can transpile them.&lt;/p&gt;
-
-&lt;h2 id=&quot;testing-from-zero-to-hero&quot;&gt;Testing: from zero to hero&lt;/h2&gt;
-
-&lt;p&gt;I used to be that developer who tested in the browser by clicking around. “If it works when I try it, it’s good to ship.”&lt;/p&gt;
-
-&lt;p&gt;That approach doesn’t scale. One too many production bugs taught me the value of automated testing:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Jest makes testing almost pleasant&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;formatUser&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;formats user name and email&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;John&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;john@example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;formatUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;John (john@example.com)&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-  &lt;span class=&quot;nx&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;handles missing email gracefully&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;John&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;formatUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;John (no email)&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;My testing philosophy:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Test the happy path&lt;/li&gt;
-  &lt;li&gt;Test edge cases that have bitten you before&lt;/li&gt;
-  &lt;li&gt;Don’t test implementation details&lt;/li&gt;
-  &lt;li&gt;Write tests that make refactoring safer&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Start small. A few key tests are better than none.&lt;/p&gt;
-
-&lt;h2 id=&quot;framework-fatigue-is-real&quot;&gt;Framework fatigue is real&lt;/h2&gt;
-
-&lt;p&gt;I’ve used jQuery, Backbone, Angular (1.x), React, Vue, Svelte, and probably a few others I’ve forgotten.&lt;/p&gt;
-
-&lt;p&gt;Each framework promised to solve all my problems. Each had its own way of doing things. Each had its own ecosystem to learn.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Here’s what I’ve learned:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;React&lt;/strong&gt; - Great ecosystem, steep learning curve, lots of boilerplate. Good for teams that can invest in learning it properly.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Vue&lt;/strong&gt; - More approachable than React, good documentation, smaller ecosystem. Great for smaller teams or solo projects.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Svelte&lt;/strong&gt; - Interesting approach, smaller bundles, less mature ecosystem. Worth watching but I haven’t used it in production.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;My advice:&lt;/strong&gt; Pick one and stick with it for a while. Framework-hopping is expensive. Most frameworks can build most apps. The team’s familiarity matters more than the framework’s features.&lt;/p&gt;
-
-&lt;p&gt;Currently betting on React because that’s where the jobs are, but Vue makes me happier.&lt;/p&gt;
-
-&lt;h2 id=&quot;performance-lessons-learned-the-hard-way&quot;&gt;Performance lessons learned the hard way&lt;/h2&gt;
-
-&lt;p&gt;I once shipped a React app that took 30 seconds to load on 3G. The bundle was 5MB. Oops.&lt;/p&gt;
-
-&lt;p&gt;That taught me to care about performance from day one:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Code splitting saves lives:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Load heavy components only when needed&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Dashboard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;./Dashboard&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Reports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lazy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;./Reports&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// Route-based splitting&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;routes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;/dashboard&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;component&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Dashboard&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;/reports&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;component&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Reports&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;Bundle analysis is essential:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# See what&apos;s making your bundle fat&lt;/span&gt;
-npx webpack-bundle-analyzer dist/static/js/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.js
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;I was shocked to discover that moment.js was 67KB and I was only using it to format one date. Switched to date-fns and saved 60KB.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Performance budget:&lt;/strong&gt; I set a target bundle size (&amp;lt; 1MB total) and fail builds that exceed it. Prevents performance regression.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-javascript-ecosystem-will-keep-changing&quot;&gt;The JavaScript ecosystem will keep changing&lt;/h2&gt;
-
-&lt;p&gt;New frameworks launch every week. Build tools promise to be 10x faster. Package managers claim to solve all problems.&lt;/p&gt;
-
-&lt;p&gt;I’ve learned to be selective about what new things I adopt:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Before jumping on trends, I ask:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Does this solve a real problem I have?&lt;/li&gt;
-  &lt;li&gt;Is it mature enough for production use?&lt;/li&gt;
-  &lt;li&gt;Will my team be able to learn and maintain it?&lt;/li&gt;
-  &lt;li&gt;What’s the migration path if it doesn’t work out?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Current bets I’m making:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;TypeScript is here to stay&lt;/li&gt;
-  &lt;li&gt;Vite will continue eating webpack’s lunch&lt;/li&gt;
-  &lt;li&gt;React will remain dominant for a while&lt;/li&gt;
-  &lt;li&gt;Edge computing will become more important&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Things I’m watching but not betting on yet:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;WebAssembly for frontend apps&lt;/li&gt;
-  &lt;li&gt;Micro-frontends (seems like premature optimization for most apps)&lt;/li&gt;
-  &lt;li&gt;The next “React killer” framework&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;The JavaScript ecosystem is exhausting but also exciting. New tools genuinely make development better, even if the pace of change is overwhelming.&lt;/p&gt;
-
-&lt;p&gt;My advice: focus on fundamentals (code quality, testing, performance), pick a stable stack you can be productive with, and upgrade incrementally when you have clear benefits.&lt;/p&gt;
-
-&lt;p&gt;The tools will keep changing. The principles stay the same.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="javascript" /><category term="development" /><category term="javascript" /><category term="tools" /><category term="best-practices" /><category term="modern-development" /><summary type="html">My love-hate relationship with the JavaScript ecosystem. How I learned to stop worrying and embrace the chaos of modern JS development.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/modern-javascript.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/modern-javascript.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Using Braintree hosted fields with Ruby on Rails</title><link href="http://localhost:4000/2017/rails-with-braintree-hosted-fields/" rel="alternate" type="text/html" title="Using Braintree hosted fields with Ruby on Rails" /><published>2017-09-26T19:00:00-05:00</published><updated>2017-09-26T19:00:00-05:00</updated><id>http://localhost:4000/2017/rails-with-braintree-hosted-fields</id><content type="html" xml:base="http://localhost:4000/2017/rails-with-braintree-hosted-fields/">&lt;blockquote&gt;
-  &lt;p&gt;Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;While it is possible to create your own credit card process in a Ruby on Rails app, due to the PCI compliance rules, it is just safer to use something like Stripe or Braintree.&lt;/p&gt;
-
-&lt;p&gt;I have used Stripe before and it is very easy to set up and use. Stripe now has elements which can be used to create a custom credit card form that can be styled to look exactly like your app.&lt;/p&gt;
-
-&lt;p&gt;Previous to this, the dropin solutions were good but just did not look like the rest of the application.&lt;/p&gt;
-
-&lt;p&gt;After reading up a bit, I decided that I wanted to try out Braintree hosted fields.&lt;/p&gt;
-
-&lt;p&gt;Below is the finished form that I created. I wanted to be able to get more user information at the same time as charging the credit card.&lt;/p&gt;
-
-&lt;p&gt;TL/DR
-For the app that I made for this tutorial, it is at https://github.com/brobertsaz/rails_braintree_hosted_fields&lt;/p&gt;
-
-&lt;p&gt;Braintree Setup&lt;/p&gt;
-
-&lt;p&gt;First thing that you need to do is head on over to Braintree and sign up for sandbox account.  Don’t worry, it’s free.&lt;/p&gt;
-
-&lt;p&gt;After you sign up you will need to copy this info:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Braintree::Configuration.environment = :sandbox
-Braintree::Configuration.merchant_id = &apos;qwertyqwerty&apos;
-Braintree::Configuration.public_key = &apos;qwertyqwerty&apos;
-Braintree::Configuration.private_key = &apos;qwertyqwertyqwerty&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Next, create a braintree.rb file in config/initializers/ directory and add these environment variables:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Braintree::Configuration.environment = :sandbox
-Braintree::Configuration.logger = Logger.new(&apos;log/braintree.log&apos;)
-Braintree::Configuration.merchant_id = ENV[&apos;BRAINTREE_MERCHANT_ID&apos;]
-Braintree::Configuration.public_key = ENV[&apos;BRAINTREE_PUBLIC_KEY&apos;]
-Braintree::Configuration.private_key = ENV[&apos;BRAINTREE_PRIVATE_KEY&apos;]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;In order to use these environment variables, we will use the Figaro gem. Add to Gemfile:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &apos;figaro&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;You will need to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle&lt;/code&gt; to install figaro and then &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec figaro install&lt;/code&gt; to install it. This will create a new file config/application.yml. This is where you will set your keys for Braintree.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Braintree configuration keys
-BRAINTREE_MERCHANT_ID: &apos;&apos;
-BRAINTREE_PUBLIC_KEY: &apos;&apos;
-BRAINTREE_PRIVATE_KEY: &apos;&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Make sure that you add config/application.yml to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt; file as this holds all of your Braintree keys.&lt;/p&gt;
-
-&lt;p&gt;Lastly, add the Braintree Ruby gem to your Gemfile,&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &apos;braintree&apos;, &apos;~&amp;gt; 2.77&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;and make sure that you run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle&lt;/code&gt; to install it.&lt;/p&gt;
-
-&lt;p&gt;Note: If you are in newer version of Rails, jQuery is no longer included automatically so you will need to add&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem &apos;jquery-rails&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;to your Gemfile, and run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle&lt;/code&gt; to install it.&lt;/p&gt;
-
-&lt;p&gt;Customers Setup&lt;/p&gt;
-
-&lt;p&gt;For the checkout form that I wanted to use, I needed a Customer that would be saved to the database.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rails g model Customers
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now open up the db/migrate/new-migration-file and we will add our fields&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class CreateCustomers &amp;lt; ActiveRecord::Migration[5.1]
-  def change
-    create_table :customers do |t|
-      t.string :first_name
-      t.string :last_name
-      t.string :email
-      t.string :phone
-      t.string :address_1
-      t.string :address_2
-      t.string :city
-      t.string :state
-      t.string :zipcode
-      t.integer :braintree_customer_id
-      t.datetime :last_visit
-      t.timestamps null: false
-    end
-  end
-end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;We will use the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;braintree_customer_id&lt;/code&gt; so that in the future if we make a charge for that same customer, we can access the save data.&lt;/p&gt;
-
-&lt;p&gt;As we created the model for Customer, we can create a new customer without having to create a Customer controller. This will be done in our Checkouts controller. Let’s create that now. Create new file at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app/controllers/checkouts_controller.rb&lt;/code&gt; and add the following:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class CheckoutsController &amp;lt; ApplicationController
-  def new
-    @customer = Customer.new
-    @client_token = Braintree::ClientToken.generate
-  end
-
-  private
-  def customer_params
-    params.require(:customer).permit(:first_name, :last_name, :address_1, :address_2, :city, :state, :zipcode, :email, :phone)
-  end
-end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;In the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;new&lt;/code&gt; method, we are creating a new customer that we will use in the checkout form. We also need to create a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@client_token&lt;/code&gt; using the built in Braintree function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Braintree::ClientToken.generate&lt;/code&gt; and we added the strong parameters which we will use later.&lt;/p&gt;
-
-&lt;p&gt;Now, let’s make sure that we have our routes setup correctly.&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Rails.application.routes.draw do
-  resources :customers
-  root &apos;checkouts#new&apos;
-  resources :checkouts,  only: [:new, :create, :show]
-end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;We are going to route our app to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;checkouts#new&lt;/code&gt; which will take us to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;views/checkouts/new.html.erb&lt;/code&gt; so lets create that file now.&lt;/p&gt;
-
-&lt;p&gt;There are two parts to the new view; there is the HTML markup for the form and the Javascript section that is used by Braintree to create a iframe for the credit card information.&lt;/p&gt;
-
-&lt;p&gt;For the sake of the demo, I just used Bootstrap CDN link in the view itself. I also used the &lt;a href=&quot;https://github.com/plataformatec/simple_form&quot;&gt;simple_form ruby gem&lt;/a&gt;. Add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gem &apos;simple_form&apos;&lt;/code&gt; to Gemfile and run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle&lt;/code&gt;. Then you will need to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails generate simple_form:install --bootstrap&lt;/code&gt; to install simple_form.&lt;/p&gt;
-
-&lt;p&gt;Form setup&lt;/p&gt;
-
-&lt;p&gt;HTML — add the following to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;views/checkouts/new.html.erb&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;link href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&amp;gt;
-...
-&amp;lt;div class=&quot;panel panel-default bootstrap-basic&quot;&amp;gt;
-  &amp;lt;div class=&quot;panel-heading&quot;&amp;gt;
-    &amp;lt;h3 class=&quot;panel-title&quot;&amp;gt;Enter Card Details&amp;lt;/h3&amp;gt;
-  &amp;lt;/div&amp;gt;
-  &amp;lt;div class=&quot;panel-body&quot;&amp;gt;
-    &amp;lt;%= simple_form_for @customer, url: {action: &apos;create&apos;}, method: &apos;post&apos; do |f| %&amp;gt;
-      ... inputs ...
-    &amp;lt;% end %&amp;gt;
-  &amp;lt;/div&amp;gt;
-&amp;lt;/div&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Javascript — add to the same view:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;script src=&quot;https://js.braintreegateway.com/js/beta/braintree-hosted-fields-beta.16.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;script id=&quot;braintree-client-token&quot; type=&quot;application/json&quot;&amp;gt;&amp;lt;%= @client_token %&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;script&amp;gt;
-var clientToken = document.getElementById(&apos;braintree-client-token&apos;).innerHTML;
-
-braintree.setup(clientToken, &apos;custom&apos;, {
-  id: &apos;new_customer&apos;,
-  hostedFields: {
-    styles: {},
-    number: { selector: &apos;#credit-card-field&apos;, placeholder: &apos;4111 1111 1111 1111&apos; },
-    cvv: { selector: &apos;#security-code-field&apos;, placeholder: &apos;123&apos; },
-    expirationDate: { selector: &apos;#expiration-field&apos;, placeholder: &apos;MM/YYYY&apos; },
-    postalCode: { selector: &apos;#postal-code-field&apos;, placeholder: &apos;12345&apos; }
-  }
-});
-&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Transaction&lt;/p&gt;
-
-&lt;p&gt;When we submit the form it will go to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;checkouts#create&lt;/code&gt; method. When this happens, the Braintree form will create a nonce which is basically a tokenized string that contains the credit card data. This data is encrypted when it is sent to the backend and will be decrypted by Braintree on their side.&lt;/p&gt;
-
-&lt;p&gt;Let’s start to add the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;create&lt;/code&gt; method in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;controllers/checkouts_controller.rb&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  def create
-    amount = params[&quot;amount&quot;] ||= 200
-    nonce = params[&quot;payment_method_nonce&quot;]
-    result = Braintree::Transaction.sale(
-      amount: amount,
-      payment_method_nonce: nonce,
-    )
-  end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now the full &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;create&lt;/code&gt; method:&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  def create
-    amount = params[&quot;amount&quot;] ||= 200
-    nonce = params[&quot;payment_method_nonce&quot;]
-    result = Braintree::Transaction.sale(
-      amount: amount,
-      payment_method_nonce: nonce,
-      customer: {
-        first_name: customer_params[:first_name],
-        last_name: customer_params[:last_name],
-        email: customer_params[:email],
-        phone: customer_params[:phone]
-      },
-      options: { store_in_vault: true }
-    )
-
-    if result.success? || result.transaction
-      @customer = Customer.create customer_params
-      @customer.braintree_customer_id = result.transaction.customer_details.id
-      @customer.save
-      redirect_to checkout_path(result.transaction.id)
-    else
-      error_messages = result.errors.map { |error| &quot;Error: #{error.code}: #{error.message}&quot; }
-      flash[:error] = error_messages
-      redirect_to new_checkout_path
-    end
-  end
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Thanks — helpful resources:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;https://www.sitepoint.com/integrate-braintree-payments-rails/&lt;/li&gt;
-  &lt;li&gt;https://github.com/braintree/braintree_rails_example&lt;/li&gt;
-  &lt;li&gt;https://developers.braintreepayments.com/start/example-integrations&lt;/li&gt;
-  &lt;li&gt;https://developers.braintreepayments.com/guides/hosted-fields/overview/javascript/v3&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Demo App: https://github.com/brobertsaz/rails_braintree_hosted_fields&lt;/p&gt;
-
-&lt;p&gt;Feedback: If I missed something or made any errors, please let me know so that I can get this updated.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="rails" /><category term="ruby" /><category term="braintree" /><category term="payments" /><category term="tutorial" /><summary type="html">Archived from the original post (2017-09-27). Lightly converted to Markdown; links and examples preserved where possible.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/braintree-hosted-fields.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/braintree-hosted-fields.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">What Operation Code means to me.</title><link href="http://localhost:4000/2017/what-oc-means-to-me/" rel="alternate" type="text/html" title="What Operation Code means to me." /><published>2017-09-24T19:00:00-05:00</published><updated>2017-09-24T19:00:00-05:00</updated><id>http://localhost:4000/2017/what-oc-means-to-me</id><content type="html" xml:base="http://localhost:4000/2017/what-oc-means-to-me/">&lt;blockquote&gt;
-  &lt;p&gt;Archived from the original post (2017-09-25). Lightly converted to Markdown.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;A few months back I was on Twitter looking for a place to volunteer to mentor people learning Ruby on Rails. I had not heard of Operation Code until somebody suggested it to me.&lt;/p&gt;
-
-&lt;p&gt;I was in the Army for 6 years in the 80’s. My unit went to Desert Storm a couple of months after I go out. I almost went back in a couple of times. It was hard for me to transition back to the civilian life after the Army. You take so much for granted when you are in the service. There is no worry of cutbacks or layoffs. There is no worry about whether your paycheck will be there for payday or not. No worry of health insurance. Just do your job and life is good.&lt;/p&gt;
-
-&lt;p&gt;I bounced around a bit after the Army, trying to find a good career. That did not come for many years…&lt;/p&gt;
-
-&lt;p&gt;I started learning programming almost 20 years after getting out. I knew people that we retiring from the Army and I was still trying to get that career that would make me happy.&lt;/p&gt;
-
-&lt;p&gt;In 2009 there were not a lot of resources for learning programming like there is now. I did not have the time nor the money to go to a school for programming and there were not that many places available at that time. I luckily found a mentor that became a friend that became a business partner.&lt;/p&gt;
-
-&lt;p&gt;What drew me to Ruby on Rails was the community. That was something that I had missed from the days in the military. The friendships, the camaraderie and the unity.&lt;/p&gt;
-
-&lt;p&gt;Finding Operation Code was a blessing. I found other vets, active duty and military family members that were all there for one of two things. To learn programming or to help others to learn programming. I had no idea of all of the resources that were available to vets until I joined OC.&lt;/p&gt;
-
-&lt;p&gt;When I got my first mentee I was so happy.  Then I got my second. They are both super smart people that really do not need a lot of help at all. I think it is more of the fact that they have somebody that they can talk to if need be. What if I am not online? There are 100’s of others that are there to help and answer questions.&lt;/p&gt;
-
-&lt;p&gt;Total strangers that will jump on a screen share just to help out somebody with questions. There are no charges and no fees. OC is just one great big group of people that are there for one another.&lt;/p&gt;
-
-&lt;p&gt;What does Operation Code mean to me? Friends, family and a place that feels like home for this vet.&lt;/p&gt;
-
-&lt;p&gt;If you love your freedom, thank a vet. If you really love your freedom, then help a vet become a programmer.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="Legacy" /><category term="workflow" /><category term="community" /><category term="veterans" /><summary type="html">Archived from the original post (2017-09-25). Lightly converted to Markdown.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/operation-code.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/operation-code.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;p&gt;It took about a day to set up the first time, but it’s saved me weeks of debugging over the past year. If you’re using GraphQL with TypeScript, this is a no-brainer.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="react" /><category term="typescript" /><category term="typescript" /><category term="react" /><category term="graphql" /><category term="codegen" /><category term="ruby-on-rails" /><summary type="html">How GraphQL Code Generator saved me from runtime surprises and made my Rails + React apps much more reliable. Plus the gotchas I wish I&apos;d known earlier.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/type-safe-react-rails-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/type-safe-react-rails-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
