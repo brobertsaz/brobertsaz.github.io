@@ -147,5 +147,4 @@ What's your experience with mentorship in Rails? How has it changed in your care
 
 ---
 
-**Previous:** [From Mailing Lists to Slack: How Rails Culture Shifted]({% post_url 2025-09-19-from-mailing-lists-to-slack-how-rails-culture-shifted %})
-<!-- | **Next:** [The Future of Rails: Bridging the Generation Gap]({% post_url 2025-09-25-the-future-of-rails-bridging-the-generation-gap %}) -->
+**Previous:** [From Mailing Lists to Slack: How Rails Culture Shifted]({% post_url 2025-09-19-from-mailing-lists-to-slack-how-rails-culture-shifted %}) | **Next:** [The Future of Rails: Bridging the Generation Gap]({% post_url 2025-09-25-the-future-of-rails-bridging-the-generation-gap %})
