@@ -149,7 +149,7 @@ If you work on a team and institutional knowledge keeps walking out the door, de
 
 If you have a big codebase and waiting 3–5 hours for indexing sounds painful, the hybrid indexing alone might be worth it.
 
-Check it out at [github.com/brobertsaz/claude-os](https://github.com/brobertsaz/claude-os). There's also a [live demo](https://thebob.dev/claude-os/) if you want to see what it looks like before installing.
+Check it out at [github.com/brobertsaz/claude-os](https://github.com/brobertsaz/claude-os). There's also [full documentation](https://thebob.dev/claude-os/) if you want to learn more before installing.
 
 It's 100% free, 100% open source, MIT licensed. Built by developers who got tired of starting every conversation from zero.
 
