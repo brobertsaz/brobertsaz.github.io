@@ -1,4 +1,379 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-10-31T18:26:52-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Code It Forward</title><subtitle>Practical Rails · React · GraphQL · TypeScript — pay it forward.</subtitle><author><name>Bob Roberts</name></author><entry><title type="html">Why we built Claude OS (and what it actually is)</title><link href="http://localhost:4000/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is/" rel="alternate" type="text/html" title="Why we built Claude OS (and what it actually is)" /><published>2025-10-31T11:00:00-05:00</published><updated>2025-10-31T11:00:00-05:00</updated><id>http://localhost:4000/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is</id><content type="html" xml:base="http://localhost:4000/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is/">&lt;p&gt;After six months of using Claude Code daily, I finally hit my breaking point. Not because Claude wasn’t smart—it absolutely is. But because every single conversation started from zero. Every explanation about our architecture, repeated. Every context about why we do things a certain way, lost the moment I closed the terminal.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-02-28T14:44:23-06:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Code It Forward</title><subtitle>Practical Rails · React · GraphQL · TypeScript — pay it forward.</subtitle><author><name>Bob Roberts</name></author><entry><title type="html">How Senior Developers Can Mentor in the Age of AI</title><link href="http://localhost:4000/ai/mentorship/leadership/2026/03/05/how-senior-developers-can-mentor/" rel="alternate" type="text/html" title="How Senior Developers Can Mentor in the Age of AI" /><published>2026-03-05T11:00:00-06:00</published><updated>2026-03-05T11:00:00-06:00</updated><id>http://localhost:4000/ai/mentorship/leadership/2026/03/05/how-senior-developers-can-mentor</id><content type="html" xml:base="http://localhost:4000/ai/mentorship/leadership/2026/03/05/how-senior-developers-can-mentor/">&lt;p&gt;I’ve spent a lot of time thinking about how AI changes the mentorship relationship. Not just because AI tools are new and interesting, but because the fundamental dynamic of teaching someone to code shifts when they can just ask a machine for answers. As senior developers, our role isn’t obsolete—but it is evolving. Here’s how I think about mentoring now.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-old-model-doesnt-work-the-same-way&quot;&gt;The Old Model Doesn’t Work the Same Way&lt;/h2&gt;
+
+&lt;p&gt;Traditionally, mentorship often looked like this: a junior developer gets stuck, asks a senior for help, the senior either solves the problem or guides them toward a solution, and in the process, the junior learns. The senior’s value came from having already solved similar problems, from knowing the codebase, from understanding the patterns.&lt;/p&gt;
+
+&lt;p&gt;That model still has value, but it’s no longer the primary way juniors get un-stuck. Now they paste an error message into Claude or ChatGPT and get an answer in seconds. They can ask AI to explain unfamiliar code, to generate examples, to walk them through concepts. They basically have an always-available tutor that never gets tired of explaining things.&lt;/p&gt;
+
+&lt;p&gt;This changes what we mentor. We can’t just be the person who has answers, because AI has answers too, often faster and more patiently than us. Where we add value is in the stuff AI can’t provide: context about the business, judgment about what’s worth building, experience with what happens when systems fail, and the knowledge that only comes from years of making mistakes.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-senior-developers-can-offer&quot;&gt;What Senior Developers Can Offer&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Context that AI lacks.&lt;/strong&gt; When a junior asks about whether to refactor a chunk of code, AI can explain the trade-offs in theory. But it doesn’t know that your team has a deadline next week, or that this particular module has been stable for years, or that the company is about to pivot away from this feature entirely. We have context that shapes what the right answer actually is.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Judgment about what matters.&lt;/strong&gt; There’s a difference between code that works and code that’s worth writing. A junior can ask AI to generate a feature, but they can’t easily judge whether that feature is worth the complexity it adds, whether it aligns with product goals, or whether it’s worth maintaining long-term. This judgment comes from experience—we can help transfer it.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Debugging the hard problems.&lt;/strong&gt; AI is great at generating code and explaining familiar patterns. It’s much worse at debugging issues that span multiple systems, involve subtle race conditions, or require understanding organizational context. When the problem is genuinely hard, human expertise matters more, not less.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Learning how to learn.&lt;/strong&gt; This one is underrated. How do you break down a complex problem? How do you know what you don’t know? How do you evaluate whether you understand something? These meta-skills become more important when execution is easier—knowing what to build matters more when building is fast.&lt;/p&gt;
+
+&lt;h2 id=&quot;practical-ways-to-mentor-now&quot;&gt;Practical Ways to Mentor Now&lt;/h2&gt;
+
+&lt;p&gt;Given how things have changed, here’s how I approach mentorship differently:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Focus on questions, not answers.&lt;/strong&gt; Instead of solving problems for juniors (or having AI do it), ask them questions that guide their thinking. What have you tried? What do you think is happening? What would you do if you had to guess? This builds the reasoning skills that AI can’t replicate.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Discuss the “why” more than the “how.”&lt;/strong&gt; AI can teach the how—here’s syntax, here’s a pattern, here’s how to implement this. The why is where humans add value. Why does this architectural choice make sense? Why would we choose this approach over that one? Why does this problem matter to the business?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Model debugging and problem-solving.&lt;/strong&gt; Show juniors how you approach a hard problem. Talk through your thinking. Explain how you know what to Google, how you narrow down issues, how you decide when to ask for help. This kind of thinking out loud is something juniors rarely get to see.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Help them use AI well.&lt;/strong&gt; Instead of pretending AI doesn’t exist, help juniors use it effectively. Show them how to write good prompts, how to evaluate AI suggestions critically, how to learn from AI explanations rather than just copying answers. The developers who use AI thoughtfully will outperform those who ignore it or rely on it too heavily.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Create space for struggle.&lt;/strong&gt; It’s tempting to let AI solve problems for juniors to save time. But that struggle—the frustration of not understanding, the satisfaction of finally getting it—that’s where growth happens. Let them struggle appropriately, then help them reflect on what they learned.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-relationship-matters&quot;&gt;The Relationship Matters&lt;/h2&gt;
+
+&lt;p&gt;One thing AI can’t replicate is the human relationship. Juniors don’t just need answers; they need someone who believes in them, who can provide perspective, who can advocate for them, who can help them navigate career decisions. Mentorship is about more than technical skills. It’s about having someone in your corner.&lt;/p&gt;
+
+&lt;p&gt;Make time for the human side. Ask about their goals. Share your own experiences, including failures. Be someone they can talk to about the non-technical parts of being a developer. That connection is the part that actually sticks with people long after they’ve forgotten the specific code you helped them with.&lt;/p&gt;
+
+&lt;h2 id=&quot;our-responsibility&quot;&gt;Our Responsibility&lt;/h2&gt;
+
+&lt;p&gt;As senior developers, we have a responsibility to the next generation. They’re coming into an industry that’s genuinely uncertain about what AI means for their careers. They’re navigating tools that change weekly. They’re trying to learn in an environment where the easy answers are always available.&lt;/p&gt;
+
+&lt;p&gt;Our job is to help them build the skills that matter, to share the perspective we wish we’d had, and to support them as they figure things out. AI changes the specifics of how we mentor, but the core responsibility is the same one it’s always been: we were junior once too, and someone helped us. Now it’s our turn.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="ai" /><category term="mentorship" /><category term="leadership" /><category term="ai" /><category term="mentorship" /><category term="senior-developers" /><category term="leadership" /><category term="teaching" /><summary type="html">As senior developers, our role isn&apos;t obsolete, but it is evolving. Here&apos;s how I think about mentoring now that AI can answer questions faster than we can.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/senior-mentor-ai.png" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/senior-mentor-ai.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Future of Junior Developers in an AI-Augmented World</title><link href="http://localhost:4000/ai/career/mentorship/2026/03/02/the-future-of-junior-developers/" rel="alternate" type="text/html" title="The Future of Junior Developers in an AI-Augmented World" /><published>2026-03-02T11:00:00-06:00</published><updated>2026-03-02T11:00:00-06:00</updated><id>http://localhost:4000/ai/career/mentorship/2026/03/02/the-future-of-junior-developers</id><content type="html" xml:base="http://localhost:4000/ai/career/mentorship/2026/03/02/the-future-of-junior-developers/">&lt;p&gt;I went to a tech meetup, a Ruby meetup recently, and the big conversation was AI. It seems like it’s on everybody’s mind, whether it’s good for us, whether it’s bad for us, whether it’s bad for the world. But one question that seems to keep coming up is not only are programmers or software engineers worrying about their future, but what does this mean for junior developers? In the past, junior developers took a coding school or they got a CS degree and they went to work somewhere where they had senior developers to mentor them and to teach them and to get them going in this world of programming. Is that going to end? What is the future going to be now for junior developers? Do they even need to go to programming schools? I like to take some of the things we talked about the other night and put them together, and these are my thoughts.&lt;/p&gt;
+
+&lt;p&gt;The answers aren’t simple, but I think there’s plenty of reason for optimism if we’re willing to adapt.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-doomsday-scenario-and-why-its-overblown&quot;&gt;The Doomsday Scenario (And Why It’s Overblown)&lt;/h2&gt;
+
+&lt;p&gt;You’ve probably seen the takes: “AI will replace junior developers” or “Why hire a junior when Claude can write the same code in seconds?” I get why these arguments sound convincing. AI can generate functional code quickly. It can scaffold applications, write tests, and fix bugs. What used to take a junior developer hours can sometimes be done in minutes with the right prompt.&lt;/p&gt;
+
+&lt;p&gt;But this view mistakes what junior developers actually do—and what they grow into.&lt;/p&gt;
+
+&lt;p&gt;Junior developers aren’t hired to write code. They’re hired to learn how to write code well, to understand systems, to develop judgment, and eventually to become mid-level and senior developers who carry institutional knowledge, make architectural decisions, and mentor the next generation. The code they write today is almost beside the point. The value they provide is their trajectory.&lt;/p&gt;
+
+&lt;p&gt;AI doesn’t have a trajectory. It doesn’t grow. It doesn’t develop institutional knowledge. It doesn’t understand your specific business domain, your team’s conventions, or your customers’ needs. These are human qualities that take years to develop, and they’re what ultimately make senior developers valuable.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-actually-changes&quot;&gt;What Actually Changes&lt;/h2&gt;
+
+&lt;p&gt;But things do change. The nature of “junior” work shifts when AI can handle more of the mechanical execution. Here’s what I’m actually seeing:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The bottleneck moves upstream.&lt;/strong&gt; When AI can generate code quickly, the constraint is no longer writing the code—it’s knowing what to build. Junior developers need to become fluent in requirements gathering, problem decomposition, and communicating with stakeholders. These are skills that were always important, but they become even more critical when execution is faster.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Debugging becomes more valuable than writing.&lt;/strong&gt; Anyone can generate code. Understanding why that code doesn’t work, why it’s slow, why it’s insecure—that requires actual expertise. The developers who thrive will be those who can debug effectively, trace through complex systems, and understand what’s happening under the hood.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The learning curve flattens, but doesn’t disappear.&lt;/strong&gt; AI can help explain concepts, generate examples, and answer questions instantly. This makes it easier to get started. But the deeper expertise—the intuition, the pattern recognition, the ability to make good architectural decisions—still takes time to develop. The shortcut isn’t to skip the learning; it’s to learn differently.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-junior-developers-need-to-focus-on&quot;&gt;What Junior Developers Need to Focus On&lt;/h2&gt;
+
+&lt;p&gt;If you’re early in your career, here’s what I’d encourage you to focus on:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Understanding fundamentals over memorizing syntax.&lt;/strong&gt; Syntax changes. Frameworks come and go. The fundamentals—how computers process data, how networks work, how databases query—those persist. Focus on understanding why things work, not just how to write the current syntax.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Use AI as a tutor, not a crutch.&lt;/strong&gt; Ask AI to explain concepts. Ask it to generate examples. Ask it to help you understand error messages. But don’t just paste AI-generated code without understanding it. When you use AI, make sure you’re still learning.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Develop your communication skills.&lt;/strong&gt; The ability to translate between technical and non-technical people, to write clear documentation, to explain your decisions—these skills become more valuable, not less. AI can generate documentation, but it doesn’t understand your specific context.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Embrace the struggle.&lt;/strong&gt; It’s tempting to use AI to avoid frustration—to just get the answer rather than figuring it out. But that struggle is where learning happens. Use AI to accelerate your learning, not to bypass it.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-note-on-hiring&quot;&gt;A Note on Hiring&lt;/h2&gt;
+
+&lt;p&gt;From the other side of the table—if you’re hiring or mentoring junior developers, adjust your expectations accordingly. The code a junior produces in their first months might look different than it did a few years ago. They might rely more on AI assistance. That’s okay, as long as they’re learning.&lt;/p&gt;
+
+&lt;p&gt;What you should evaluate is their ability to reason about problems, their willingness to learn, and their communication. Can they break down a problem? Can they explain what they’re trying to do? Can they review code and spot issues? These are the skills that matter.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-long-view&quot;&gt;The Long View&lt;/h2&gt;
+
+&lt;p&gt;I’ve been in this industry for a long time. I’ve seen plenty of “this changes everything” moments. The rise of Ruby on Rails, JavaScript frameworks taking over, cloud computing becoming the default. Each time, people said junior developers would be obsolete. Each time, they weren’t.&lt;/p&gt;
+
+&lt;p&gt;What changes is the specific skills that are valuable. The fundamentals remain: thinking systematically, understanding systems, communicating clearly, learning continuously. The developers who thrive will be those who use AI to amplify these human skills, not those who try to compete with AI on its own terms.&lt;/p&gt;
+
+&lt;p&gt;The future for junior developers isn’t bleak. It’s different. And honestly, if you’re willing to adapt, it’s a pretty good time to be getting started.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="ai" /><category term="career" /><category term="mentorship" /><category term="ai" /><category term="career" /><category term="junior-developers" /><category term="future" /><category term="mentorship" /><summary type="html">There&apos;s a lot of anxiety about what AI means for junior developers. The answers aren&apos;t simple, but I think there&apos;s plenty of reason for optimism if we&apos;re willing to adapt.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/future-junior-developers.png" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/future-junior-developers.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Vibe Coding vs AI-Assisted Coding: Understanding the Difference and Why It Matters</title><link href="http://localhost:4000/ai/coding/2026/02/28/vibe-coding-vs-ai-assisted-coding/" rel="alternate" type="text/html" title="Vibe Coding vs AI-Assisted Coding: Understanding the Difference and Why It Matters" /><published>2026-02-28T11:00:00-06:00</published><updated>2026-02-28T11:00:00-06:00</updated><id>http://localhost:4000/ai/coding/2026/02/28/vibe-coding-vs-ai-assisted-coding</id><content type="html" xml:base="http://localhost:4000/ai/coding/2026/02/28/vibe-coding-vs-ai-assisted-coding/">&lt;p&gt;There’s been a lot of chatter on social media about vibe coding and now vibe coding versus AI-assisted development. I have posted several times about the fact I do not like the term vibe coding. Vibe coding to me is people that are not developers, people that are not software engineers, go to something like a bolt.new and say “build me this website”. They have no clue what they’re doing, they have no clue how to program, they have no idea what good UI/UX is. It’s literally vibe coding. What I prefer to call it, for what I do, is AI-assisted coding or AI-assisted development. For me, I use AI to help me write code and not just say, “hey AI, make this and do this.”&lt;/p&gt;
+
+&lt;p&gt;The things I’ve read about AI-assisted coding and vibe coding, and the things I’ve posted on, have prompted me to write this post.&lt;/p&gt;
+
+&lt;p&gt;AI coding tools have taken off over the past couple of years, and with them has come a whole new vocabulary. You’ve probably heard terms like “vibe coding,” “AI-assisted development,” “prompt engineering,” and “copilot pairing” thrown around in discussions, blog posts, and conference talks. But what do these terms actually mean, and more importantly, what do they mean for you as a developer?&lt;/p&gt;
+
+&lt;p&gt;I think about this stuff a lot, both because I use AI tools daily in my own work and because I mentor developers at various stages of their careers. The distinction between vibe coding and AI-assisted coding isn’t just about words. These are fundamentally different approaches to building software, with real implications for skill development, code quality, and long-term career growth.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-vibe-coding&quot;&gt;What Is Vibe Coding?&lt;/h2&gt;
+
+&lt;p&gt;Vibe coding is a term that gained popularity more recently, describing a workflow where the developer essentially treats the AI as a black box that produces code. You give it a prompt, you get code back, you paste it in, and you move on. The developer’s job becomes writing prompts rather than writing code. The “vibe” comes from the feeling that you’re building something—you see code appear, tests pass, features work—but the actual engineering thinking has been outsourced entirely to the AI.&lt;/p&gt;
+
+&lt;p&gt;Now, vibe coding isn’t inherently evil or wrong. Sometimes you need to get something working quickly and you don’t care about the implementation details. Maybe it’s a one-off script, a prototype, or a tool you’ll use exactly once. In those contexts, vibe coding is perfectly reasonable. I’ve definitely used AI to generate throwaway code that I’d never ship to production, and I’m sure you have too.&lt;/p&gt;
+
+&lt;p&gt;The problem emerges when vibe coding becomes your default mode, especially for code that matters. When you stop understanding what your code does, you become unable to debug it, maintain it, or explain it to others. You lose the ability to make informed decisions about trade-offs because you never made those decisions in the first place—the AI made them, and you just accepted them.&lt;/p&gt;
+
+&lt;p&gt;There’s also a subtler issue with vibe coding: it feels productive. You’re typing prompts, seeing results, shipping features. But shipping without understanding is borrowing against tomorrow. You might move faster today, but you’ll pay for it when things break and you have no idea why.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-ai-assisted-coding&quot;&gt;What Is AI-Assisted Coding?&lt;/h2&gt;
+
+&lt;p&gt;AI-assisted coding, on the other hand, is a collaborative process where the developer uses AI as a tool to augment their own abilities rather than replace their thinking. The human remains in the driver’s seat, making architectural decisions, understanding the code, reviewing what the AI produces, and taking responsibility for the final result.&lt;/p&gt;
+
+&lt;p&gt;In practice, AI-assisted coding might look like asking an AI to generate a first draft of a function, then reviewing it, modifying it, and understanding it before integrating it into your codebase. It might mean using AI to explain unfamiliar code patterns, suggest improvements to your own implementation, or help you navigate a new framework. The AI is a collaborator, not a substitute for your expertise.&lt;/p&gt;
+
+&lt;p&gt;The difference comes down to who’s driving. In vibe coding, you hand off the problem to the AI and hope for the best. In AI-assisted coding, you use AI to move faster while keeping ownership and understanding of what you’re building.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-real-world-difference&quot;&gt;The Real-World Difference&lt;/h2&gt;
+
+&lt;p&gt;Here’s how these two approaches actually play out. Say you’re building a new feature that involves processing webhooks, validating incoming data, updating a database record, and sending a notification.&lt;/p&gt;
+
+&lt;p&gt;With vibe coding, you might paste a prompt like “write me a Rails webhook handler that validates JSON, updates the user model, and sends an email” and paste the resulting code directly into your app. It might work initially. But when the webhook fails silently because the validation logic doesn’t match the actual data shape, you’re stuck. You don’t know what the code does, so you don’t know where to look. You might spend hours debugging something that would take minutes if you had written it yourself.&lt;/p&gt;
+
+&lt;p&gt;With AI-assisted coding, you’d still use AI to help, but differently. You might ask for a draft of the webhook handler, then review it line by line. You’d check that the validation matches what you actually need. You’d add tests yourself—maybe ask AI to help generate test cases, but you’d review and run those tests. When something breaks, you understand the flow well enough to debug it. You’ve still done the engineering work; you’ve just used AI to help with some of the execution.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-this-distinction-matters-for-junior-developers&quot;&gt;Why This Distinction Matters for Junior Developers&lt;/h2&gt;
+
+&lt;p&gt;If you’re earlier in your career, this distinction is especially critical. Junior developers are building their mental models of how software works. They’re learning patterns, developing intuition, and forming habits that will stick with them for decades. If you start with vibe coding as a habit, you skip the crucial phase of actually learning how to code.&lt;/p&gt;
+
+&lt;p&gt;I remember when I was first learning to program, I learned by making countless mistakes. I wrote code that didn’t work, debugged it, fixed it, and in the process built an understanding of how things actually functioned. That struggle was essential to my development. If I’d had an AI that could just “solve” my problems for me back then, I would have missed all those learning opportunities.&lt;/p&gt;
+
+&lt;p&gt;None of this means junior developers shouldn’t use AI tools—they absolutely should, and those who embrace AI thoughtfully will likely accelerate their learning. But the goal should be to use AI to enhance learning, not to bypass it. Ask AI to explain code rather than just generate it. Use AI to help you understand why your code isn’t working, rather than just asking for a fix. Treat AI as a mentor who can answer questions instantly, not as a replacement for the struggle that builds expertise.&lt;/p&gt;
+
+&lt;h2 id=&quot;finding-your-balance&quot;&gt;Finding Your Balance&lt;/h2&gt;
+
+&lt;p&gt;The reality is that most of us operate somewhere on a spectrum between these two extremes. There are moments when vibe coding makes sense, and there are moments when you need deep, careful, AI-assisted collaboration with yourself in full control. The skill is knowing when to use which approach.&lt;/p&gt;
+
+&lt;p&gt;A useful heuristic is to ask yourself: “If this code breaks in production at 2 AM, will I be able to debug it?” If the answer is no, you probably need to understand it better—and that might mean rewriting it yourself rather than pasting in AI-generated code. If the answer is yes, and it’s a low-stakes situation, vibe away.&lt;/p&gt;
+
+&lt;p&gt;Another heuristic is to ask what you’re learning. If you’re in a learning phase—picking up a new language, exploring a new framework—minimize vibe coding and maximize assisted coding. Use AI as a tutor, not a crutch. When you’re in maintenance mode on familiar territory, you can be more liberal with AI assistance.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-path-forward&quot;&gt;The Path Forward&lt;/h2&gt;
+
+&lt;p&gt;The future of software development isn’t about choosing between human coding and AI coding. It’s about figuring out the right way to work together. The developers who do well will be the ones who understand both their own strengths and the capabilities (and limitations) of AI tools.&lt;/p&gt;
+
+&lt;p&gt;Vibe coding is tempting because it feels easy and fast. But easy and fast rarely lead to mastery or maintainable software. AI-assisted coding takes more effort, sure. You have to think, review, understand. But it leads to better outcomes and you actually get better at your job over time.&lt;/p&gt;
+
+&lt;p&gt;The fundamentals of software engineering still matter. Understanding data structures, thinking through algorithms, designing systems, debugging effectively. AI can help you execute faster, but it can’t replace the thinking that makes you a good engineer.&lt;/p&gt;
+
+&lt;p&gt;So be intentional about how you use these tools. Ask yourself whether you’re using AI to get better or to avoid getting better. That distinction matters more than most people realize.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="ai" /><category term="coding" /><category term="ai" /><category term="coding" /><category term="development-tools" /><category term="productivity" /><summary type="html">Vibe coding and AI-assisted coding aren&apos;t just different words for the same thing. They represent fundamentally different approaches to building software, with real implications for skill development, code quality, and your career.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/vibe-coding-vs-ai-assisted.png" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/vibe-coding-vs-ai-assisted.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">What’s New in Claude OS v2.3: Skills Library, Session Insights, and 100+ Stars</title><link href="http://localhost:4000/ai/tools/productivity/2025/12/11/whats-new-in-claude-os-v2-3/" rel="alternate" type="text/html" title="What’s New in Claude OS v2.3: Skills Library, Session Insights, and 100+ Stars" /><published>2025-12-11T10:00:00-06:00</published><updated>2025-12-11T10:00:00-06:00</updated><id>http://localhost:4000/ai/tools/productivity/2025/12/11/whats-new-in-claude-os-v2-3</id><content type="html" xml:base="http://localhost:4000/ai/tools/productivity/2025/12/11/whats-new-in-claude-os-v2-3/">&lt;p&gt;Two months ago, I wrote about &lt;a href=&quot;https://thebob.dev/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is/&quot;&gt;why we built Claude OS&lt;/a&gt; and the problem it solves: spending 30–40% of your time re-explaining your codebase to Claude because it forgets everything between sessions.&lt;/p&gt;
+
+&lt;p&gt;Since then, Claude OS has grown from a personal productivity tool into something with a real community behind it. We crossed &lt;strong&gt;100 stars&lt;/strong&gt; on GitHub, have &lt;strong&gt;25 forks&lt;/strong&gt;, &lt;strong&gt;7 contributors&lt;/strong&gt;, and an active Discord. But more importantly, we shipped features that make Claude genuinely better at its job.&lt;/p&gt;
+
+&lt;p&gt;Here’s what’s new in v2.3.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-skills-library-teaching-claude-new-tricks&quot;&gt;The Skills Library: Teaching Claude new tricks&lt;/h2&gt;
+
+&lt;p&gt;The biggest addition in v2.3 is the &lt;strong&gt;Skills Library&lt;/strong&gt;—a way to browse, install, and manage reusable instruction sets that teach Claude specific capabilities.&lt;/p&gt;
+
+&lt;h3 id=&quot;what-are-skills&quot;&gt;What are skills?&lt;/h3&gt;
+
+&lt;p&gt;Skills are markdown files that live in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.claude/skills/&lt;/code&gt; and automatically load when relevant. They can teach Claude anything: coding patterns, debugging frameworks, tool workflows, domain-specific knowledge.&lt;/p&gt;
+
+&lt;p&gt;For example, the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systematic-debugging&lt;/code&gt; skill teaches Claude a five-phase debugging framework instead of letting it guess-and-check:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Phase 0: Problem Intake (ASK questions first)
+Phase 1: Root Cause Investigation
+Phase 2: Pattern Analysis
+Phase 3: Hypothesis Testing
+Phase 4: Implementation with TDD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Before this skill, Claude would often jump straight to “fixing” bugs without understanding them. Now it asks clarifying questions first. That single behavior change has saved me hours of frustration.&lt;/p&gt;
+
+&lt;h3 id=&quot;36-community-skills&quot;&gt;36+ community skills&lt;/h3&gt;
+
+&lt;p&gt;We’ve integrated two skill repositories:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Anthropic Official (16 skills):&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pdf&lt;/code&gt; - Create, edit, analyze PDF documents&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xlsx&lt;/code&gt; - Spreadsheet manipulation with formulas&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;frontend-design&lt;/code&gt; - Production-grade UI components&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mcp-builder&lt;/code&gt; - Create MCP servers&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;doc-coauthoring&lt;/code&gt; - Collaborative documentation workflow&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Superpowers by Jesse Vincent (20 skills):&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;test-driven-development&lt;/code&gt; - Rigorous TDD: red-green-refactor&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systematic-debugging&lt;/code&gt; - The five-phase framework mentioned above&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;verification-before-completion&lt;/code&gt; - Prevents Claude from saying “done” without evidence&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brainstorming&lt;/code&gt; - Structured ideation before coding&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root-cause-tracing&lt;/code&gt; - Trace bugs backward through call stacks&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;installing-is-simple&quot;&gt;Installing is simple&lt;/h3&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/claude-os-skills                    &lt;span class=&quot;c&quot;&gt;# List installed skills&lt;/span&gt;
+/claude-os-skills &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;pdf        &lt;span class=&quot;c&quot;&gt;# Install from community&lt;/span&gt;
+/claude-os-skills templates          &lt;span class=&quot;c&quot;&gt;# Browse local templates&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Or use the web UI at &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://localhost:5173&lt;/code&gt;—browse skills visually, read descriptions, install with one click.&lt;/p&gt;
+
+&lt;h3 id=&quot;our-curated-recommendations&quot;&gt;Our curated recommendations&lt;/h3&gt;
+
+&lt;p&gt;Not all skills are created equal. We’ve started a &lt;a href=&quot;https://github.com/brobertsaz/claude-os/wiki/Recommended-Skills&quot;&gt;Recommended Skills wiki page&lt;/a&gt; with our “staff picks”—skills we actually use daily and trust.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The “Must-Have Stack”:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systematic-debugging&lt;/code&gt; - Prevents guess-and-check debugging&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;verification-before-completion&lt;/code&gt; - Prevents false “done” claims&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brainstorming&lt;/code&gt; - Structured design before coding&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;These three address Claude’s most common failure modes. Install them first.&lt;/p&gt;
+
+&lt;h2 id=&quot;session-insights-let-claude-remember-what-it-learned&quot;&gt;Session Insights: Let Claude remember what it learned&lt;/h2&gt;
+
+&lt;p&gt;The second major feature is &lt;strong&gt;Session Insights&lt;/strong&gt;—the ability to parse Claude Code sessions and extract valuable patterns automatically.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-problem&quot;&gt;The problem&lt;/h3&gt;
+
+&lt;p&gt;Claude Code saves session transcripts as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.jsonl&lt;/code&gt; files. They contain everything: decisions made, bugs fixed, patterns discovered. But they just sit there, unprocessed. Until now.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-it-works&quot;&gt;How it works&lt;/h3&gt;
+
+&lt;p&gt;Claude OS can now:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Parse session files&lt;/strong&gt; - Read Claude Code’s native &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.jsonl&lt;/code&gt; format&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Extract insights&lt;/strong&gt; - Identify decisions, patterns, solutions, and blockers&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Save to memory&lt;/strong&gt; - Store in your project’s knowledge base for future reference&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;When you end a session, Claude OS can prompt you: “I found 3 insights from this session. Save them to memory?”&lt;/p&gt;
+
+&lt;h3 id=&quot;what-gets-extracted&quot;&gt;What gets extracted&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Decisions&lt;/strong&gt;: “We chose JWT over sessions because…”&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Patterns&lt;/strong&gt;: “form_for @object vs :symbol—use object when partials need f.object”&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Solutions&lt;/strong&gt;: “Fixed N+1 query by eager loading associations”&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Blockers&lt;/strong&gt;: “Can’t upgrade Rails due to gem X incompatibility”&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These become searchable context that loads automatically in future sessions. Claude doesn’t just remember what you explicitly told it—it remembers what you discovered together.&lt;/p&gt;
+
+&lt;h2 id=&quot;beautiful-new-installer-v22&quot;&gt;Beautiful new installer (v2.2)&lt;/h2&gt;
+
+&lt;p&gt;The installer got a complete makeover with &lt;a href=&quot;https://github.com/charmbracelet/gum&quot;&gt;Charm CLI (gum)&lt;/a&gt; support:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./setup-claude-os.sh &lt;span class=&quot;nt&quot;&gt;--demo&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# See the beautiful UI (no changes made)&lt;/span&gt;
+./setup-claude-os.sh &lt;span class=&quot;nt&quot;&gt;--dry-run&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Preview what would happen&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;New features:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Interactive menus with arrow-key navigation&lt;/li&gt;
+  &lt;li&gt;Graceful bash fallback when gum isn’t available&lt;/li&gt;
+  &lt;li&gt;Safety features: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--demo&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--dry-run&lt;/code&gt;, automatic config backups&lt;/li&gt;
+  &lt;li&gt;Lite model default: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;llama3.2:3b&lt;/code&gt; (2GB) instead of 8b (4.7GB)&lt;/li&gt;
+  &lt;li&gt;Cloud option: Choose local Ollama or OpenAI during setup&lt;/li&gt;
+  &lt;li&gt;Better Linux support across distros&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--demo&lt;/code&gt; flag is particularly nice for kicking the tires before committing to anything.&lt;/p&gt;
+
+&lt;h2 id=&quot;community-contributions&quot;&gt;Community contributions&lt;/h2&gt;
+
+&lt;p&gt;This release wouldn’t exist without our contributors:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Contributor&lt;/th&gt;
+      &lt;th&gt;Contributions&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;https://github.com/illAssad&quot;&gt;@illAssad&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;SQLite cursor fixes, tree-sitter compatibility, non-blocking indexing, Jobs Dashboard&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;https://github.com/williamclavier&quot;&gt;@williamclavier&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;Auto-create commands/skills directories&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;https://github.com/jplimack&quot;&gt;@jplimack&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;Dynamic paths (no more hardcoding!)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;https://github.com/gkastanis&quot;&gt;@gkastanis&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;Linux support, missing frontend files&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;https://github.com/nicseltzer&quot;&gt;@nicseltzer&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;Documentation fixes&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;Thank you.&lt;/strong&gt; Every PR makes Claude OS better for everyone.&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-actually-working-well&quot;&gt;What’s actually working well&lt;/h2&gt;
+
+&lt;p&gt;After two months of daily use on real projects, here’s what I can report:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Session context loading&lt;/strong&gt; - This is the killer feature. Every session starts by searching recent memories and loading relevant context. Claude doesn’t start cold anymore. It knows what we were working on, what patterns we’ve established, what gotchas to avoid.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The Kanban board&lt;/strong&gt; - When using Agent-OS for spec-driven development, the real-time board is genuinely useful. Edit &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tasks.md&lt;/code&gt;, board updates in ~6 seconds. It’s not revolutionary, but it’s nice to see progress visually.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Tree-sitter indexing&lt;/strong&gt; - 10,000 files in 30 seconds instead of hours. This made Claude OS usable for large codebases. If you haven’t read the &lt;a href=&quot;https://thebob.dev/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is/&quot;&gt;original post&lt;/a&gt;, the 600–1000x speedup was a game-changer.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Skills&lt;/strong&gt; - Having Claude follow &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systematic-debugging&lt;/code&gt; instead of guess-and-check has saved hours of frustration. The Phase 0 “ask questions first” behavior alone is worth the install.&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-still-rough&quot;&gt;What’s still rough&lt;/h2&gt;
+
+&lt;p&gt;I promised transparency in the first post, so here’s what needs work:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Installation complexity&lt;/strong&gt; - It’s better with the new installer, but still requires Python 3.11/3.12, Ollama or OpenAI, and some terminal comfort. We’re not at “npm install” simplicity yet.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Memory consolidation&lt;/strong&gt; - We track that memories should be consolidated, but haven’t built the actual consolidation yet. Your knowledge base grows forever without cleanup.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Windows support&lt;/strong&gt; - Not there. Coming, but not there.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Extraction accuracy&lt;/strong&gt; - Session insight extraction uses Ollama’s LLM. Quality varies. We recently fixed a hallucination bug where it was inventing insights that weren’t in the transcript. It’s better now, but not perfect.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-road-to-125-stars&quot;&gt;The road to 125 stars&lt;/h2&gt;
+
+&lt;p&gt;We’re at &lt;strong&gt;106 stars&lt;/strong&gt; and aiming for &lt;strong&gt;125 by Christmas&lt;/strong&gt;. Sounds arbitrary, but having a goal keeps us shipping.&lt;/p&gt;
+
+&lt;p&gt;If Claude OS has helped your workflow, consider:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;⭐ &lt;a href=&quot;https://github.com/brobertsaz/claude-os&quot;&gt;Starring the repo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;📣 Sharing with other Claude Code users&lt;/li&gt;
+  &lt;li&gt;🤝 Contributing a skill, fix, or improvement&lt;/li&gt;
+  &lt;li&gt;💬 Joining the &lt;a href=&quot;https://discord.gg/BrvVYdXkCU&quot;&gt;Discord&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Every star helps more developers discover that Claude doesn’t have to forget everything between sessions.&lt;/p&gt;
+
+&lt;h2 id=&quot;try-it&quot;&gt;Try it&lt;/h2&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/brobertsaz/claude-os.git
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;claude-os
+./setup-claude-os.sh &lt;span class=&quot;nt&quot;&gt;--demo&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# See the UI first&lt;/span&gt;
+./setup-claude-os.sh         &lt;span class=&quot;c&quot;&gt;# Install for real&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Links:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href=&quot;https://github.com/brobertsaz/claude-os&quot;&gt;brobertsaz/claude-os&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Documentation&lt;/strong&gt;: &lt;a href=&quot;https://thebob.dev/claude-os/&quot;&gt;thebob.dev/claude-os&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Wiki&lt;/strong&gt;: &lt;a href=&quot;https://github.com/brobertsaz/claude-os/wiki/Recommended-Skills&quot;&gt;Recommended Skills&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Discord&lt;/strong&gt;: &lt;a href=&quot;https://discord.gg/BrvVYdXkCU&quot;&gt;Join the community&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;the-one-minute-version&quot;&gt;The one-minute version&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;What’s new:&lt;/strong&gt; Skills library (36+ skills), session insights, beautiful installer&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Skills:&lt;/strong&gt; Teachable behaviors—TDD, debugging, PDF manipulation, and more&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Session insights:&lt;/strong&gt; Auto-extract patterns from your work sessions&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Community:&lt;/strong&gt; 100+ stars, 7 contributors, active Discord&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Still free:&lt;/strong&gt; 100% local, never sends your code anywhere&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you try the skills library, let me know which ones actually help. We’re building the “recommended” list based on what people actually use, not what sounds impressive.&lt;/p&gt;
+
+&lt;p&gt;See you at 125 stars. 🚀&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="ai" /><category term="tools" /><category term="productivity" /><category term="claude" /><category term="ai" /><category term="development-tools" /><category term="rag" /><category term="sqlite" /><category term="productivity" /><category term="skills" /><summary type="html">Two months ago we launched Claude OS. Now we&apos;re at 100+ stars with a skills library, session insights, and a real community. Here&apos;s what&apos;s new.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/claude-os.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/claude-os.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Why we built Claude OS (and what it actually is)</title><link href="http://localhost:4000/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is/" rel="alternate" type="text/html" title="Why we built Claude OS (and what it actually is)" /><published>2025-10-31T11:00:00-05:00</published><updated>2025-10-31T11:00:00-05:00</updated><id>http://localhost:4000/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is</id><content type="html" xml:base="http://localhost:4000/ai/tools/productivity/2025/10/31/why-we-built-claude-os-and-what-it-actually-is/">&lt;p&gt;After six months of using Claude Code daily, I finally hit my breaking point. Not because Claude wasn’t smart—it absolutely is. But because every single conversation started from zero. Every explanation about our architecture, repeated. Every context about why we do things a certain way, lost the moment I closed the terminal.&lt;/p&gt;
 
 &lt;p&gt;I’d spend ten minutes explaining our custom JWT setup. Claude would generate perfect code. Next day, same question, same explanation, same ten minutes gone. Like working with a brilliant dev who can’t remember yesterday.&lt;/p&gt;
 
@@ -128,7 +503,7 @@
 
 &lt;p&gt;If you have a big codebase and waiting 3–5 hours for indexing sounds painful, the hybrid indexing alone might be worth it.&lt;/p&gt;
 
-&lt;p&gt;Check it out at &lt;a href=&quot;https://github.com/brobertsaz/claude-os&quot;&gt;github.com/brobertsaz/claude-os&lt;/a&gt;. There’s also a &lt;a href=&quot;https://thebob.dev/claude-os/&quot;&gt;live demo&lt;/a&gt; if you want to see what it looks like before installing.&lt;/p&gt;
+&lt;p&gt;Check it out at &lt;a href=&quot;https://github.com/brobertsaz/claude-os&quot;&gt;github.com/brobertsaz/claude-os&lt;/a&gt;. There’s also &lt;a href=&quot;https://thebob.dev/claude-os/&quot;&gt;full documentation&lt;/a&gt; if you want to learn more before installing.&lt;/p&gt;
 
 &lt;p&gt;It’s 100% free, 100% open source, MIT licensed. Built by developers who got tired of starting every conversation from zero.&lt;/p&gt;
 
@@ -731,422 +1106,4 @@ I set it to 25 because the server has plenty of RAM (32 GB) and I’d rather hav
   &lt;li&gt;Keep Sidekiq to 3 threads per process unless you’ve proven you need more.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;If you want the full step‑by‑step let me know. I put everything into a document including cleanup commands, monitoring, and the connection math. It’s the checklist I wish I’d had before the week started.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="production" /><category term="sidekiq" /><category term="deployment" /><category term="passenger" /><category term="mysql" /><category term="redis" /><category term="activerecord" /><category term="database-pool" /><summary type="html">A week of production chaos taught me that Sidekiq failures aren&apos;t always about Sidekiq. Sometimes it&apos;s your database connection pool that&apos;s starving everything else.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Rails Generation Gap: Why It Matters</title><link href="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/" rel="alternate" type="text/html" title="The Rails Generation Gap: Why It Matters" /><published>2025-09-12T10:00:00-05:00</published><updated>2025-09-12T10:00:00-05:00</updated><id>http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters</id><content type="html" xml:base="http://localhost:4000/rails/community/career/2025/09/12/the-rails-generation-gap-why-it-matters/">&lt;p&gt;I still remember the first time I got truly stuck on a Rails bug in 2008. I sent a question to a mailing list and figured I might never hear back. An hour later, a stranger replied with a fix, an explanation, and a reminder to pay it forward. Before I knew it, I had met a total stranger and they were mentoring me. That was the vibe when I started: small, tight knit, and very collaborative.&lt;/p&gt;
-
-&lt;p&gt;Jump ahead a decade and the on ramp looks different. Fewer mailing lists. More bootcamps, YouTube, Discord, and Stack Overflow. Folks learn fast, ship fast, and get help in new places. Rails changed, but the bigger shift was how people came into the community and learned the craft.&lt;/p&gt;
-
-&lt;p&gt;That shift is what I think of as the Rails Generation Gap. We do not talk about it enough, and it matters.&lt;/p&gt;
-
-&lt;p&gt;I am starting a short series on this. I will look at the early craft culture, the bootcamp boom, the cultural shifts that came with it, and some practical ways to bridge the gap. The idea for this series was what I cam away from with the first Rails meetup I have been to in years, which I wrote about &lt;a href=&quot;/general/meta/2025/09/08/welcome-to-my-blog/#what-brought-me-back&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;before-bootcamps-a-craft-culture&quot;&gt;Before bootcamps: a craft culture&lt;/h2&gt;
-
-&lt;p&gt;When I started with Rails in 2008, it still felt like magic. Convention over configuration made things click. Getting started was not easy though. Docs were thin, posts were dense, and half the time you learned by reading the source.&lt;/p&gt;
-
-&lt;p&gt;The upside was depth. Those of us who came in during that era learned the how and the why. Mentorship was built in because it had to be.&lt;/p&gt;
-
-&lt;p&gt;It also felt closed at times. Fewer entry points. Less diversity. Sometimes it read like an insider club.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;the-bootcamp-boom&quot;&gt;The bootcamp boom&lt;/h2&gt;
-
-&lt;p&gt;Around 2013, bootcamps exploded. Course Report counted roughly two thousand grads in 2013. By 2019, it was more than twenty three thousand a year, and Rails was everywhere in those programs.&lt;/p&gt;
-
-&lt;p&gt;Rails made sense for teaching. You could get someone to a working web app in weeks, not months. For career changers, that was huge.&lt;/p&gt;
-
-&lt;p&gt;More people in the community was a good thing. It opened doors beyond CS degrees and long nights reading code.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;the-gap&quot;&gt;The gap&lt;/h2&gt;
-
-&lt;p&gt;Growth comes with tradeoffs. Some of the old guard saw bootcamp grads as folks who could ship but could not explain what Active Record was doing under the hood. Some newcomers saw veterans as unapproachable or stuck in old patterns.&lt;/p&gt;
-
-&lt;p&gt;The way we shared knowledge changed too. Long form posts and deep dives gave way to shorter answers and quick videos. Stack Overflow peaked around 2013 to 2015 and then slid. By 2023, new questions were down about seventy seven percent compared to 2009.&lt;/p&gt;
-
-&lt;p&gt;That shift in how we learn and teach created friction.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;why-it-still-matters&quot;&gt;Why it still matters&lt;/h2&gt;
-
-&lt;p&gt;Rails is mature now. It is not the new hot thing. The gap still shows up in day to day work.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Hiring and onboarding: I have seen teams struggle to bring on a lot of juniors without strong mentorship in place.&lt;/li&gt;
-  &lt;li&gt;Open source health: Rails thrives on contribution. Without context and a habit of paying it forward, it gets harder to sustain.&lt;/li&gt;
-  &lt;li&gt;Mixing voices: Veterans bring depth. New folks bring energy and fresh perspective. We need both.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Whether we talk to each other, or past each other, determines a lot about where Rails goes next.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;closing-the-gap&quot;&gt;Closing the gap&lt;/h2&gt;
-
-&lt;p&gt;A few practical moves I have seen help:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Veterans can share not just code, but the history and tradeoffs that shaped Rails.&lt;/li&gt;
-  &lt;li&gt;Bootcamp grads can document what they learn and pull others up the ladder behind them.&lt;/li&gt;
-  &lt;li&gt;Companies can try apprenticeship style onboarding and give seniors time to mentor.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Rails has always been more than code. Community is the multiplier. How we teach, share, and build will shape the next decade.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;what-is-next&quot;&gt;What is next&lt;/h2&gt;
-
-&lt;p&gt;This is the first post in a short series on the Rails Generation Gap. Next up, I will rewind to the early era of screencasts, whimsical guides, and in person mentorship, and pull forward the parts that still work today.&lt;/p&gt;
-
-&lt;p&gt;If you have lived through both sides of this, what differences have you noticed? How do you think we can build better bridges between generations of Rails developers?&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;strong&gt;Next in this series:&lt;/strong&gt; &lt;a href=&quot;/rails/community/history/2025/09/15/rails-before-bootcamps-a-tight-knit-craft-community/&quot;&gt;Rails Before Bootcamps — A Tight‑Knit Craft Community&lt;/a&gt;&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="community" /><category term="career" /><category term="rails" /><category term="mentorship" /><category term="bootcamps" /><category term="community" /><category term="culture" /><summary type="html">From mailing lists to bootcamps, the way people enter Rails has changed. That shift affects how we hire, mentor, and build.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/rails-generation-gap.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Dusting Off the Blog (Again)</title><link href="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/" rel="alternate" type="text/html" title="Dusting Off the Blog (Again)" /><published>2025-09-08T12:00:00-05:00</published><updated>2025-09-08T12:00:00-05:00</updated><id>http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog</id><content type="html" xml:base="http://localhost:4000/general/meta/2025/09/08/welcome-to-my-blog/">&lt;p&gt;If you’ve been following this blog for a while (and there might be a few of you), you’ll notice it’s been quiet since 2017. Seven years is a long time in tech. A lot has changed.&lt;/p&gt;
-
-&lt;p&gt;I used to write regularly about Rails, freelancing, and the Arizona tech scene. Then life happened, priorities shifted, and the blog went dormant.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-brought-me-back&quot;&gt;What brought me back&lt;/h2&gt;
-
-&lt;p&gt;A few days ago I went to &lt;a href=&quot;https://www.linkedin.com/company/xoruby/posts/?feedView=all&quot;&gt;XORuby&lt;/a&gt; in Chicago. First tech event I’d attended in person since probably 2017. I honestly didn’t realize how much I missed it.&lt;/p&gt;
-
-&lt;p&gt;We talked about _why the lucky stiff, old Ruby legends, and I even mentioned that I once followed a cat named Gorbypuff on Twitter (RIP). It was the kind of conversation that reminded me why I fell in love with the Ruby community in the first place.&lt;/p&gt;
-
-&lt;p&gt;Sitting there, I realized we’ve all gotten lazy since COVID. It’s too easy to attend meetings online, watch conference videos from our couch, or just skip community stuff altogether. But we’re missing the human interaction. The random conversations. The energy you only get when developers are in the same room geeking out together.&lt;/p&gt;
-
-&lt;p&gt;After that meetup, I kept thinking: we need to get back to having fun with this stuff. Back to Rails for Zombies-style learning. Back to _why’s talking foxes. Back to the days when Ruby felt like a community of people who genuinely enjoyed building things together.&lt;/p&gt;
-
-&lt;h2 id=&quot;whats-different-this-time&quot;&gt;What’s different this time&lt;/h2&gt;
-
-&lt;p&gt;Back in 2011-2017, I was writing about learning Rails, starting a freelance business, and trying to build a tech community in Phoenix. Those posts are still here (check the archives) - they’re a time capsule of a different era in web development.&lt;/p&gt;
-
-&lt;p&gt;Now I’m in a different place. Rails is mature. JavaScript has eaten the world. I’ve worked at companies of different sizes, built systems that actually scaled, and learned from mistakes that seemed impossible at the time.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-im-planning-to-write-about&quot;&gt;What I’m planning to write about&lt;/h2&gt;
-
-&lt;p&gt;This isn’t going to be another “here’s how to build a todo app” blog. I want to focus on the messy, real-world stuff that doesn’t fit neatly into tutorials:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;War stories from production&lt;/strong&gt; - The bugs that kept me up at night and how we fixed them&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Technology decisions and their consequences&lt;/strong&gt; - Why we chose certain tools and what we learned&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;The human side of development&lt;/strong&gt; - Team dynamics, code reviews, and technical communication&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Honest takes on the JavaScript/React/TypeScript ecosystem&lt;/strong&gt; - What actually works vs what gets hype&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Basically, the kind of content I wish I could have read when I was figuring this stuff out.&lt;/p&gt;
-
-&lt;h2 id=&quot;so-im-starting-with-this-blog&quot;&gt;So I’m starting with this blog&lt;/h2&gt;
-
-&lt;p&gt;That meetup reminded me that I used to be part of something. Not just using Rails to build apps, but actually participating in the community. Writing. Sharing what I learned. Connecting with other developers.&lt;/p&gt;
-
-&lt;p&gt;Personal blogs used to be how we did this. Before everything moved to LinkedIn posts and Twitter threads. Before algorithms decided what was worth reading.&lt;/p&gt;
-
-&lt;p&gt;I miss that version of the web. I miss the version of myself that contributed to it.&lt;/p&gt;
-
-&lt;p&gt;The community gave me a lot over the years - knowledge, friendships, opportunities. This blog is how I’m starting to give something back.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-to-expect&quot;&gt;What to expect&lt;/h2&gt;
-
-&lt;p&gt;I’m not committing to a posting schedule. This isn’t a content marketing blog. I’ll write when I have something worth saying.&lt;/p&gt;
-
-&lt;p&gt;I want to bring back some of that old Ruby community spirit - the curiosity, the willingness to share half-baked ideas, the sense that we’re all figuring this out together.&lt;/p&gt;
-
-&lt;p&gt;If you’ve been here since the early days, thanks for sticking around. If you’re new, welcome. Either way, I hope you find something useful.&lt;/p&gt;
-
-&lt;p&gt;The old posts are still here if you want to see how my thinking has evolved (or laugh at my 2011 predictions about the future of web development). But I’m more interested in what comes next.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Back to building things.&lt;/p&gt;
-
-&lt;p&gt;Bob&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="general" /><category term="meta" /><category term="blogging" /><category term="comeback" /><category term="reflection" /><summary type="html">After a long hiatus, I&apos;m bringing this blog back to life. What changed, why I stopped, and what I&apos;m planning to write about this time around.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/blog-comeback.png" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/blog-comeback.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Making Apps Feel Instant: My Experience with Realtime Rails and Apollo</title><link href="http://localhost:4000/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/" rel="alternate" type="text/html" title="Making Apps Feel Instant: My Experience with Realtime Rails and Apollo" /><published>2025-02-01T10:00:00-06:00</published><updated>2025-02-01T10:00:00-06:00</updated><id>http://localhost:4000/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails</id><content type="html" xml:base="http://localhost:4000/react/realtime/2025/02/01/realtime-and-optimistic-ui-with-apollo-and-rails/">&lt;p&gt;I’ve been working on a dashboard app lately that needed to feel snappy. You know the feeling when you click “Save” and nothing happens for a second? That pause where users wonder if they actually clicked the button? I wanted to eliminate that.&lt;/p&gt;
-
-&lt;p&gt;Turns out, making UIs feel instant isn’t just about making the server faster. It’s about making smart choices about what to show users while they wait.&lt;/p&gt;
-
-&lt;h2 id=&quot;the-optimistic-ui-revelation&quot;&gt;The optimistic UI revelation&lt;/h2&gt;
-
-&lt;p&gt;A few months ago I was building a simple task management feature. Users could create tasks, toggle them complete, delete them. Standard stuff. But every action felt sluggish because users had to wait for the server response before seeing any change.&lt;/p&gt;
-
-&lt;p&gt;Then I discovered Apollo’s optimistic responses. Game changer.&lt;/p&gt;
-
-&lt;p&gt;Here’s what made the difference. Instead of waiting for the server, I started showing users what they expected to see immediately:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// When someone creates a new task, show it right away&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useMutation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CREATE_TASK&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;optimisticResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;input&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;createTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`temp-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// temporary ID&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;completed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;__typename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Task&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}),&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;onError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// Oops, something went wrong - the UI automatically rolls back&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Failed to create task:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The difference was night and day. Click “Add Task” and boom - it’s there. No waiting. If something goes wrong on the server, Apollo handles rolling back the optimistic change.&lt;/p&gt;
-
-&lt;p&gt;But I learned the hard way that optimistic UI isn’t magic. It works great for simple actions like creating, toggling, or deleting. But I tried to get too clever with complex forms and nested relationships. That’s where things got messy.&lt;/p&gt;
-
-&lt;h2 id=&quot;when-optimistic-ui-isnt-enough&quot;&gt;When optimistic UI isn’t enough&lt;/h2&gt;
-
-&lt;p&gt;Optimistic updates work great when you’re the only one changing data. But what about when multiple users are working on the same thing? That’s where I needed real-time subscriptions.&lt;/p&gt;
-
-&lt;p&gt;I was building a collaborative feature where team members could see each other’s changes live. ActionCable made this surprisingly straightforward with Rails:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# In my Rails GraphQL schema&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Types::SubscriptionType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;BaseObject&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;field&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:task_updated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Types&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;TaskType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# After updating a task anywhere in the app&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;MySchema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscriptions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;trigger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:task_updated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;updated_task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;On the client side, I had to set up Apollo to handle both regular HTTP requests and WebSocket subscriptions:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// This took me a while to get right&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;wsLink&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;GraphQLWsLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;createClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;ws://localhost:3000/cable&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;splitLink&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;definition&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;getMainDefinition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-      &lt;span class=&quot;nx&quot;&gt;definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;kind&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;OperationDefinition&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
-      &lt;span class=&quot;nx&quot;&gt;definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;operation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;subscription&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;wsLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;httpLink&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The magic happened when I subscribed to updates:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;useSubscription&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;TASK_UPDATED&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;onData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// Someone else updated a task - show it immediately&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;updatedTask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;taskUpdated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// Apollo automatically updates the cache&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;the-actioncable-bottleneck&quot;&gt;The ActionCable bottleneck&lt;/h2&gt;
-
-&lt;p&gt;Everything worked great in development and with a few users. But when I load-tested with a couple hundred concurrent WebSocket connections, ActionCable started to struggle. Ruby isn’t great at handling tons of concurrent connections.&lt;/p&gt;
-
-&lt;p&gt;That’s when I discovered AnyCable. It’s a drop-in replacement that offloads WebSocket handling to a Go process while keeping all my Rails business logic intact. The switch was painless - just changed my cable config and started the AnyCable-Go server.&lt;/p&gt;
-
-&lt;p&gt;The performance difference was dramatic. What used to choke at 200 connections now handled thousands without breaking a sweat.&lt;/p&gt;
-
-&lt;h2 id=&quot;sometimes-simple-polling-is-better&quot;&gt;Sometimes simple polling is better&lt;/h2&gt;
-
-&lt;p&gt;Not everything needs WebSockets. For data that updates occasionally - like user counts or notification badges - I just use Apollo’s polling feature:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;GET_NOTIFICATION_COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;pollInterval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30000&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Check every 30 seconds&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;It’s simpler, more reliable, and puts less strain on the server.&lt;/p&gt;
-
-&lt;h2 id=&quot;lessons-learned-the-hard-way&quot;&gt;Lessons learned the hard way&lt;/h2&gt;
-
-&lt;p&gt;Building realtime features taught me a few things:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Optimistic UI is great, but have a rollback plan.&lt;/strong&gt; I spent hours debugging “ghost” items that appeared when mutations failed silently.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;WebSockets are stateful and fragile.&lt;/strong&gt; Always handle reconnections gracefully. Users close laptops, switch networks, go through tunnels.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Not everything needs to be realtime.&lt;/strong&gt; I got carried away and made every little thing live. Some data is fine being a few seconds stale.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Test with real network conditions.&lt;/strong&gt; Everything works great on localhost. Try it on a flaky mobile connection.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;The combination of optimistic UI and selective realtime updates has made my apps feel much more responsive. Users notice the difference immediately. The key is being thoughtful about when to use each technique.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="react" /><category term="realtime" /><category term="apollo" /><category term="optimistic-ui" /><category term="subscriptions" /><category term="actioncable" /><category term="anycable" /><category term="rails" /><summary type="html">Lessons learned from building realtime features with Apollo and Rails. When optimistic UI works great, when it doesn&apos;t, and why I switched to AnyCable.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/realtime-optimistic-ui-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/realtime-optimistic-ui-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">The Authentication Dilemma: Sessions vs JWTs in Rails</title><link href="http://localhost:4000/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/" rel="alternate" type="text/html" title="The Authentication Dilemma: Sessions vs JWTs in Rails" /><published>2025-01-24T10:00:00-06:00</published><updated>2025-01-24T10:00:00-06:00</updated><id>http://localhost:4000/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt</id><content type="html" xml:base="http://localhost:4000/security/rails/2025/01/24/auth-in-rails-and-apollo-sessions-vs-jwt/">&lt;p&gt;I’ve been building Rails apps for over a decade now, and I’ve probably implemented user authentication about fifty different ways. Most of those attempts were overly complicated. I’ve learned that when it comes to auth, boring usually wins.&lt;/p&gt;
-
-&lt;p&gt;Last year I was working on a new Rails app with a React frontend. The team immediately started debating: “Should we use JWTs or stick with Rails sessions?” Everyone had strong opinions, most based on blog posts they’d read rather than real experience.&lt;/p&gt;
-
-&lt;p&gt;Here’s what I’ve learned from actually shipping both approaches.&lt;/p&gt;
-
-&lt;h2 id=&quot;why-i-usually-stick-with-sessions&quot;&gt;Why I usually stick with sessions&lt;/h2&gt;
-
-&lt;p&gt;For most Rails apps I build, I reach for good old cookie-based sessions first. They’re built into Rails, they work with ActionCable out of the box, and I get security features for free.&lt;/p&gt;
-
-&lt;p&gt;Here’s my typical setup:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# config/initializers/session_store.rb&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;session_store&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:cookie_store&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;key: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;_myapp_session&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;same_site: :lax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;secure: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;production?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;httponly: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httponly: true&lt;/code&gt; means JavaScript can’t access the session cookie. That’s a good thing - XSS attacks can’t steal it. The &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;same_site: :lax&lt;/code&gt; helps prevent CSRF attacks.&lt;/p&gt;
-
-&lt;p&gt;But here’s the catch with single-page apps: you still need CSRF protection for state-changing requests:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# app/controllers/application_controller.rb&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ApplicationController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActionController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;protect_from_forgery&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;with: :exception&lt;/span&gt;
-  
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;current_user&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@current_user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:user_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:user_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;I expose the CSRF token to my React app through a meta tag:&lt;/p&gt;
-
-&lt;div class=&quot;language-erb highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- app/views/layouts/application.html.erb --&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;csrf-token&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;%=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form_authenticity_token&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;%&amp;gt;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;On the Apollo side, I need to include credentials with every request and add the CSRF token:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// apollo/client.js&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HttpLink&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;@apollo/client&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setContext&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;@apollo/client/link/context&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;httpLink&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HttpLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; 
-  &lt;span class=&quot;na&quot;&gt;uri&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;/graphql&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-  &lt;span class=&quot;na&quot;&gt;credentials&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// This sends cookies with every request&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;csrfLink&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;querySelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;meta[name=&quot;csrf-token&quot;]&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;X-CSRF-Token&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&apos;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ApolloClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;csrfLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;httpLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;InMemoryCache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This approach is boring, but it works. The browser handles everything automatically, and I don’t have to worry about token storage or expiration.&lt;/p&gt;
-
-&lt;h2 id=&quot;when-i-reach-for-jwts&quot;&gt;When I reach for JWTs&lt;/h2&gt;
-
-&lt;p&gt;I only use JWTs when I have a specific need they solve:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;strong&gt;Cross-domain requests&lt;/strong&gt; - My API is on a different domain than my frontend&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Mobile apps&lt;/strong&gt; - Cookies don’t work as nicely in native apps&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Multiple services&lt;/strong&gt; - I need to verify users across different backend services&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;But JWTs come with complexity. Here’s a basic implementation I’ve used:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Gemfile&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;jwt&apos;&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# app/services/auth_service.rb&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AuthService&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;SECRET&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;credentials&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;jwt_secret&lt;/span&gt;
-  
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;ss&quot;&gt;sub: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;ss&quot;&gt;exp: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hours&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;from_now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_i&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;JWT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SECRET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;HS256&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JWT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SECRET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;algorithm: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;HS256&apos;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;sub&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;JWT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;DecodeError&lt;/span&gt;
-    &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;In my ApplicationController:&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ApplicationController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActionController&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
-  &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
-  
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;current_user&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@current_user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_user_from_token&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_user_from_token&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Authorization&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos; &apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;last&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;
-    
-    &lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;AuthService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user_id&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;On the client side, I store the JWT and include it with every request:&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// apollo/client.js&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setContext&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;@apollo/client/link/context&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;authLink&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;localStorage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;authToken&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;Authorization&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;`Bearer &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&apos;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ApolloClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;link&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;authLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;httpLink&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;InMemoryCache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;But here’s where JWTs get tricky…&lt;/p&gt;
-
-&lt;h2 id=&quot;the-jwt-complexity-spiral&quot;&gt;The JWT complexity spiral&lt;/h2&gt;
-
-&lt;p&gt;JWTs seem simple at first, but they get complicated fast. Here are the problems I’ve run into:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;You can’t revoke them easily.&lt;/strong&gt; If someone steals a JWT, it’s valid until it expires. With sessions, I can just delete the session from my database.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Token refresh is annoying.&lt;/strong&gt; Short-lived tokens mean you need a refresh mechanism. I’ve built systems with refresh tokens stored as httpOnly cookies, but at that point, why not just use sessions?&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Storage is tricky.&lt;/strong&gt; localStorage persists across browser sessions but is vulnerable to XSS. sessionStorage gets cleared when users close tabs. Cookies are back to the same-site restrictions.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Clock skew causes weird bugs.&lt;/strong&gt; If your server and client clocks are off, tokens might be “expired” before they should be.&lt;/p&gt;
-
-&lt;h2 id=&quot;what-i-actually-do&quot;&gt;What I actually do&lt;/h2&gt;
-
-&lt;p&gt;For 90% of the Rails apps I build, I use cookie sessions with CSRF protection. It’s boring, but it works reliably.&lt;/p&gt;
-
-&lt;p&gt;I only reach for JWTs when I have a genuine cross-domain need or I’m building a native mobile app. And when I do use JWTs, I keep them short-lived (30 minutes max) and implement a proper refresh token system.&lt;/p&gt;
-
-&lt;h2 id=&quot;one-mistake-that-taught-me-a-lesson&quot;&gt;One mistake that taught me a lesson&lt;/h2&gt;
-
-&lt;p&gt;A few years back, I built a system that stored JWTs in localStorage and made them long-lived (24 hours) to avoid the refresh complexity. A penetration test later revealed that a single XSS vulnerability could steal user tokens for an entire day.&lt;/p&gt;
-
-&lt;p&gt;I switched back to short-lived tokens with httpOnly refresh cookies. But at that point, I was basically reinventing sessions with extra steps.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Authentication doesn’t have to be exciting. Sometimes the boring, well-tested approach is exactly what you need.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="security" /><category term="rails" /><category term="authentication" /><category term="authorization" /><category term="jwt" /><category term="sessions" /><category term="apollo" /><category term="react" /><category term="csrf" /><summary type="html">Why I usually stick with boring cookie sessions, when I reach for JWTs, and the authentication mistakes that taught me lessons the hard way.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/auth-sessions-vs-jwt-pro.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/auth-sessions-vs-jwt-pro.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;p&gt;If you want the full step‑by‑step let me know. I put everything into a document including cleanup commands, monitoring, and the connection math. It’s the checklist I wish I’d had before the week started.&lt;/p&gt;</content><author><name>Bob Roberts</name></author><category term="rails" /><category term="production" /><category term="sidekiq" /><category term="deployment" /><category term="passenger" /><category term="mysql" /><category term="redis" /><category term="activerecord" /><category term="database-pool" /><summary type="html">A week of production chaos taught me that Sidekiq failures aren&apos;t always about Sidekiq. Sometimes it&apos;s your database connection pool that&apos;s starving everything else.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" /><media:content medium="image" url="http://localhost:4000/assets/images/covers/deployment-sidekiq-fix.svg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
