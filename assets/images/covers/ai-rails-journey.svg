@@ -1,0 +1,116 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b0f14"/>
+      <stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(250 315) scale(200 200)">
+      <stop offset="0" stop-color="#f97316" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#f97316" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 315) scale(200 200)">
+      <stop offset="0" stop-color="#8B5CF6" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(950 315) scale(200 200)">
+      <stop offset="0" stop-color="#64ffda" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#64ffda" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="timeline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#8B5CF6" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#64ffda" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+  <rect width="1200" height="630" fill="url(#glow3)"/>
+
+  <!-- Grid lines for dev aesthetic -->
+  <g opacity="0.05" stroke="#c9d1d9" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Timeline line -->
+  <line x1="180" y1="315" x2="1020" y2="315" stroke="url(#timeline)" stroke-width="3"/>
+
+  <!-- Node 1: OpenAI Integration -->
+  <g transform="translate(250, 315)">
+    <!-- Outer ring -->
+    <circle cx="0" cy="0" r="55" fill="none" stroke="#f97316" stroke-width="2" opacity="0.4"/>
+    <circle cx="0" cy="0" r="40" fill="#f97316" fill-opacity="0.15" stroke="#f97316" stroke-width="2"/>
+    <!-- API symbol -->
+    <text x="0" y="-5" font-family="monospace" font-size="16" fill="#f97316" text-anchor="middle" font-weight="700">{</text>
+    <text x="0" y="12" font-family="monospace" font-size="16" fill="#f97316" text-anchor="middle" font-weight="700">}</text>
+    <!-- Label -->
+    <text x="0" y="85" font-family="Inter, -apple-system, sans-serif" font-size="18" fill="#f97316" text-anchor="middle" font-weight="600">OpenAI API</text>
+    <text x="0" y="108" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#6e7681" text-anchor="middle">Circuit breakers</text>
+    <text x="0" y="126" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#6e7681" text-anchor="middle">Fallbacks / Caching</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <g transform="translate(370, 315)">
+    <line x1="0" y1="0" x2="80" y2="0" stroke="#9ea7b3" stroke-width="2" opacity="0.4"/>
+    <polygon points="80,-5 90,0 80,5" fill="#9ea7b3" opacity="0.4"/>
+  </g>
+
+  <!-- Node 2: Claude-OS -->
+  <g transform="translate(600, 315)">
+    <circle cx="0" cy="0" r="55" fill="none" stroke="#8B5CF6" stroke-width="2" opacity="0.4"/>
+    <circle cx="0" cy="0" r="40" fill="#8B5CF6" fill-opacity="0.15" stroke="#8B5CF6" stroke-width="2"/>
+    <!-- Memory/brain symbol -->
+    <circle cx="0" cy="0" r="12" fill="none" stroke="#8B5CF6" stroke-width="2"/>
+    <circle cx="-15" cy="-12" r="5" fill="#8B5CF6" fill-opacity="0.5"/>
+    <circle cx="15" cy="-12" r="5" fill="#8B5CF6" fill-opacity="0.5"/>
+    <circle cx="-15" cy="12" r="5" fill="#8B5CF6" fill-opacity="0.5"/>
+    <circle cx="15" cy="12" r="5" fill="#8B5CF6" fill-opacity="0.5"/>
+    <line x1="-10" y1="-8" x2="-4" y2="-3" stroke="#8B5CF6" stroke-width="1.5" opacity="0.6"/>
+    <line x1="10" y1="-8" x2="4" y2="-3" stroke="#8B5CF6" stroke-width="1.5" opacity="0.6"/>
+    <line x1="-10" y1="8" x2="-4" y2="3" stroke="#8B5CF6" stroke-width="1.5" opacity="0.6"/>
+    <line x1="10" y1="8" x2="4" y2="3" stroke="#8B5CF6" stroke-width="1.5" opacity="0.6"/>
+    <!-- Label -->
+    <text x="0" y="85" font-family="Inter, -apple-system, sans-serif" font-size="18" fill="#8B5CF6" text-anchor="middle" font-weight="600">Claude-OS</text>
+    <text x="0" y="108" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#6e7681" text-anchor="middle">Persistent memory</text>
+    <text x="0" y="126" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#6e7681" text-anchor="middle">200+ stars</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <g transform="translate(720, 315)">
+    <line x1="0" y1="0" x2="80" y2="0" stroke="#9ea7b3" stroke-width="2" opacity="0.4"/>
+    <polygon points="80,-5 90,0 80,5" fill="#9ea7b3" opacity="0.4"/>
+  </g>
+
+  <!-- Node 3: Native Claude -->
+  <g transform="translate(950, 315)">
+    <circle cx="0" cy="0" r="55" fill="none" stroke="#64ffda" stroke-width="2" opacity="0.4"/>
+    <circle cx="0" cy="0" r="40" fill="#64ffda" fill-opacity="0.15" stroke="#64ffda" stroke-width="2"/>
+    <!-- Claude symbol -->
+    <text x="0" y="8" font-family="Inter, -apple-system, sans-serif" font-size="28" fill="#64ffda" text-anchor="middle" font-weight="700">C</text>
+    <!-- Label -->
+    <text x="0" y="85" font-family="Inter, -apple-system, sans-serif" font-size="18" fill="#64ffda" text-anchor="middle" font-weight="600">Native Claude</text>
+    <text x="0" y="108" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#6e7681" text-anchor="middle">Built-in memory</text>
+    <text x="0" y="126" font-family="Inter, -apple-system, sans-serif" font-size="14" fill="#6e7681" text-anchor="middle">Platform evolution</text>
+  </g>
+
+  <!-- Top text -->
+  <g font-family="Inter, -apple-system, sans-serif" fill="#c9d1d9">
+    <text x="600" y="120" font-size="20" fill="#6e7681" text-anchor="middle" letter-spacing="3">THE JOURNEY</text>
+  </g>
+
+  <!-- Bottom text -->
+  <g font-family="Inter, -apple-system, sans-serif">
+    <text x="600" y="545" font-size="16" fill="#6e7681" text-anchor="middle">Build things. Learn from them. Be ready to let them go.</text>
+  </g>
+</svg>
