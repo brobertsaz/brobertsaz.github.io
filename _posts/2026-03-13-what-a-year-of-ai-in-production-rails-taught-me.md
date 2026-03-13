@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "What a Year of AI in Production Rails Taught Me (Including Building Something I No Longer Need)"
-date: 2026-03-13 10:00:00 -0700
+date: 2026-03-13 06:00:00 -0700
 categories: [ai, rails, development]
 tags: [ai, rails, openai, claude, production, development-tools]
 author: Bob Roberts
