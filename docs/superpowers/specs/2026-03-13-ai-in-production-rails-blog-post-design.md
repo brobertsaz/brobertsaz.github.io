@@ -20,7 +20,7 @@ Experienced Rails developers who are curious about AI integration but haven't ta
 ## Post Structure
 
 ### Section 1: The Hook
-Open with the punchline: built an open-source project, 100+ GitHub stars, active community, and now don't use it anymore. Frame this as a feature of how fast AI tooling moves, not a failure. Set up the journey.
+Open with the punchline: built an open-source project, 200+ GitHub stars, active community, and now don't use it anymore. Frame this as a feature of how fast AI tooling moves, not a failure. Set up the journey.
 
 ### Section 2: Where It Started - Needing AI in a Real App
 - Introduce Pistn: automotive service management SaaS, running since 2014, 10,000+ file Rails codebase
