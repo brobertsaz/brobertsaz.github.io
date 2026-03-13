@@ -18,6 +18,7 @@ I'm a Senior Software Engineer in Madison, Wisconsin. For 15+ years I've built w
 ## What you'll find here
 
 - Practical Rails patterns you can copy and extend
+- AI integration lessons from production apps
 - Notes on product decisions, trade-offs, and the business side of features
 - Mentoring, leadership, and teamwork lessons from the field
 
