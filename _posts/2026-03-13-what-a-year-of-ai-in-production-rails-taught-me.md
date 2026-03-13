@@ -33,7 +33,7 @@ But I'm getting ahead of myself. Let me start from the beginning.
 
 ## Where it started - needing AI in a real app
 
-I run a platform called [Pistn](https://pistn.com), an automotive service management SaaS that's been around since 2014. We're talking tire shops, oil change centers, service centers. The Rails codebase has grown to over 10,000 files. It does a lot: custom branded websites for each dealer, CRM with email campaigns and text messaging, online appointment booking, POS integration, analytics. The usual SaaS sprawl that happens when you've been building something for a decade.
+I run an automotive service management SaaS that's been around since 2014. We're talking tire shops, oil change centers, service centers. The Rails codebase has grown to over 10,000 files. It does a lot: custom branded websites for each dealer, CRM with email campaigns and text messaging, online appointment booking, POS integration, analytics. The usual SaaS sprawl that happens when you've been building something for a decade.
 
 The first time we actually needed AI was for a documentation assistant. Our platform has a lot of moving parts, and our team needed a way to ask questions about how things work without digging through hundreds of files. Think of it as an internal search engine that actually understands what you're asking, not just matching keywords.
 
@@ -57,7 +57,7 @@ Here's what I want to emphasize to other Rails devs: these patterns have nothing
 
 ## The memory problem
 
-Around the same time we were building the documentation assistant, I started using Claude Code daily for development work on Pistn. And Claude Code is genuinely great. It understands code, writes clean solutions, debugs tricky issues. But it had one massive problem: every conversation started from scratch.
+Around the same time we were building the documentation assistant, I started using Claude Code daily for development work on the platform. And Claude Code is genuinely great. It understands code, writes clean solutions, debugs tricky issues. But it had one massive problem: every conversation started from scratch.
 
 I'd spend ten minutes explaining our account hierarchy. Account has GroupAccount, GroupAccount has DealerAccount, there are integrated sites with shared variant partials, the Front::LocalController handles specific routes separately from FrontController. Claude would get it, write perfect code, and then tomorrow? Same conversation, same ten minutes, same explanation.
 
@@ -93,9 +93,9 @@ If you're a Rails developer thinking about AI integration, here's what actually 
 
 **Build resilience patterns from day one.** Don't add the circuit breaker later. Don't add caching after you get the first outage. Treat the AI API like what it is: an external service that will go down, will be slow sometimes, and will occasionally return garbage. Plan for all three.
 
-**Don't get attached to your abstractions.** We built a whole project around AI memory and context management. Now we don't need it. If we'd built Pistn's core features on top of Claude-OS, we'd be doing a migration right now. Keep your AI integration behind clean interfaces. Make it swappable. Because you will probably swap it.
+**Don't get attached to your abstractions.** We built a whole project around AI memory and context management. Now we don't need it. If we'd built our app's core features on top of Claude-OS, we'd be doing a migration right now. Keep your AI integration behind clean interfaces. Make it swappable. Because you will probably swap it.
 
-**Start with a real problem.** We didn't add AI to Pistn because AI is cool. We added it because our team needed a better way to find information in a complex system. The documentation assistant solved a real pain point. If you're adding AI because you feel like you should, stop and find the actual problem first.
+**Start with a real problem.** We didn't add AI to our platform because AI is cool. We added it because our team needed a better way to find information in a complex system. The documentation assistant solved a real pain point. If you're adding AI because you feel like you should, stop and find the actual problem first.
 
 **The boring engineering matters more than the AI part.** Error handling, timeouts, graceful degradation, caching, rate limiting. Nobody writes blog posts about implementing exponential backoff. But that's the stuff that keeps your app running when things go sideways. The AI part is honestly the easy part. Making it reliable in production is where the real work lives.
 
@@ -107,7 +107,7 @@ If you're a Rails developer thinking about AI integration, here's what actually 
 
 AI tooling for developers is converging fast. The gap between "build it yourself" and "just use what the platform gives you" gets smaller every month. Features that required custom infrastructure a year ago are becoming standard.
 
-That doesn't mean you shouldn't build. We learned more from building Claude-OS and the Pistn documentation assistant than we would have learned from any tutorial or course. The experience of putting AI into production, hitting the edge cases, building the resilience patterns, understanding how these models actually behave when real users interact with them - that knowledge doesn't expire even when the specific tools do.
+That doesn't mean you shouldn't build. We learned more from building Claude-OS and our documentation assistant than we would have learned from any tutorial or course. The experience of putting AI into production, hitting the edge cases, building the resilience patterns, understanding how these models actually behave when real users interact with them - that knowledge doesn't expire even when the specific tools do.
 
 The developers who are going to do well with AI aren't the ones waiting for everything to be perfect. They're the ones building now, learning from what breaks, and staying flexible enough to adapt when the ground shifts under them. Which it will. Repeatedly.
 
