@@ -10,10 +10,23 @@ I'd love to hear from you! Whether you have questions about a blog post, want to
 
 ## How to Reach Me
 
-### Email
+### Send Me a Message
 
-The best way to reach me is via email:
-**[brobertsaz@users.noreply.github.com](mailto:brobertsaz@users.noreply.github.com)**
+<form action="https://cardsfanbob.getform.com/v0vxw" method="POST">
+  <div style="margin-bottom: 1rem;">
+    <label for="name" style="display: block; margin-bottom: 0.25rem;">Name</label>
+    <input type="text" name="name" id="name" required style="width: 100%; padding: 0.5rem; background: var(--bg-secondary, #161b22); color: var(--text-primary, #c9d1d9); border: 1px solid var(--border-color, #30363d); border-radius: 6px;">
+  </div>
+  <div style="margin-bottom: 1rem;">
+    <label for="email" style="display: block; margin-bottom: 0.25rem;">Email</label>
+    <input type="email" name="email" id="email" required style="width: 100%; padding: 0.5rem; background: var(--bg-secondary, #161b22); color: var(--text-primary, #c9d1d9); border: 1px solid var(--border-color, #30363d); border-radius: 6px;">
+  </div>
+  <div style="margin-bottom: 1rem;">
+    <label for="message" style="display: block; margin-bottom: 0.25rem;">Message</label>
+    <textarea name="message" id="message" rows="5" required style="width: 100%; padding: 0.5rem; background: var(--bg-secondary, #161b22); color: var(--text-primary, #c9d1d9); border: 1px solid var(--border-color, #30363d); border-radius: 6px;"></textarea>
+  </div>
+  <button type="submit" style="padding: 0.5rem 1.5rem; background: #64ffda; color: #0d1117; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Send Message</button>
+</form>
 
 I typically respond within 24-48 hours during weekdays.
 
