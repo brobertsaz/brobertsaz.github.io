@@ -10,9 +10,20 @@ I'd love to hear from you! Whether you have questions about a blog post, want to
 
 ## How to Reach Me
 
+<div id="success-message" style="display:none; padding: 1rem; margin-bottom: 1.5rem; background: rgba(100, 255, 218, 0.1); border: 1px solid #64ffda; border-radius: 6px; color: #64ffda;">
+  Thanks for reaching out! I'll get back to you soon.
+</div>
+
+<script>
+if (window.location.search.includes('success=true')) {
+  document.getElementById('success-message').style.display = 'block';
+}
+</script>
+
 ### Send Me a Message
 
 <form action="https://cardsfanbob.getform.com/v0vxw" method="POST">
+  <input type="hidden" name="_redirect" value="https://brobertsaz.github.io/contact/?success=true">
   <div style="margin-bottom: 1rem;">
     <label for="name" style="display: block; margin-bottom: 0.25rem;">Name</label>
     <input type="text" name="name" id="name" required style="width: 100%; padding: 0.5rem; background: var(--bg-secondary, #161b22); color: var(--text-primary, #c9d1d9); border: 1px solid var(--border-color, #30363d); border-radius: 6px;">
